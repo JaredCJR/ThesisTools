@@ -34,7 +34,10 @@ class LitRunner:
             Log.err("----------------------------------------------------------\n")
 
     def run(self, MailMsg="", RandomMean=0.5):
-        timeFile = os.getenv('LLVM_THESIS_Random_LLVMTestSuite_Results') + "/TimeStamp"
+        ResultDir = os.getenv('LLVM_THESIS_Random_LLVMTestSuite_Results')
+        if not os.path.exists(ResultDir):
+            os.makedirs(ResultDir)
+        timeFile = ResultDir + "/TimeStamp"
         if os.path.isfile(timeFile):
             os.remove(timeFile)
 
