@@ -13,7 +13,7 @@ Add below environment variables to your .bashrc:
 ```
 #if you want lit to get these env, you need to modify "llvm-thesis/utils/lit/lit/TestingConfig.py"
 export LLVM_THESIS_HOME=$HOME/workspace/llvm-thesis
-export LLVM_THESIS_RandomHome=$LLVM_THESIS_HOME/ThesisTools/random_select
+export LLVM_THESIS_RandomHome=$LLVM_THESIS_HOME/ThesisTools/RandomSelect
 export LLVM_THESIS_TestSuite=$LLVM_THESIS_HOME/test-suite/build
 export LLVM_THESIS_Random_LLVMTestSuiteScript=$LLVM_THESIS_RandomHome/LLVMTestSuiteScript
 export LLVM_THESIS_Random_LLVMTestSuite_Results=$LLVM_THESIS_Random_LLVMTestSuiteScript/results
