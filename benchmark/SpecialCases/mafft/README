@@ -1,0 +1,2 @@
+Due to failed to use pyActor for this LLVM test-suite benchmakr,
+we use this hack, you may need to modify the absolute path in llvm/DSOAO/random_select/ExternalBenchmarkScript/BenchmarkList.py and the two script in this dir.

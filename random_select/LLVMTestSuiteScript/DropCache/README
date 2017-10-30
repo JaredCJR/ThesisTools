@@ -1,0 +1,8 @@
+changed the owner of the compiled file to root, and set the setuid bit.
+For example:
+1. $ gcc -o drop drop.c
+2. $ sudo chown root:root ./drop
+3. $ sudo chmod u+s ./drop
+4. $ ./drop
+
+ref:https://stackoverflow.com/questions/13646925/allowing-a-non-root-user-to-drop-cache
