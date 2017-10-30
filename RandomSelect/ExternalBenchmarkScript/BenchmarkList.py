@@ -12,7 +12,7 @@ class BenchmarkList:
         return [BenchmarkName + "-" + SubCmd, Cmd + " " + str(Iteration) + " " + SubCmd, VerifyMsg]
 
     """
-    path is relative to "llvm_source/DSOAO/random_select"
+    path is relative to "$LLVM_THESIS_RandomHome"
      ["directory path", "build command", [available benchmarks commands], "clean command"]
      [available benchmarks commands] can be split into three parts:
                                     ["label name", "commands", "expected last outputs"]
