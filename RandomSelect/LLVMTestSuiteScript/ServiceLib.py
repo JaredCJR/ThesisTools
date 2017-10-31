@@ -55,11 +55,6 @@ class LogService():
         self.StdoutFilePath = Loc + '/' + self.time + "_STDOUT"
         self.StderrFilePath = Loc + '/' + self.time + "_STDERR"
         self.RecordFilePath = Loc + '/' + self.time + "_Time"
-        '''
-        self.out("Record Stdout to {}\n".format(self.StdoutFilePath))
-        self.out("Record Stderr to {}\n".format(self.StderrFilePath))
-        self.out("Record Results to {}\n".format(self.RecordFilePath))
-        '''
 
     def NewLogFiles(self):
         self.time = None

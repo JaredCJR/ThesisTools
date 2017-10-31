@@ -167,7 +167,8 @@ class CommonDriver:
 
         os.makedirs(path)
         os.chdir(path)
-        os.system("CC=clang CXX=clang++ cmake ../")
+        CmakeFile = os.getenv('LLVM_THESIS_Random_LLVMTestSuite_Results') + "CmakeLog"
+        os.system("CC=clang CXX=clang++ cmake ../ | tee " + CmakeFile)
         os.chdir(pwd)
         print("Cmake at {}\n".format(path))
 
