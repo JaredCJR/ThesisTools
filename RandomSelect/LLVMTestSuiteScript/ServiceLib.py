@@ -79,6 +79,9 @@ class LogService():
             file.write(msg)
             file.close()
 
+    def outNotToFile(self, msg):
+        print(msg, end="")
+
     def err(self, msg):
         #save to same error file for every instance
         with open(self.StderrFilePath, "a") as file:

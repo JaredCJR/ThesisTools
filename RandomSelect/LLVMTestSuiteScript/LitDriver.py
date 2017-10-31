@@ -13,18 +13,19 @@ import smtplib
 import RandomGenerator as RG
 
 class LitRunner:
-    def ExecCmd(self, cmd, ShellMode=False, NeedPrintStdout=False,
-            NeedPrintStderr=True):
+    def ExecCmd(self, cmd, ShellMode=False, NeedPrintStderr=True):
         Log = sv.LogService()
         try:
             #Execute cmd
             p = sp.Popen(shlex.split(cmd), shell=ShellMode, stdout=sp.PIPE, stderr= sp.PIPE)
             out, err = p.communicate()
             p.wait()
-            if NeedPrintStdout and out is not None:
+            if out is not None:
                 Log.out(out.decode('utf-8'))
+            if err is not None:
+                Log.err(err.decode('utf-8'))
             if NeedPrintStderr and err is not None:
-                Log.out(err.decode('utf-8'))
+                Log.outNotToFile(err.decode('utf-8'))
         except Exception as e:
             Log.err("----------------------------------------------------------\n")
             Log.err("Exception= {}".format(str(e)) + "\n")
@@ -63,7 +64,7 @@ class LitRunner:
             os.chdir(RootPath)
             self.ExecCmd("make clean", ShellMode=True)
             self.ExecCmd("make -j" + CoreNum, ShellMode=True,
-                    NeedPrintStdout=True, NeedPrintStderr=True)
+                     NeedPrintStderr=True)
             #record input set
             RandomSetAllLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSetAll"
             with open(RandomSetAllLoc, "a") as file:
@@ -87,7 +88,7 @@ class LitRunner:
             cmd = lit + " -j1 -q ./"
             Log.out("Run: {}\n".format(LitTargetDir))
             bar.update((idx / len(SuccessBuiltPath)) * 100)
-            self.ExecCmd(cmd, ShellMode=False, NeedPrintStdout=True, NeedPrintStderr=True)
+            self.ExecCmd(cmd, ShellMode=False, NeedPrintStderr=True)
         os.chdir(pwd)
 
         #calculate used time
