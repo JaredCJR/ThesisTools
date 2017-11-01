@@ -34,15 +34,36 @@ class LitRunner:
                 Log.err("Error Msg= {}\n".format(err.decode('utf-8')))
             Log.err("----------------------------------------------------------\n")
 
-    def run(self, MailMsg="", RandomMean=0.5):
-        ResultDir = os.getenv('LLVM_THESIS_Random_LLVMTestSuite_Results')
-        if not os.path.exists(ResultDir):
-            os.makedirs(ResultDir)
-        timeFile = ResultDir + "/TimeStamp"
-        if os.path.isfile(timeFile):
-            os.remove(timeFile)
-
+    def CmakeTestSuite(self):
         time = sv.TimeService()
+        time.DelTimeStamp()
+        pwd = os.getcwd()
+        path = os.getenv('LLVM_THESIS_TestSuite', 'Err')
+        if path == 'Err':
+            sys.exit("Error with get env: $LLVM_THESIS_TestSuite\n")
+        if os.path.exists(path):
+            shutil.rmtree(path)
+
+        os.makedirs(path)
+        os.chdir(path)
+        CmakeFile = os.getenv('LLVM_THESIS_Random_LLVMTestSuite_Results') + "/CmakeLog"
+        os.system("CC=clang CXX=clang++ cmake ../ | tee " + CmakeFile)
+        os.chdir(pwd)
+        Log = sv.LogService()
+        Log.out("Cmake at {} and record to {}\n".format(path, CmakeFile))
+        with open(CmakeFile, 'r') as file:
+            Msg = file.read()
+            file.close()
+        Log.out(Msg)
+
+    def run(self, MailMsg="", RandomMean=0.5):
+        time = sv.TimeService()
+
+        #cmake
+        self.CmakeTestSuite()
+        #if you disable cmake, you need to enable the following line
+        #time.DelTimeStamp()
+
         StartDateTime = time.GetCurrentLocalTime()
         Target = lm.TargetBenchmarks()
         Log = sv.LogService()
@@ -158,35 +179,12 @@ class CommonDriver:
             print("Leave it as usual.")
         print("Done.\n")
 
-    def CmakeTestSuite(self):
-        pwd = os.getcwd()
-        path = os.getenv('LLVM_THESIS_TestSuite', 'Err')
-        if path == 'Err':
-            sys.exit("Error with get env: $LLVM_THESIS_TestSuite\n")
-        if os.path.exists(path):
-            shutil.rmtree(path)
-
-        os.makedirs(path)
-        os.chdir(path)
-        CmakeFile = os.getenv('LLVM_THESIS_Random_LLVMTestSuite_Results') + "/CmakeLog"
-        os.system("CC=clang CXX=clang++ cmake ../ | tee " + CmakeFile)
-        os.chdir(pwd)
-        Log = sv.LogService()
-        Log.outNotToFile("Cmake at {} and record to {}\n".format(path, CmakeFile))
-        Mail = sv.EmailService()
-        with open(CmakeFile, 'r') as file:
-            Msg = file.read()
-            file.close()
-        Subject = "Cmake Info"
-        Mail.send(Subject=Subject, Msg=Msg)
 
 
     def run(self):
         self.CleanAllResults()
         time = sv.TimeService()
-        time.DelTimeStamp()
         StartTime = time.GetCurrentLocalTime()
-        self.CmakeTestSuite()
         #How many iteration in one round?
         repeat = 24 #On Intel 8700K 4.3GHz, 24 is about one day.
         #How many round do we need?
@@ -199,7 +197,6 @@ class CommonDriver:
                 lit = LitRunner()
                 msg = "{}/{} Iteration For {}/{} Round.\n".format(j+1, repeat, i+1, round)
                 lit.run(MailMsg=msg, RandomMean=mean)
-
 
         EndTime = time.GetCurrentLocalTime()
         TotalTime = time.GetDeltaTimeInDate(StartTime, EndTime)
