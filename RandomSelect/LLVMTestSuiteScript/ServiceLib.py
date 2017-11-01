@@ -55,11 +55,6 @@ class LogService():
         self.StdoutFilePath = Loc + '/' + self.time + "_STDOUT"
         self.StderrFilePath = Loc + '/' + self.time + "_STDERR"
         self.RecordFilePath = Loc + '/' + self.time + "_Time"
-        '''
-        self.out("Record Stdout to {}\n".format(self.StdoutFilePath))
-        self.out("Record Stderr to {}\n".format(self.StderrFilePath))
-        self.out("Record Results to {}\n".format(self.RecordFilePath))
-        '''
 
     def NewLogFiles(self):
         self.time = None
@@ -78,6 +73,9 @@ class LogService():
         with open(self.StdoutFilePath, "a") as file:
             file.write(msg)
             file.close()
+
+    def outNotToFile(self, msg):
+        print(msg, end="")
 
     def err(self, msg):
         #save to same error file for every instance
