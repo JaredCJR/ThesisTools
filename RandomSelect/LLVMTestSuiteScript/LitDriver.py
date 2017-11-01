@@ -78,7 +78,7 @@ class LitRunner:
         CoreNum = str(multiprocessing.cpu_count())
         for RootPath in Target.TargetPathList:
             #generate pass set
-            rg_driver = RG.Driver()
+            rg_driver = RG.FileDriver()
             #mean should between 0~1
             RetSet = rg_driver.run(RandomMean)
             #build

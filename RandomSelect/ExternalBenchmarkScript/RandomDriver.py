@@ -23,7 +23,7 @@ class Executer:
         for i in range(self.repeat):
             print("Iteration Start-----------------------------------------")
             #generate pass set
-            rg_driver = RG.Driver()
+            rg_driver = RG.FileDriver()
             #mean should between 0~1
             mean = (i + 1) / (self.repeat + 1)
             rg_driver.run(mean)
@@ -52,7 +52,7 @@ class Executer:
                     p.wait()
                 except:
                     print("Build with this combination error.")
-                    file_loc = RG.Driver().InputSetLoc
+                    file_loc = RG.FileDriver().InputSetLoc
                     target_file = open(file_loc, "r")
                     print(target_file.read())
                     print("-------------------------")
@@ -103,7 +103,7 @@ class Executer:
                         Result_FileErr.close()
                         continue
                     Result_File = open(Result_FileLoc, "a")
-                    file_loc = RG.Driver().InputSetLoc
+                    file_loc = RG.FileDriver().InputSetLoc
                     target_file = open(file_loc, "r")
                     Result_File.write("{},{},{}\n".format(run_single[0].rstrip(),
                         target_file.read().rstrip(), period))

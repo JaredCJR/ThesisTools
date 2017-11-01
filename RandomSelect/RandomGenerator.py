@@ -16,7 +16,8 @@ class RandomPick:
                 res_list.append(num)
         return res_list
 
-class Driver:
+#This will predict a set of number into a file: InputSet
+class FileDriver:
     InputSetLoc = None
     def __init__(self):
         self.InputSetLoc = os.getenv('LLVM_THESIS_RandomHome', '/tmp')
@@ -60,6 +61,6 @@ class FunctionLevelPredictor:
 
 
 if __name__ == '__main__':
-    drv = Driver()
+    drv = FileDriver()
     mean = 0.05
     drv.run(mean)
