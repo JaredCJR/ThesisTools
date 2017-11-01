@@ -17,12 +17,13 @@ class TimeService:
         delta = t2 - t1
         return delta
 
-class Singleton(type):
-    _instances = {}
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
+    def DelTimeStamp(self):
+        ResultDir = os.getenv('LLVM_THESIS_Random_LLVMTestSuite_Results')
+        if not os.path.exists(ResultDir):
+            os.makedirs(ResultDir)
+        timeFile = ResultDir + "/TimeStamp"
+        if os.path.isfile(timeFile):
+            os.remove(timeFile)
 
 class LogService():
     StderrFilePath = None
@@ -55,17 +56,6 @@ class LogService():
         self.StdoutFilePath = Loc + '/' + self.time + "_STDOUT"
         self.StderrFilePath = Loc + '/' + self.time + "_STDERR"
         self.RecordFilePath = Loc + '/' + self.time + "_Time"
-
-    def NewLogFiles(self):
-        self.time = None
-        self.StdoutFilePath = None
-        self.StderrFilePath = None
-        self.RecordFilePath = None
-        time = TimeService()
-        self.time = time.GetCurrentLocalTime()
-        with open(self.TimeStamp, 'w') as file:
-            file.write(self.time)
-            file.close()
 
     def out(self, msg):
         print(msg, end="")

@@ -136,13 +136,14 @@ class LitRunner:
             Content += "Read Record Time Exception={}\n".format(str(e))
             Content += "Usually, this means something happens...\n"
 
-
         mail.send(Subject=MailSubject, Msg=Content)
-        Log.NewLogFiles()
+        time.DelTimeStamp()
 
 
 class CommonDriver:
     def CleanAllResults(self):
+        #If we use LogService, it will leave TimeStamp in the "results"
+        #Therefore, we only use "print"
         response = "Yes, I want."
         print("Do you want to remove all the files in the \"results\" directory?")
         print("[Enter] \"{}\" to do this.".format(response))
@@ -170,18 +171,26 @@ class CommonDriver:
         CmakeFile = os.getenv('LLVM_THESIS_Random_LLVMTestSuite_Results') + "/CmakeLog"
         os.system("CC=clang CXX=clang++ cmake ../ | tee " + CmakeFile)
         os.chdir(pwd)
-        print("Cmake at {} and record to {}\n".format(path, CmakeFile))
+        Log = sv.LogService()
+        Log.outNotToFile("Cmake at {} and record to {}\n".format(path, CmakeFile))
+        Mail = sv.EmailService()
+        with open(CmakeFile, 'r') as file:
+            Msg = file.read()
+            file.close()
+        Subject = "Cmake Info"
+        Mail.send(Subject=Subject, Msg=Msg)
 
 
     def run(self):
         self.CleanAllResults()
+        time = sv.TimeService()
+        time.DelTimeStamp()
+        StartTime = time.GetCurrentLocalTime()
         self.CmakeTestSuite()
         #How many iteration in one round?
-        repeat = 25 #On Intel 8700K 4.3GHz, 25 is about one day.
+        repeat = 24 #On Intel 8700K 4.3GHz, 24 is about one day.
         #How many round do we need?
         round = 4
-        time = sv.TimeService()
-        StartTime = time.GetCurrentLocalTime()
         for i in range(round):
             for j in range(repeat):
                 #RandomMeanNumber
@@ -200,6 +209,7 @@ class CommonDriver:
         msg = TimeMsg + "Please save the results, if necessary.\n"
         mail.send(Subject="All {}x{} Iterations Done.".format(repeat, round),
                 Msg=msg)
+        # Use LogService will cause TimeStamp choas
         print("Done All Rounds\n")
 
 
