@@ -54,6 +54,11 @@ class Driver:
         return RetList
 
 
+class FunctionLevelPredictor:
+    def RandomPassSet():
+        return "5 9 4 8 7"
+
+
 if __name__ == '__main__':
     drv = Driver()
     mean = 0.05
