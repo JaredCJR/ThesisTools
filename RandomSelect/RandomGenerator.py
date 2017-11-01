@@ -16,13 +16,8 @@ class RandomPick:
                 res_list.append(num)
         return res_list
 
-#This will predict a set of number into a file: InputSet
-class FileDriver:
-    InputSetLoc = None
-    def __init__(self):
-        self.InputSetLoc = os.getenv('LLVM_THESIS_RandomHome', '/tmp')
-        self.InputSetLoc += '/InputSet' #relative path
-    def run(self, mean):
+class RandomSetGenerator:
+    def PredictGenList(self, mean=0.5):
         cand = Candidate()
         #l is the ordered candidates
         l = cand.generator() 
@@ -34,6 +29,17 @@ class FileDriver:
         target_list = rand.run(l, mean)
         #shuffle to keep first does not always the same
         cryptorand.shuffle(target_list)
+        return target_list
+
+#This will predict a set of number into a file: InputSet
+class FileDriver:
+    InputSetLoc = None
+    def __init__(self):
+        self.InputSetLoc = os.getenv('LLVM_THESIS_RandomHome', '/tmp')
+        self.InputSetLoc += '/InputSet' #relative path
+    def run(self, mean):
+        rsg = RandomSetGenerator()
+        target_list = rsg.PredictGenList(mean)
         """
         print(target_list)
         """
@@ -57,7 +63,10 @@ class FileDriver:
 
 class FunctionLevelPredictor:
     def RandomPassSet():
-        return "5 9 4 8 7"
+        rsg = RandomSetGenerator()
+        mean = random.uniform(0, 1)
+        RetList = rsg.PredictGenList(mean)
+        return RetList
 
 
 if __name__ == '__main__':
