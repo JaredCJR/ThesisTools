@@ -137,7 +137,16 @@ class LitRunner:
                 Content += file.read()
                 file.close()
         except Exception as e:
-            Content += "All Sanity passed in this build\n")
+            Content += "All Sanity passed in these build\n")
+
+        Content += "-------------------------------------------------------\n"
+        Content += "Error PassSet Msg:\n"
+        try:
+            with open(Log.ErrorSetFilePath, 'r') as file:
+                Content += file.read()
+                file.close()
+        except Exception as e:
+            Content += "All PassSet passed in these build\n")
 
         Content += "-------------------------------------------------------\n"
         Content += "Stdout Msg:\n"
@@ -204,7 +213,7 @@ class CommonDriver:
             for j in range(repeat):
                 #RandomMeanNumber
                 mean = (j + 1) / (repeat + 1)
-                #Build and Execute
+                #Build(including cmake) and Execute
                 lit = LitRunner()
                 msg = "{}/{} Iteration For {}/{} Round.\n".format(j+1, repeat, i+1, round)
                 lit.run(MailMsg=msg, RandomMean=mean)

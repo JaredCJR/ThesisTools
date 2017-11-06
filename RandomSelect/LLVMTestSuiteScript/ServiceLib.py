@@ -30,6 +30,7 @@ class LogService():
     StdoutFilePath = None
     RecordFilePath = None
     SanityFilePath = None
+    ErrorSetFilePath = None
     time = None
     TimeStamp = None
     def __init__(self):
@@ -58,6 +59,7 @@ class LogService():
         self.StderrFilePath = Loc + '/' + self.time + "_STDERR"
         self.RecordFilePath = Loc + '/' + self.time + "_Time"
         self.SanityFilePath = Loc + '/' + self.time + "_ErrorTest"
+        self.ErrorSetFilePath = Loc + '/' + self.time + "_ErrorSet"
 
     def out(self, msg):
         print(msg, end="")
@@ -76,14 +78,20 @@ class LogService():
             file.close()
 
     def record(self, msg):
-        #save to same error file for every instance
+        #save to same file for every instance
         with open(self.RecordFilePath, "a") as file:
             file.write(msg)
             file.close()
 
     def sanityLog(self, msg):
-        #save to same error file for every instance
+        #save to same file for every instance
         with open(self.SanityFilePath, "a") as file:
+            file.write(msg)
+            file.close()
+
+    def ErrorSetLog(self, msg):
+        #save to same file for every instance
+        with open(self.ErrorSetFilePath, "a") as file:
             file.write(msg)
             file.close()
 
@@ -149,10 +157,23 @@ class BenchmarkNameService:
                     FailList.append(line[len(TargetPrefix):])
             file.close()
         pwd = os.getcwd()
-        os.chdir(os.getenv('LLVM_THESIS_TestSuite', "Error"))
+        LLVMTestSuiteBuildPath = os.getenv('LLVM_THESIS_TestSuite', "Error")
+        os.chdir(LLVMTestSuiteBuildPath)
+
+        # Create InputSet dict
+        RandomSetAllLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSetAll"
+        InputSetDict = {}
+        with open(RandomSetAllLoc, "r") as file:
+            for line in file:
+                Set = [x.strip() for x in line.split(',')]
+                InputSetDict[Set[0]] = Set[1]
+
         for test in FailList:
             os.remove(test)
             Log.sanityLog("Remove: " + test)
+            # Log the error set for the corresponding application
+            ErrorSet = InputSetDict[LLVMTestSuiteBuildPath + "/" + test]
+            Log.ErrorSetLog(test + ", " + ErrorSet)
 
         os.chdir(pwd)
 

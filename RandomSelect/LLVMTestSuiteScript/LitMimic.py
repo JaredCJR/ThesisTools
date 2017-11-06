@@ -23,7 +23,6 @@ class TargetBenchmarks(metaclass=Singleton):
     SkipDirList = []
 
     def init(self):
-        #The last character in BuiltPath must be '/'
         self.LLVMTestSuiteBuildPath = os.getenv('LLVM_THESIS_TestSuite', "Error")
         if self.LLVMTestSuiteBuildPath == "Error":
             Log = sv.LogService()
