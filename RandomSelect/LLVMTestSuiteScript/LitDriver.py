@@ -13,7 +13,7 @@ import smtplib
 import RandomGenerator as RG
 
 class LitRunner:
-    def ExecCmd(self, cmd, ShellMode=False, NeedPrintStderr=True):
+    def ExecCmd(self, cmd, ShellMode=False, NeedPrintStderr=True, SanityLog=False):
         Log = sv.LogService()
         try:
             #Execute cmd
@@ -22,6 +22,8 @@ class LitRunner:
             p.wait()
             if out is not None:
                 Log.out(out.decode('utf-8'))
+                if SanityLog == True:
+                    Log.sanityLog(out.decode('utf-8'))
             if err is not None:
                 Log.err(err.decode('utf-8'))
             if NeedPrintStderr and err is not None:
@@ -98,6 +100,11 @@ class LitRunner:
         actor = lm.LitMimic()
         SuccessBuiltPath = actor.run()
 
+        #remove ".test" file for those failed to pass sanity check in lit
+        RmFailed = sv.BenchmarkNameService()
+        RmFailed.RemoveSanityFailedTestDesc(Log.SanityFilePath)
+        # Now, all the remained tests should be all reported as successful execution from lit
+
         #execute it one after another with "lit"
         lit = os.getenv('LLVM_THESIS_lit', "Error")
         if lit == "Error":
@@ -116,11 +123,6 @@ class LitRunner:
         EndDateTime = time.GetCurrentLocalTime()
         DeltaDateTime = time.GetDeltaTimeInDate(StartDateTime, EndDateTime)
 
-        #Remove failed records
-        RmRec = sv.BenchmarkNameService()
-        RmRec.RemoveFailureRecords(StdoutFile=Log.StdoutFilePath, RecordFile=Log.RecordFilePath)
-
-
         #Send notification
         mail = sv.EmailService()
         MailSubject = "LitDriver One Iteration Done."
@@ -128,6 +130,15 @@ class LitRunner:
         Content += "Start date time: " + StartDateTime + "\n"
         Content += "Finish date time: " + EndDateTime + "\n"
         Content += "Whole procedure takes \"{}\"\n".format(DeltaDateTime)
+        Content += "-------------------------------------------------------\n"
+        Content += "Sanity Msg:\n"
+        try:
+            with open(Log.SanityFilePath, 'r') as file:
+                Content += file.read()
+                file.close()
+        except Exception as e:
+            Content += "All Sanity passed in this build\n")
+
         Content += "-------------------------------------------------------\n"
         Content += "Stdout Msg:\n"
         try:
@@ -145,7 +156,7 @@ class LitRunner:
                 file.close()
         except Exception as e:
             Content += "Read Stderr Exception={}\n".format(str(e))
-            Content += "Usually, this means no stderr\n"
+            Content += "\nUsually, this means no stderr\n"
 
         Content += "-------------------------------------------------------\n"
         Content += "Record Time Msg:\n"

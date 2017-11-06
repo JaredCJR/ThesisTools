@@ -29,6 +29,7 @@ class LogService():
     StderrFilePath = None
     StdoutFilePath = None
     RecordFilePath = None
+    SanityFilePath = None
     time = None
     TimeStamp = None
     def __init__(self):
@@ -56,6 +57,7 @@ class LogService():
         self.StdoutFilePath = Loc + '/' + self.time + "_STDOUT"
         self.StderrFilePath = Loc + '/' + self.time + "_STDERR"
         self.RecordFilePath = Loc + '/' + self.time + "_Time"
+        self.SanityFilePath = Loc + '/' + self.time + "_ErrorTest"
 
     def out(self, msg):
         print(msg, end="")
@@ -76,6 +78,12 @@ class LogService():
     def record(self, msg):
         #save to same error file for every instance
         with open(self.RecordFilePath, "a") as file:
+            file.write(msg)
+            file.close()
+
+    def sanityLog(self, msg):
+        #save to same error file for every instance
+        with open(self.SanityFilePath, "a") as file:
             file.write(msg)
             file.close()
 
@@ -130,6 +138,23 @@ class BenchmarkNameService:
         if ret.startswith("./"):
             ret = ret["./"]
         return self.ReplaceWithDash(ret)
+
+    def RemoveSanityFailedTestDesc(self, SanityFile):
+        Log = LogService()
+        FailList = []
+        TargetPrefix = "    test-suite :: "
+        with open(SanityFile, 'r') as file:
+            for line in file:
+                if line.startswith(TargetPrefix) :
+                    FailList.append(line[len(TargetPrefix):])
+            file.close()
+        pwd = os.getcwd()
+        os.chdir(os.getenv('LLVM_THESIS_TestSuite', "Error"))
+        for test in FailList:
+            os.remove(test)
+            Log.sanityLog("Remove: " + test)
+
+        os.chdir(pwd)
 
     def RemoveFailureRecords(self, StdoutFile, RecordFile):
         Log = LogService()

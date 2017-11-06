@@ -65,6 +65,10 @@ class LitMimic:
         Log = sv.LogService()
         SuccessBuiltPath = []
         for RootPath in target.TargetPathList:
+            #Run lit in parallel in order to log the built sanity.
+            LitExec = drv.LitRunner()
+            CoreNum = str(multiprocessing.cpu_count())
+            LitExec.ExecCmd("lit -q -j" + CoreNum + " " + RootPath, ShellMode=False, NeedPrintStderr=True, SanityLog=True)
             for root, dirs, files in os.walk(RootPath):
                 for file in files:
                     test_pattern = '.test'
