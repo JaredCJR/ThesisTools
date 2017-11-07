@@ -8,6 +8,7 @@ import shlex
 import subprocess as sp
 import LitDriver as drv
 import ServiceLib as sv
+import multiprocessing
 
 class Singleton(type):
     _instances = {}
@@ -66,8 +67,13 @@ class LitMimic:
         for RootPath in target.TargetPathList:
             #Run lit in parallel in order to log the built sanity.
             LitExec = drv.LitRunner()
+            Log.out("-----------------------------------------------------------")
+            Log.out("Run $lit in parallel for sanity checking in {}\n".format(RootPath))
+            Log.out("-----------------------------------------------------------")
             CoreNum = str(multiprocessing.cpu_count())
-            LitExec.ExecCmd("lit -q -j" + CoreNum + " " + RootPath, ShellMode=False, NeedPrintStderr=True, SanityLog=True)
+            lit = os.getenv('LLVM_THESIS_lit', "Error")
+            cmd = lit + " -q -j" + CoreNum + " " + RootPath
+            LitExec.ExecCmd(cmd, ShellMode=False, NeedPrintStderr=True, SanityLog=True)
             for root, dirs, files in os.walk(RootPath):
                 for file in files:
                     test_pattern = '.test'

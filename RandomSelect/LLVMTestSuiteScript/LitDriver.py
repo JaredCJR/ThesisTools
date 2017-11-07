@@ -32,7 +32,7 @@ class LitRunner:
             Log.err("----------------------------------------------------------\n")
             Log.err("Exception= {}".format(str(e)) + "\n")
             Log.err("Command error: {}\n".format(cmd))
-            if err is not None:
+            if err:
                 Log.err("Error Msg= {}\n".format(err.decode('utf-8')))
             Log.err("----------------------------------------------------------\n")
 
