@@ -56,7 +56,7 @@ class Executer:
             file.write(str(ReturnCode))
             file.close()
 
-        ss = sv.ReadPassSetService()
+        ss = sv.PassSetService()
         RandomSet = ss.ReadCorrespondingSet(elfPath)
 
         BenchmarkName = sv.BenchmarkNameService()

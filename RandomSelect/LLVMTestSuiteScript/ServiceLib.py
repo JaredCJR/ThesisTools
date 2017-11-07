@@ -122,7 +122,7 @@ class EmailService:
             Log.err('Error sending mail\n')
         server.quit()
 
-    def SignificantNotification(self, To, Msg):
+    def SignificantNotification(self, To="jaredcjr.tw@gmail.com", Msg=""):
         MailSubject = "LitDriver Notification."
         self.send(To=To, Subject=MailSubject, Msg=Msg)
 
@@ -147,74 +147,9 @@ class BenchmarkNameService:
             ret = ret["./"]
         return self.ReplaceWithDash(ret)
 
-    def RemoveSanityFailedTestDesc(self, SanityFile):
-        Log = LogService()
-        FailList = []
-        TargetPrefix = "    test-suite :: "
-        with open(SanityFile, 'r') as file:
-            for line in file:
-                if line.startswith(TargetPrefix) :
-                    FailList.append(line[len(TargetPrefix):])
-            file.close()
-        pwd = os.getcwd()
-        LLVMTestSuiteBuildPath = os.getenv('LLVM_THESIS_TestSuite', "Error")
-        os.chdir(LLVMTestSuiteBuildPath)
 
-        # Create InputSet dict
-        RandomSetAllLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSetAll"
-        InputSetDict = {}
-        with open(RandomSetAllLoc, "r") as file:
-            for line in file:
-                Set = [x.strip() for x in line.split(',')]
-                InputSetDict[Set[0]] = Set[1]
 
-        for test in FailList:
-            os.remove(test)
-            Log.sanityLog("Remove: " + test)
-            # Log the error set for the corresponding application
-            ErrorSet = InputSetDict[LLVMTestSuiteBuildPath + "/" + test]
-            Log.ErrorSetLog(test + ", " + ErrorSet)
-
-        os.chdir(pwd)
-
-    def RemoveFailureRecords(self, StdoutFile, RecordFile):
-        Log = LogService()
-        FailList = []
-        TargetPrefix = "    test-suite :: "
-        with open(StdoutFile, 'r') as file:
-            for line in file:
-                if line.startswith(TargetPrefix) :
-                    FailList.append(line[len(TargetPrefix):])
-            file.close()
-        #get the targets
-        FailNameList = []
-        for line in FailList:
-            PathPrefix = line[:line.rfind('/')]
-            PathPostfix = line[line.rfind('/') + 1:]
-            NamePostfix = PathPrefix[PathPrefix.rfind('/') + 1:] + '-' + PathPostfix
-            #remove .test
-            NamePostfix = NamePostfix[:-(len(".test") + 1)]
-            FailNameList.append(NamePostfix.rstrip())
-        #remove form records
-        NewRecord = ""
-        with open(RecordFile, 'r') as file:
-            for line in file:
-                LinePrefix = line[:line.find(',')]
-                RmFlag = False
-                for RemoveTarget in FailNameList:
-                    if LinePrefix.endswith(RemoveTarget):
-                        RmFlag = True
-                        break
-                if RmFlag == False:
-                    NewRecord += line
-            file.close()
-
-        #replace the original one
-        with open(RecordFile, 'w') as file:
-            file.write(NewRecord)
-            file.close()
-
-class ReadPassSetService:
+class PassSetService:
     def ReadCorrespondingSet(self, elfPath):
         RandomSetLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSetAll"
         RandomSets = []
@@ -235,3 +170,42 @@ class ReadPassSetService:
             RandomSet = "Error"
 
         return RandomSet
+
+    def RemoveSanityFailedTestDesc(self, SanityFile):
+        Log = LogService()
+        FailList = []
+        TargetPrefix = "    test-suite :: "
+        with open(SanityFile, 'r') as file:
+            for line in file:
+                if line.startswith(TargetPrefix) :
+                    FailList.append(line[len(TargetPrefix):])
+            file.close()
+
+        # Create InputSet dict
+        RandomSetAllLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSetAll"
+        InputSetDict = {}
+        with open(RandomSetAllLoc, "r") as file:
+            for line in file:
+                Set = [x.strip() for x in line.split(',')]
+                InputSetDict[Set[0]] = Set[1]
+        LLVMTestSuiteBuildPath = os.getenv('LLVM_THESIS_TestSuite', "Error")
+        for test in FailList:
+            RealPath = LLVMTestSuiteBuildPath + "/" + test
+            if os.path.exists(RealPath):
+                Log.sanityLog("Remove: " + RealPath)
+                os.remove(RealPath)
+            else:
+                Log.out("Try to remove {}, but it does not exists\n".format(RealPath))
+            # Log the error set for the corresponding application
+            Dirs = [dir.strip() for dir in test.split('/')]
+            key = LLVMTestSuiteBuildPath + '/' + Dirs[0] + '/' + Dirs[1] + '/'
+            ErrorSet = InputSetDict[key]
+            Log.ErrorSetLog(test + ", " + ErrorSet + "\n")
+
+    def RecordBuildFailedPassSet(self):
+        RandomSetLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSet"
+        with open(RandomSetLoc, 'r') as file:
+            set = file.read()
+            file.close()
+            Log = LogService()
+            Log.ErrorSetLog("all, " + set + "\n")

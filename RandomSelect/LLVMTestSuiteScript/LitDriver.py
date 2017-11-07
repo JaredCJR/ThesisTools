@@ -11,6 +11,7 @@ import subprocess as sp
 import progressbar
 import smtplib
 import RandomGenerator as RG
+import re
 
 class LitRunner:
     def ExecCmd(self, cmd, ShellMode=False, NeedPrintStderr=True, SanityLog=False):
@@ -25,7 +26,14 @@ class LitRunner:
                 if SanityLog == True:
                     Log.sanityLog(out.decode('utf-8'))
             if err is not None:
-                Log.err(err.decode('utf-8'))
+                errMsg = err.decode('utf-8')
+                Log.err(errMsg)
+                ErrMatch = re.compile('make:.*Error')
+                if ErrMatch.match(errMsg):
+                    mail = sv.EmailService()
+                    mail.SignificantNotification(Msg="Compilation Error, check it A.S.A.P\n")
+                    ps = PassSetService()
+                    ps.RecordBuildFailedPassSet()
             if NeedPrintStderr and err is not None:
                 Log.outNotToFile(err.decode('utf-8'))
         except Exception as e:
@@ -100,7 +108,7 @@ class LitRunner:
         SuccessBuiltPath = actor.run()
 
         #remove ".test" file for those failed to pass sanity check in lit
-        RmFailed = sv.BenchmarkNameService()
+        RmFailed = sv.PassSetService()
         RmFailed.RemoveSanityFailedTestDesc(Log.SanityFilePath)
         # Now, all the remained tests should be all reported as successful execution from lit
 
