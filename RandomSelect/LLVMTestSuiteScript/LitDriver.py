@@ -58,7 +58,7 @@ class LitRunner:
             file.close()
         Log.out(Msg)
 
-    def run(self, MailMsg="", RandomMean=0.5):
+    def run(self, MailMsg=""):
         time = sv.TimeService()
 
         #cmake
@@ -81,8 +81,7 @@ class LitRunner:
         for RootPath in Target.TargetPathList:
             #generate pass set
             rg_driver = RG.FileDriver()
-            #mean should between 0~1
-            RetSet = rg_driver.run(RandomMean)
+            RetSet = rg_driver.run()
             #build
             os.chdir(RootPath)
             self.ExecCmd("make clean", ShellMode=True)
@@ -125,7 +124,7 @@ class LitRunner:
 
         #Send notification
         mail = sv.EmailService()
-        MailSubject = "LitDriver One Iteration Done."
+        MailSubject = "LitDriver One Round Done."
         Content = MailMsg + "\n\n\n"
         Content += "Start date time: " + StartDateTime + "\n"
         Content += "Finish date time: " + EndDateTime + "\n"
@@ -205,18 +204,13 @@ class CommonDriver:
         self.CleanAllResults()
         time = sv.TimeService()
         StartTime = time.GetCurrentLocalTime()
-        #How many iteration in one round?
-        repeat = 24 #On Intel 8700K 4.3GHz, 24 is about one day.
         #How many round do we need?
-        round = 4
+        round = 100
         for i in range(round):
-            for j in range(repeat):
-                #RandomMeanNumber
-                mean = (j + 1) / (repeat + 1)
-                #Build(including cmake) and Execute
-                lit = LitRunner()
-                msg = "{}/{} Iteration For {}/{} Round.\n".format(j+1, repeat, i+1, round)
-                lit.run(MailMsg=msg, RandomMean=mean)
+            #Build(including cmake) and Execute
+            lit = LitRunner()
+            msg = "{}/{} Round.\n".format(i+1, round)
+            lit.run(MailMsg=msg)
 
         EndTime = time.GetCurrentLocalTime()
         TotalTime = time.GetDeltaTimeInDate(StartTime, EndTime)
@@ -224,7 +218,7 @@ class CommonDriver:
         mail = sv.EmailService()
         TimeMsg = "Start: {};\nEnd: {}\nTotal: {}\n\n".format(StartTime, EndTime, TotalTime)
         msg = TimeMsg + "Please save the results, if necessary.\n"
-        mail.send(Subject="All {}x{} Iterations Done.".format(repeat, round),
+        mail.send(Subject="All {} Rounds Done.".format(round),
                 Msg=msg)
         # Use LogService will cause TimeStamp choas
         print("Done All Rounds\n")

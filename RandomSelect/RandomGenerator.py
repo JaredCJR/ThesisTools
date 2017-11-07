@@ -37,8 +37,9 @@ class FileDriver:
     def __init__(self):
         self.InputSetLoc = os.getenv('LLVM_THESIS_RandomHome', '/tmp')
         self.InputSetLoc += '/InputSet' #relative path
-    def run(self, mean):
+    def run(self):
         rsg = RandomSetGenerator()
+        mean = random.uniform(0, 1)
         target_list = rsg.PredictGenList(mean)
         """
         print(target_list)
@@ -62,7 +63,7 @@ class FileDriver:
 
 
 class FunctionLevelPredictor:
-    def RandomPassSet():
+    def RandomPassSet(self):
         rsg = RandomSetGenerator()
         mean = random.uniform(0, 1)
         RetList = rsg.PredictGenList(mean)
@@ -70,6 +71,5 @@ class FunctionLevelPredictor:
 
 
 if __name__ == '__main__':
-    drv = FileDriver()
-    mean = 0.05
-    drv.run(mean)
+    drv = FunctionLevelPredictor()
+    print(drv.RandomPassSet())
