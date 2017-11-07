@@ -136,7 +136,7 @@ class LitRunner:
                 Content += file.read()
                 file.close()
         except Exception as e:
-            Content += "All Sanity passed in these build\n")
+            Content += "All Sanity passed in these build\n"
 
         Content += "-------------------------------------------------------\n"
         Content += "Error PassSet Msg:\n"
@@ -145,7 +145,7 @@ class LitRunner:
                 Content += file.read()
                 file.close()
         except Exception as e:
-            Content += "All PassSet passed in these build\n")
+            Content += "All PassSet passed in these build\n"
 
         Content += "-------------------------------------------------------\n"
         Content += "Stdout Msg:\n"
