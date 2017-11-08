@@ -68,7 +68,7 @@ class LitMimic:
             #Run lit in parallel in order to log the built sanity.
             LitExec = drv.LitRunner()
             Log.out("-----------------------------------------------------------\n")
-            Log.out("Run $lit in parallel for sanity checking in {}\n".format(RootPath))
+            Log.out("Run $lit in parallel for sanity checking in \n{}\n".format(RootPath))
             Log.out("-----------------------------------------------------------\n")
             CoreNum = str(multiprocessing.cpu_count())
             lit = os.getenv('LLVM_THESIS_lit', "Error")

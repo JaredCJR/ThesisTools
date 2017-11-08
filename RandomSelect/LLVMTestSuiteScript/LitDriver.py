@@ -109,7 +109,7 @@ class LitRunner:
 
         #remove ".test" file for those failed to pass sanity check in lit
         RmFailed = sv.PassSetService()
-        RmFailed.RemoveSanityFailedTestDesc(Log.SanityFilePath)
+        FailedDirs = RmFailed.RemoveSanityFailedTestDesc(Log.SanityFilePath)
         # Now, all the remained tests should be all reported as successful execution from lit
 
         #execute it one after another with "lit"
@@ -119,11 +119,22 @@ class LitRunner:
             sys.exit("lit is unknown\n")
         bar = progressbar.ProgressBar(redirect_stdout=True)
         for idx, LitTargetDir in enumerate(SuccessBuiltPath):
-            os.chdir(LitTargetDir)
-            cmd = lit + " -j1 -q ./"
-            Log.out("Run: {}\n".format(LitTargetDir))
-            bar.update((idx / len(SuccessBuiltPath)) * 100)
-            self.ExecCmd(cmd, ShellMode=False, NeedPrintStderr=True)
+            try:
+                os.chdir(LitTargetDir)
+                cmd = lit + " -j1 -q ./"
+                Log.out("Run: {}\n".format(LitTargetDir))
+                bar.update((idx / len(SuccessBuiltPath)) * 100)
+                self.ExecCmd(cmd, ShellMode=False, NeedPrintStderr=True)
+            except Exception as e:
+                Found = False
+                for FailedDir in FailedDirs:
+                    if FailedDir == LitTargetDir:
+                        Found = True
+                if Found == True:
+                    Log.out("Target Dir: {}  is removed\n".format(LitTargetDir))
+                else:
+                    Log.err("Why exception happedend? in \n{}\n for {}\n".format(LitTargetDir, e))
+
         os.chdir(pwd)
 
         #calculate used time

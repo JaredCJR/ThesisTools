@@ -5,6 +5,7 @@ from time import gmtime, strftime, localtime
 from datetime import datetime, date, timedelta
 import LitMimic as lm
 import smtplib
+import shutil
 
 class TimeService:
     DateTimeFormat = "%Y%m%d_%H-%M-%S"
@@ -189,18 +190,23 @@ class PassSetService:
                 Set = [x.strip() for x in line.split(',')]
                 InputSetDict[Set[0]] = Set[1]
         LLVMTestSuiteBuildPath = os.getenv('LLVM_THESIS_TestSuite', "Error")
+        #return the build failed dirs
+        FailedDirs = []
         for test in FailList:
             RealPath = LLVMTestSuiteBuildPath + "/" + test
-            if os.path.exists(RealPath):
-                Log.sanityLog("Remove: " + RealPath)
-                os.remove(RealPath)
+            DirPath = os.path.dirname(RealPath)
+            if os.path.exists(DirPath) == True:
+                Log.sanityLog("Remove: " + DirPath + "\n")
+                shutil.rmtree(DirPath)
             else:
-                Log.out("Try to remove {}, but it does not exists\n".format(RealPath))
+                Log.out("Try to remove {}, but it does not exists\n".format(DirPath))
             # Log the error set for the corresponding application
             Dirs = [dir.strip() for dir in test.split('/')]
             key = LLVMTestSuiteBuildPath + '/' + Dirs[0] + '/' + Dirs[1] + '/'
             ErrorSet = InputSetDict[key]
+            FailedDirs.append(ErrorSet)
             Log.ErrorSetLog(test + ", " + ErrorSet + "\n")
+        return FailedDirs
 
     def RecordBuildFailedPassSet(self):
         RandomSetLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSet"
