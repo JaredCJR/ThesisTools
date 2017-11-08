@@ -9,6 +9,7 @@ import subprocess as sp
 import LitDriver as drv
 import ServiceLib as sv
 import multiprocessing
+import fileinput
 
 class Singleton(type):
     _instances = {}
@@ -77,35 +78,42 @@ class LitMimic:
             #Goal:Build and check sanity again for those affect by other build failure?
             #example: NOEXE: test-suite :: MultiSource/Benchmarks/tramp3d-v4/tramp3d-v4.test (149 of 159)
             NOEXEList = []
+            LineList = []
             TargetPrefix = "NOEXE: test-suite :: "
             with open(Log.SanityFilePath, 'r') as file:
                 for line in file:
                     if line.startswith(TargetPrefix) :
                         NOEXEList.append(line[len(TargetPrefix):])
+                        LineList.append(line)
                 file.close()
-            NOEXEDirs = []
-            for test in NOEXEList:
-                #remove ( )
-                line = [x.strip() for x in test.split('(')]
-                NOEXEDirs.append(os.path.dirname(line[0]))
-            pwd = os.getcwd()
-            pss = sv.PassSetService()
-            for dir in NOEXEDirs:
-                #write corresponding InputSet
-                Set = pss.GetInputSet(dir)
-                pss.WriteInputSet(Set)
-                #build again
-                os.chdir(dir)
-                self.ExecCmd("make clean", ShellMode=True)
-                self.ExecCmd("make -j" + CoreNum, ShellMode=True,
-                     NeedPrintStderr=True)
-                #sanity check again
-                cmd = lit + " -q -j" + CoreNum + " ./"
-                LitExec.ExecCmd(cmd, ShellMode=False, NeedPrintStderr=True, SanityLog=True)
+            if NOEXEList:
+                Log.out("NOEXE happened. Try to rebuild and check again.\n")
+                NOEXEDirs = []
+                for test in NOEXEList:
+                    #remove ( )
+                    line = [x.strip() for x in test.split('(')]
+                    NOEXEDirs.append(os.path.dirname(line[0]))
+                pwd = os.getcwd()
+                pss = sv.PassSetService()
+                for idx, dir in enumerate(NOEXEDirs):
+                    #FIXME: remove the below line
+                    Log.out("Dealing :{}\n".format(dir))
+                    for line in fileinput.input(['thefile.txt'], inplace=True):
+                        line.replace(LineList[idx], "Dealed NOEXE: {}".format(dir)) #(old, new)
+                    #write corresponding InputSet
+                    Set = pss.GetInputSet(dir)
+                    pss.WriteInputSet(Set)
+                    #build again
+                    os.chdir(dir)
+                    self.ExecCmd("make clean", ShellMode=True)
+                    self.ExecCmd("make -j" + CoreNum, ShellMode=True,
+                        NeedPrintStderr=True)
+                    #sanity check again
+                    cmd = lit + " -q -j" + CoreNum + " ./"
+                    Log.out("Try to rebuild: {}  with Set: {}\n".format(dir, Set))
+                    LitExec.ExecCmd(cmd, ShellMode=False, NeedPrintStderr=True, SanityLog=True)
+                os.chdir(pwd)
 
-                Log.out("Try to rebuild: {}  with Set: {}\n".format(dir, Set))
-
-            os.chdir(pwd)
             #Goal:Distribute PyActor
             for root, dirs, files in os.walk(RootPath):
                 for file in files:
