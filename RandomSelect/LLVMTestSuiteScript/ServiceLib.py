@@ -59,7 +59,7 @@ class LogService():
         self.StdoutFilePath = Loc + '/' + self.time + "_STDOUT"
         self.StderrFilePath = Loc + '/' + self.time + "_STDERR"
         self.RecordFilePath = Loc + '/' + self.time + "_Time"
-        self.SanityFilePath = Loc + '/' + self.time + "_ErrorTest"
+        self.SanityFilePath = Loc + '/' + self.time + "_SanityCheck"
         self.ErrorSetFilePath = Loc + '/' + self.time + "_ErrorSet"
 
     def out(self, msg):
@@ -151,6 +151,23 @@ class BenchmarkNameService:
 
 
 class PassSetService:
+    def GetInputSetDict(self):
+        #Use absolute path as key
+        RandomSetAllLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSetAll"
+        InputSetDict = {}
+        with open(RandomSetAllLoc, "r") as file:
+            for line in file:
+                Set = [x.strip() for x in line.split(',')]
+                InputSetDict[Set[0]] = Set[1]
+        return InputSetDict
+
+    #expect path to be something like: "MultiSource/Benchmarks/tramp3d-v4"
+    def GetInputSet(self, path):
+        InputSetDict = self.GetInputSetDict()
+        Path = [x.strip() for x in path.split('/')]
+        BuildKey = os.getenv('LLVM_THESIS_TestSuite') + "/" + Path[0] + "/" + Path[1] + "/"
+        return InputSetDict[BuildKey]
+
     def ReadCorrespondingSet(self, elfPath):
         RandomSetLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSetAll"
         RandomSets = []
@@ -163,7 +180,7 @@ class PassSetService:
             RandomSet = "Error"
             for Set in RandomSets:
                 if elfPath.startswith(Set[0]):
-                    RandomSet = Set[1].lstrip().rstrip()
+                    RandomSet = Set[1].strip()
             if RandomSet == "Error":
                 mail = EmailService()
                 mail.send(Subject="Error Logging PassSet", Msg="Check it:\n{}\n".format(elfPath))
@@ -171,6 +188,7 @@ class PassSetService:
             RandomSet = "Error"
 
         return RandomSet
+
 
     def RemoveSanityFailedTestDesc(self, SanityFile):
         Log = LogService()
@@ -183,12 +201,7 @@ class PassSetService:
             file.close()
 
         # Create InputSet dict
-        RandomSetAllLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSetAll"
-        InputSetDict = {}
-        with open(RandomSetAllLoc, "r") as file:
-            for line in file:
-                Set = [x.strip() for x in line.split(',')]
-                InputSetDict[Set[0]] = Set[1]
+        InputSetDict = self.GetInputSetDict()
         LLVMTestSuiteBuildPath = os.getenv('LLVM_THESIS_TestSuite', "Error")
         #return the build failed dirs
         FailedDirs = []
@@ -215,3 +228,10 @@ class PassSetService:
             file.close()
             Log = LogService()
             Log.ErrorSetLog("all, " + set + "\n")
+
+    def WriteInputSet(self, Set=""):
+        RandomSetLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSet"
+        with open(RandomSetLoc, 'w') as file:
+            file.write(Set)
+            file.close()
+
