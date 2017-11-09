@@ -45,6 +45,7 @@ class TargetBenchmarks(metaclass=Singleton):
         self.SkipDirList = ["MultiSource/Applications/ALAC/decode",
                    "MultiSource/Applications/ALAC/encode",
                    "MultiSource/Benchmarks/mafft",
+                   "MultiSource/Benchmarks/Prolangs-C/unix-tbl",
                     ]
         return 0
 
@@ -95,18 +96,21 @@ class LitMimic:
                     NOEXEDirs.append(os.path.dirname(line[0]))
                 pwd = os.getcwd()
                 pss = sv.PassSetService()
+                BuildPath = os.getenv('LLVM_THESIS_TestSuite', "Error")
                 for idx, dir in enumerate(NOEXEDirs):
                     #FIXME: remove the below line
                     Log.out("Dealing :{}\n".format(dir))
-                    for line in fileinput.input(['thefile.txt'], inplace=True):
-                        line.replace(LineList[idx], "Dealed NOEXE: {}".format(dir)) #(old, new)
+                    for line in fileinput.input(Log.SanityFilePath, inplace=True):
+                        #stdout here is redirect to file
+                        print(line.replace(LineList[idx], "Dealed NOEXE: {}".format(dir))) #(old, new)
                     #write corresponding InputSet
                     Set = pss.GetInputSet(dir)
                     pss.WriteInputSet(Set)
                     #build again
-                    os.chdir(dir)
-                    self.ExecCmd("make clean", ShellMode=True)
-                    self.ExecCmd("make -j" + CoreNum, ShellMode=True,
+                    path = BuildPath + "/" + dir
+                    os.chdir(path)
+                    LitExec.ExecCmd("make clean", ShellMode=True)
+                    LitExec.ExecCmd("make -j" + CoreNum, ShellMode=True,
                         NeedPrintStderr=True)
                     #sanity check again
                     cmd = lit + " -q -j" + CoreNum + " ./"

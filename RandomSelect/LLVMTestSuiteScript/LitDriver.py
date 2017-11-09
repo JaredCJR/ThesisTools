@@ -29,11 +29,10 @@ class LitRunner:
                 errMsg = err.decode('utf-8')
                 Log.err(errMsg)
                 ErrMatch = re.compile('make:.*Error')
-                if ErrMatch.match(errMsg):
-                    mail = sv.EmailService()
-                    mail.SignificantNotification(Msg="Compilation Error, check it A.S.A.P\n")
-                    ps = PassSetService()
-                    ps.RecordBuildFailedPassSet()
+                for line in errMsg.splitlines():
+                    if ErrMatch.match(errMsg):
+                        ps = PassSetService()
+                        ps.RecordBuildFailedPassSet()
             if NeedPrintStderr and err is not None:
                 Log.outNotToFile(err.decode('utf-8'))
         except Exception as e:
