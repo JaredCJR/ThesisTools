@@ -12,6 +12,9 @@ import progressbar
 import smtplib
 import RandomGenerator as RG
 import re
+import time
+import psutil
+import signal
 
 class LitRunner:
     def ExecCmd(self, cmd, ShellMode=False, NeedPrintStderr=True, SanityLog=False):
@@ -199,6 +202,7 @@ class LitRunner:
 
 
 class CommonDriver:
+    PID = 0
     def CleanAllResults(self):
         #If we use LogService, it will leave TimeStamp in the "results"
         #Therefore, we only use "print"
@@ -216,24 +220,58 @@ class CommonDriver:
             print("Leave it as usual.")
         print("Done.\n")
 
+    def KillProcess(self, pid):
+        #kill all the children of pid and itself
+        parent_pid = pid
+        parent = psutil.Process(parent_pid)
+        for child in parent.children(recursive=True):
+            child.kill()
+        parent.kill()
 
+    def SIGINT_Handler(self):
+        self.KillProcess(self.PID)
+        sys.exit()
 
     def run(self):
         self.CleanAllResults()
-        time = sv.TimeService()
-        StartTime = time.GetCurrentLocalTime()
+        mail = sv.EmailService()
+        ts = sv.TimeService()
+        StartTime = ts.GetCurrentLocalTime()
         #How many round do we need?
         round = 100
         for i in range(round):
-            #Build(including cmake) and Execute
-            lit = LitRunner()
-            msg = "{}/{} Round.\n".format(i+1, round)
-            lit.run(MailMsg=msg)
+            self.PID = os.fork()
+            #child
+            if self.PID == 0:
+                #Build(including cmake) and Execute
+                lit = LitRunner()
+                msg = "{}/{} Round.\n".format(i+1, round)
+                lit.run(MailMsg=msg)
+                #Let parent to go next round
+                sys.exit()
+            #parent
+            else:
+                WaitSecs = 0
+                WaitUnit = 1
+                signal.signal(signal.SIGINT, self.SIGINT_Handler)
+                while True:
+                    rid, status = os.waitpid(self.PID, os.WNOHANG)
+                    if rid == 0 and status == 0:
+                        time.sleep(WaitUnit)
+                        WaitSecs += WaitUnit
+                    else:
+                        break
+                    #This time depends one machine
+                    if WaitSecs > 5400:
+                        self.KillProcess(self.PID)
+                        Log = sv.LogService()
+                        Log.outNotToFile("Parent wait too long, abort this round.\n")
+                        Log.err("Parent wait too long, abort this round.\n")
+                        mail.SignificantNotification(Msg="Abort one round.\n")
 
-        EndTime = time.GetCurrentLocalTime()
-        TotalTime = time.GetDeltaTimeInDate(StartTime, EndTime)
+        EndTime = ts.GetCurrentLocalTime()
+        TotalTime = ts.GetDeltaTimeInDate(StartTime, EndTime)
 
-        mail = sv.EmailService()
         TimeMsg = "Start: {};\nEnd: {}\nTotal: {}\n\n".format(StartTime, EndTime, TotalTime)
         msg = TimeMsg + "Please save the results, if necessary.\n"
         mail.send(Subject="All {} Rounds Done.".format(round),

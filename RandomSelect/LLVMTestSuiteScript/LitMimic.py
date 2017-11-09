@@ -98,11 +98,10 @@ class LitMimic:
                 pss = sv.PassSetService()
                 BuildPath = os.getenv('LLVM_THESIS_TestSuite', "Error")
                 for idx, dir in enumerate(NOEXEDirs):
-                    #FIXME: remove the below line
                     Log.out("Dealing :{}\n".format(dir))
                     for line in fileinput.input(Log.SanityFilePath, inplace=True):
                         #stdout here is redirect to file
-                        print(line.replace(LineList[idx], "Dealed NOEXE: {}".format(dir))) #(old, new)
+                        print(line.replace(LineList[idx], "Dealed NOEXE: {}".format(dir)), end='') #(old, new)
                     #write corresponding InputSet
                     Set = pss.GetInputSet(dir)
                     pss.WriteInputSet(Set)
