@@ -126,7 +126,8 @@ class LitMimic:
                         SkipFlag = False
                         for skip in target.SkipDirList:
                             if root.endswith(skip):
-                                Log.out("Skip dir={}\n".format(skip))
+                                Log.out("Remove skipped dir={}\n".format(skip))
+                                shutil.rmtree(root)
                                 SkipFlag = True
                                 break
                         if SkipFlag:
