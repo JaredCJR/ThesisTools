@@ -101,7 +101,7 @@ class LitMimic:
                     Log.out("Dealing :{}\n".format(dir))
                     for line in fileinput.input(Log.SanityFilePath, inplace=True):
                         #stdout here is redirect to file
-                        print(line.replace(LineList[idx], "Dealed NOEXE: {}".format(dir)), end='') #(old, new)
+                        print(line.replace(LineList[idx], "Dealed NOEXE: {}\n".format(dir)), end='') #(old, new)
                     #write corresponding InputSet
                     Set = pss.GetInputSet(dir)
                     pss.WriteInputSet(Set)
