@@ -58,6 +58,9 @@ class Executer:
         with open("./ReturnValue", "w") as file:
             file.write(str(ReturnCode))
             file.close()
+        if ReturnCode < 0:
+            Log.err("cmd: {}\n is killed by signal, ret={}\n".format(Cmd, ReturnCode))
+            sys.exit()
 
         ss = sv.PassSetService()
         RandomSet = ss.ReadCorrespondingSet(elfPath)
