@@ -109,7 +109,7 @@ class LitRunner:
         actor = lm.LitMimic()
         SuccessBuiltPath = actor.run()
 
-        #remove ".test" file for those failed to pass sanity check in lit
+        #remove ".test" directories for those failed to pass sanity check in lit
         RmFailed = sv.PassSetService()
         FailedDirs = RmFailed.RemoveSanityFailedTestDesc(Log.SanityFilePath)
         # Now, all the remained tests should be all reported as successful execution from lit

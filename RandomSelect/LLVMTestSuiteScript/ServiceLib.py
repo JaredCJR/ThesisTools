@@ -217,7 +217,7 @@ class PassSetService:
             Dirs = [dir.strip() for dir in test.split('/')]
             key = LLVMTestSuiteBuildPath + '/' + Dirs[0] + '/' + Dirs[1] + '/'
             ErrorSet = InputSetDict[key]
-            FailedDirs.append(ErrorSet)
+            FailedDirs.append(DirPath)
             Log.ErrorSetLog(test + ", " + ErrorSet + "\n")
         return FailedDirs
 
