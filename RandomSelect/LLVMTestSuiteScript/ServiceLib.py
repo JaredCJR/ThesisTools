@@ -197,7 +197,7 @@ class PassSetService:
         with open(SanityFile, 'r') as file:
             for line in file:
                 if line.startswith(TargetPrefix) :
-                    FailList.append(line[len(TargetPrefix):])
+                    FailList.append(line[len(TargetPrefix):].strip())
             file.close()
 
         # Create InputSet dict
