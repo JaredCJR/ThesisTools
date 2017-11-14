@@ -7,24 +7,32 @@ class Candidate:
     def generator(self):
         return list(range(1, 34+1))
 
+class GaussRandom:
+    """Always return value between 0 and 1"""
+    def gen(self, mean, stdDeviation):
+        val = 0;
+        while val <= 0 or val >=1 :
+            val = random.gauss(mean, stdDeviation)
+        return val
+
 class RandomPick:
     def run(self, list, mean):
         res_list = []
         res_list.append(list[0])
         for num in list[1:]:
-            if random.uniform(0, 1) < float(mean):
+            if random.uniform(0, 1) < mean:
                 res_list.append(num)
         return res_list
 
 class RandomSetGenerator:
-    def PredictGenList(self, mean=0.5):
+    def PredictGenList(self, mean):
         cand = Candidate()
         #l is the ordered candidates
-        l = cand.generator() 
+        l = cand.generator()
         cryptorand = SystemRandom()
         #shuffle it to create randomness
         cryptorand.shuffle(l)
-        rand = RandomPick() 
+        rand = RandomPick()
         #pick at least one as candidate
         target_list = rand.run(l, mean)
         #shuffle to keep first does not always the same
@@ -39,11 +47,10 @@ class FileDriver:
         self.InputSetLoc += '/InputSet' #relative path
     def run(self):
         rsg = RandomSetGenerator()
-        mean = random.uniform(0, 1)
+        gr = GaussRandom()
+        mean = gr.gen(0.2, 0.25)
         target_list = rsg.PredictGenList(mean)
-        """
-        print(target_list)
-        """
+        #print(target_list)
 
         #open file with buffering, text is not able to get rid of buffering
         file_loc = self.InputSetLoc
@@ -65,7 +72,8 @@ class FileDriver:
 class FunctionLevelPredictor:
     def RandomPassSet(self):
         rsg = RandomSetGenerator()
-        mean = random.uniform(0, 1)
+        gr = GaussRandom()
+        mean = gr.gen(0.2, 0.25)
         RetList = rsg.PredictGenList(mean)
         return RetList
 
@@ -73,3 +81,5 @@ class FunctionLevelPredictor:
 if __name__ == '__main__':
     drv = FunctionLevelPredictor()
     print(drv.RandomPassSet())
+    #Fdrv = FileDriver()
+    #Fdrv.run()
