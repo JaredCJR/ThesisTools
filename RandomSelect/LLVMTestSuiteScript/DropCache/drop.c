@@ -9,17 +9,10 @@ int main(void) {
         exit(EXIT_FAILURE);
     }
     if (system("sync") != 0) {
-        fprintf(stderr, "flush-cache: sync failed (first time)\n");
+        fprintf(stderr, "flush-cache: sync failed.\n");
         exit(EXIT_FAILURE);
     }
-    if (system("sync") != 0) {
-        fprintf(stderr, "flush-cache: sync failed (second time)\n");
-        exit(EXIT_FAILURE);
-    }
-    if (system("sync") != 0) {
-        fprintf(stderr, "flush-cache: sync failed (third time)\n");
-        exit(EXIT_FAILURE);
-    }
+
     FILE* f;
     f = fopen("/proc/sys/vm/drop_caches", "w");
     if (f == NULL) {
