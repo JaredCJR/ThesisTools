@@ -53,8 +53,6 @@ class Executer:
                 Log.err(str(ex) + "\n")
             return
 
-        TimeList.sort()
-
         #Output for "lit"
         p = sp.Popen(shlex.split(Cmd))
         ReturnCode = p.wait()
