@@ -9,7 +9,15 @@ int main(void) {
         exit(EXIT_FAILURE);
     }
     if (system("sync") != 0) {
-        fprintf(stderr, "flush-cache: sync failed.\n");
+        fprintf(stderr, "flush-cache: sync failed (first time)\n");
+        exit(EXIT_FAILURE);
+    }
+    if (system("sync") != 0) {
+        fprintf(stderr, "flush-cache: sync failed (second time)\n");
+        exit(EXIT_FAILURE);
+    }
+    if (system("sync") != 0) {
+        fprintf(stderr, "flush-cache: sync failed (third time)\n");
         exit(EXIT_FAILURE);
     }
 
