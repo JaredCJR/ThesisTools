@@ -28,10 +28,12 @@ class Executer:
         elfPath = elfPath[:-3]
         RealElfPath = elfPath + ".OriElf"
         Cmd = RealElfPath + " " + self.Args
-        TimeList = []
-        Repeat = 5
+        TotalTime = 0.0
+        #Make sure every benchmark execute at least "ThresholdTime"
+        ThresholdTime = 5.0
+        Repeat = 0.0
         try:
-            for i in range(Repeat):
+            while True:
                 err = None
                 DropLoc = os.getenv('LLVM_THESIS_RandomHome')
                 os.system(DropLoc + "/LLVMTestSuiteScript/DropCache/drop")
@@ -40,7 +42,11 @@ class Executer:
                 out, err = p.communicate(input=self.Stdin)
                 p.wait()
                 EndTime = time.perf_counter()
-                TimeList.append(EndTime - StartTime)
+                ElapsedTime = EndTime - StartTime
+                TotalTime += ElapsedTime
+                Repeat += 1.0
+                if TotalTime > ThresholdTime:
+                    break
         except Exception as ex:
             if err is not None:
                 Log.err(err.decode('utf-8'))
@@ -48,8 +54,6 @@ class Executer:
                 Log.err("Why exception happend, and err is None?\n")
                 Log.err(str(ex) + "\n")
             return
-
-        TimeList.sort()
 
         #Output for "lit"
         p = sp.Popen(shlex.split(Cmd), stdin = sp.PIPE)
@@ -67,7 +71,7 @@ class Executer:
 
         BenchmarkName = sv.BenchmarkNameService()
         BenchmarkName = BenchmarkName.GetFormalName(elfPath)
-        LogTime = TimeList[len(TimeList)//2]
+        LogTime = TotalTime / Repeat
         log_msg = BenchmarkName + ", " + RandomSet + ", " + str(LogTime) + "\n"
         Log.record(log_msg)
 
