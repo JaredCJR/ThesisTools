@@ -67,7 +67,9 @@ class LitMimic:
         Log = sv.LogService()
         SuccessBuiltPath = []
         for RootPath in target.TargetPathList:
-            #Run lit in parallel in order to log the built sanity.
+            """
+            Run lit in parallel in order to log the built sanity.
+            """
             LitExec = drv.LitRunner()
             Log.out("-----------------------------------------------------------\n")
             Log.out("Run $lit in parallel for sanity checking in \n{}\n".format(RootPath))
@@ -76,8 +78,10 @@ class LitMimic:
             lit = os.getenv('LLVM_THESIS_lit', "Error")
             cmd = lit + " -q -j" + CoreNum + " " + RootPath
             LitExec.ExecCmd(cmd, ShellMode=False, NeedPrintStderr=True, SanityLog=True)
-            #Goal:Build and check sanity again for those affect by other build failure?
-            #example: NOEXE: test-suite :: MultiSource/Benchmarks/tramp3d-v4/tramp3d-v4.test (149 of 159)
+            """
+            Goal:Build and check sanity again for those affect by other build failure?
+            example: NOEXE: test-suite :: MultiSource/Benchmarks/tramp3d-v4/tramp3d-v4.test (149 of 159)
+            """
             NOEXEList = []
             LineList = []
             TargetPrefix = "NOEXE: test-suite :: "

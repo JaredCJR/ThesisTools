@@ -6,6 +6,9 @@ from datetime import datetime, date, timedelta
 import LitMimic as lm
 import smtplib
 import shutil
+import time
+import subprocess as sp
+import shlex
 
 class TimeService:
     DateTimeFormat = "%Y%m%d_%H-%M-%S"
@@ -235,3 +238,77 @@ class PassSetService:
             file.write(Set)
             file.close()
 
+class PyActorService:
+    class Logger(LogService):
+        #Should never print to stdout, "lit" will get unexpected output
+        def out(self, msg):
+            pass
+
+    class Executor:
+        Args = None
+        def __init__(self, args):
+            self.Args = args
+
+        def run(self, elfPath, BoolWithStdin, realStdin=""):
+            Log = PyActorService().Logger()
+            #Remove the postfix ".py"
+            elfPath = elfPath[:-3]
+            RealElfPath = elfPath + ".OriElf"
+            Cmd = RealElfPath + " " + self.Args
+            TotalTime = 0.0
+            #Make sure every benchmark execute at least "ThresholdTime"
+            ThresholdTime = 5.0
+            Repeat = 0.0
+            try:
+                while True:
+                    err = None
+                    DropLoc = os.getenv('LLVM_THESIS_RandomHome')
+                    os.system(DropLoc + "/LLVMTestSuiteScript/DropCache/drop")
+                    if BoolWithStdin == False: # without stdin
+                        StartTime = time.perf_counter()
+                        p = sp.Popen(shlex.split(Cmd), stdout = sp.PIPE, stderr= sp.PIPE)
+                        out, err = p.communicate()
+                        p.wait()
+                        EndTime = time.perf_counter()
+                    else: # with stdin
+                        StartTime = time.perf_counter()
+                        p = sp.Popen(shlex.split(Cmd), stdout = sp.PIPE, stderr = sp.PIPE, stdin = sp.PIPE)
+                        out, err = p.communicate(input=realStdin)
+                        p.wait()
+                        EndTime = time.perf_counter()
+                    ElapsedTime = EndTime - StartTime
+                    TotalTime += ElapsedTime
+                    Repeat += 1.0
+                    if TotalTime > ThresholdTime:
+                        break
+            except Exception as ex:
+                if err is not None:
+                    Log.err(err.decode('utf-8'))
+                else:
+                    Log.err("Why exception happend, and err is None?\n")
+                    Log.err(str(ex) + "\n")
+                return
+
+            #Output for "lit"
+            if BoolWithStdin == False: # without stdin
+                p = sp.Popen(shlex.split(Cmd))
+            else: # with stdin
+                p = sp.Popen(shlex.split(Cmd), stdin = sp.PIPE)
+                p.communicate(input=realStdin)
+            ReturnCode = p.wait()
+
+            with open("./ReturnValue", "w") as file:
+                file.write(str(ReturnCode))
+                file.close()
+            if ReturnCode < 0:
+                Log.err("cmd: {}\n is killed by signal, ret={}\n".format(Cmd, ReturnCode))
+                sys.exit()
+
+            ss = PassSetService()
+            RandomSet = ss.ReadCorrespondingSet(elfPath)
+
+            BenchmarkName = BenchmarkNameService()
+            BenchmarkName = BenchmarkName.GetFormalName(elfPath)
+            LogTime = TotalTime / Repeat
+            log_msg = BenchmarkName + ", " + RandomSet + ", " + str(LogTime) + "\n"
+            Log.record(log_msg)
