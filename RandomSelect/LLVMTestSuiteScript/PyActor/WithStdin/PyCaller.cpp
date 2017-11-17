@@ -15,12 +15,16 @@ int main(int argc, char* argv[])
     std::string Cmd = argv[0];
     char postfix[] = ".py";
     Cmd += postfix;
-    std::string retFileName = "./ReturnValue";
-    system(("rm -f " + retFileName).c_str());
 
     //Pass redirected input
     int pFD[2];
     pipe(pFD);
+
+    //Get return value
+    const int RetFd0 = 512;
+    const int RetFd1 = RetFd0 + 1;
+    int retFD[2];
+    pipe(retFD);
 
     //get stdin
     // don't skip the whitespace while reading
@@ -34,9 +38,16 @@ int main(int argc, char* argv[])
     int pid=fork();
     if(pid == 0) {
         //child
+        //STDIN
         close(pFD[1]); //close write
         dup2(pFD[0], STDIN_FILENO); // redirect stdin to child
         close(pFD[0]); //close read
+
+        // return value
+        close(retFD[0]); //close read
+        dup2(retFD[1], RetFd0);
+        close(retFD[1]); //close write
+
         execv(Cmd.c_str(), argv);
     }else {
         //parent
@@ -45,13 +56,15 @@ int main(int argc, char* argv[])
         close(pFD[1]);
         waitpid(-1, NULL, 0);
         //return value
-        std::ifstream file;
-        file.open(retFileName);
-        if(file) {
-            int ret;
-            file >> ret;
-            return ret;
-        }
+        close(retFD[1]); //close write
+        dup2(retFD[0], RetFd1);
+        close(retFD[0]); //close read
+        // read return value
+        std::string retStr(100, '\0');
+        read(RetFd1, &retStr[0], 100);
+        int ret = std::stoi(retStr);
+        close(RetFd1);
+        return ret;
     }
     return 0;
 }

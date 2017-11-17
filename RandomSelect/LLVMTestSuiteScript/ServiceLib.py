@@ -137,7 +137,7 @@ class BenchmarkNameService:
             if c != '/':
                 ret += c
             else:
-                ret += '-'
+                ret += '>'
         return ret
 
     def GetFormalName(self, full_path):
@@ -257,12 +257,13 @@ class PyActorService:
             Cmd = RealElfPath + " " + self.Args
             TotalTime = 0.0
             #Make sure every benchmark execute at least "ThresholdTime"
-            ThresholdTime = 5.0
+            ThresholdTime = 0.1
             Repeat = 0.0
             try:
+                DropLoc = os.getenv('LLVM_THESIS_RandomHome')
+                os.system(DropLoc + "/LLVMTestSuiteScript/DropCache/drop")
                 while True:
                     err = None
-                    DropLoc = os.getenv('LLVM_THESIS_RandomHome')
                     os.system(DropLoc + "/LLVMTestSuiteScript/DropCache/drop")
                     if BoolWithStdin == False: # without stdin
                         StartTime = time.perf_counter()
@@ -297,9 +298,14 @@ class PyActorService:
                 p.communicate(input=realStdin)
             ReturnCode = p.wait()
 
-            with open("./ReturnValue", "w") as file:
-                file.write(str(ReturnCode))
-                file.close()
+            """
+            Use pipe to pass return value
+            """
+            RetFd0 = 512
+            RetFd1 = RetFd0 + 1
+            os.write(RetFd0, str.encode(str(ReturnCode)))
+            os.close(RetFd0)
+
             if ReturnCode < 0:
                 Log.err("cmd: {}\n is killed by signal, ret={}\n".format(Cmd, ReturnCode))
                 sys.exit()

@@ -70,6 +70,7 @@ class LitMimic:
             """
             Run lit in parallel in order to log the built sanity.
             """
+
             LitExec = drv.LitRunner()
             Log.out("-----------------------------------------------------------\n")
             Log.out("Run $lit in parallel for sanity checking in \n{}\n".format(RootPath))
@@ -142,7 +143,7 @@ class LitMimic:
                         with open(TestFilePath, "r") as TestFile:
                             for line in TestFile:
                                 if line.startswith("RUN:"):
-                                    if line.find(" < ") != -1:
+                                    if line.find("<") != -1:
                                         NeedStdin = True
                         #Do what we want: rename elf and copy actor
                         ElfName = file.replace(test_pattern, '')

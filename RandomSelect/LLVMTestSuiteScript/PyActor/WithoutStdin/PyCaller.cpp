@@ -1,28 +1,48 @@
 #include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include <string>
+#include <iostream>
+#include <istream>
+#include <ostream>
+#include <iterator>
+#include <sys/wait.h>
 #include <stdio.h>
 #include <fstream>
 
-int main(int argc, char* argv[]) 
+int main(int argc, char* argv[])
 {
-    char CmdBuffer[4096] = {};
-    std::string cmd = argv[0];
-    cmd += ".py";
-    std::string retFileName = "./ReturnValue";
-    system(("rm -f " + retFileName).c_str());
+    std::string Cmd = argv[0];
+    char postfix[] = ".py";
+    Cmd += postfix;
 
-    for(int i = 1;i < argc; i++) {
-        cmd += " ";
-        cmd += argv[i];
-    }
-    system(cmd.c_str());
+    //Get return value
+    const int RetFd0 = 512;
+    const int RetFd1 = RetFd0 + 1;
+    int retFD[2];
+    pipe(retFD);
 
-    //return value
-    std::ifstream file;
-    file.open(retFileName);
-    if(file) {
-        int ret;
-        file >> ret;
+    int pid=fork();
+    if(pid == 0) {
+        // child
+        // return value
+        close(retFD[0]); //close read
+        dup2(retFD[1], RetFd0);
+        close(retFD[1]); //close write
+
+        execv(Cmd.c_str(), argv);
+    }else {
+        //parent
+        waitpid(-1, NULL, 0);
+        //return value
+        close(retFD[1]); //close write
+        dup2(retFD[0], RetFd1);
+        close(retFD[0]); //close read
+        // read return value
+        std::string retStr(100, '\0');
+        read(RetFd1, &retStr[0], 100);
+        int ret = std::stoi(retStr);
+        close(RetFd1);
         return ret;
     }
     return 0;
