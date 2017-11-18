@@ -137,7 +137,7 @@ class BenchmarkNameService:
             if c != '/':
                 ret += c
             else:
-                ret += '>'
+                ret += '.'
         return ret
 
     def GetFormalName(self, full_path):
@@ -249,39 +249,92 @@ class PyActorService:
         def __init__(self, args):
             self.Args = args
 
-        def run(self, elfPath, BoolWithStdin, realStdin=""):
+        def RunCmd(self, Cmd, BoolWithStdin, realStdin):
+            if BoolWithStdin == False: # without stdin
+                StartTime = time.perf_counter()
+                p = sp.Popen(shlex.split(Cmd), stdout = sp.PIPE, stderr= sp.PIPE)
+                out, err = p.communicate()
+                p.wait()
+                EndTime = time.perf_counter()
+            else: # with stdin
+                StartTime = time.perf_counter()
+                p = sp.Popen(shlex.split(Cmd), stdout = sp.PIPE, stderr = sp.PIPE, stdin = sp.PIPE)
+                out, err = p.communicate(input=realStdin)
+                p.wait()
+                EndTime = time.perf_counter()
+            ElapsedTime = EndTime - StartTime
+            return out, err, ElapsedTime
+
+        """
+        arg *Features is a variable length list of features.
+            ex. cpu-cycles, branch-misses, etc
+        Return value: dict = {"feature name": number}
+            ex. {"cpu-cycles": 12345}
+        """
+        def ExtractPerfFeatures(self, perfStatLoc, perfUtil, *Features):
+            featureDict = {key: None for key in Features}
+            if perfUtil == "stat":
+                with open(perfStatLoc, "r") as file:
+                    for line in file:
+                        line = line.strip()
+                        '''
+                        ex.
+                        Performance counter stats for './dry.OriElf' (20 runs):
+                        1,000,994,867      cpu-cycles           ( +-  0.00% )
+                        0.233008107 seconds time elapsed        ( +-  0.03% )
+                        '''
+                        if line:
+                            RecFeature = line.split()
+                            # if recorded feature in Features
+                            if any(RecFeature[1] in f for f in Features):
+                                featureDict[RecFeature[1]] = int(RecFeature[0].replace(',',''))
+                    file.close()
+            return featureDict
+
+        def run(self, elfPath, BoolWithStdin, realStdin=b""):
             Log = PyActorService().Logger()
             #Remove the postfix ".py"
             elfPath = elfPath[:-3]
             RealElfPath = elfPath + ".OriElf"
             Cmd = RealElfPath + " " + self.Args
             TotalTime = 0.0
-            #Make sure every benchmark execute at least "ThresholdTime"
-            ThresholdTime = 0.1
-            Repeat = 0.0
             try:
                 DropLoc = os.getenv('LLVM_THESIS_RandomHome')
                 os.system(DropLoc + "/LLVMTestSuiteScript/DropCache/drop")
-                while True:
-                    err = None
-                    os.system(DropLoc + "/LLVMTestSuiteScript/DropCache/drop")
-                    if BoolWithStdin == False: # without stdin
-                        StartTime = time.perf_counter()
-                        p = sp.Popen(shlex.split(Cmd), stdout = sp.PIPE, stderr= sp.PIPE)
-                        out, err = p.communicate()
-                        p.wait()
-                        EndTime = time.perf_counter()
-                    else: # with stdin
-                        StartTime = time.perf_counter()
-                        p = sp.Popen(shlex.split(Cmd), stdout = sp.PIPE, stderr = sp.PIPE, stdin = sp.PIPE)
-                        out, err = p.communicate(input=realStdin)
-                        p.wait()
-                        EndTime = time.perf_counter()
-                    ElapsedTime = EndTime - StartTime
-                    TotalTime += ElapsedTime
-                    Repeat += 1.0
-                    if TotalTime > ThresholdTime:
-                        break
+                err = None
+                '''
+                Record the fisrt run time to get function usage and repeat count
+                '''
+                # write to ram
+                perfRecordLoc = "/dev/shm/" + os.path.basename(elfPath) + ".perfRecord"
+                perfRecordPrefix = "perf record --quiet --output=" + perfRecordLoc + " "
+                out, err, ElapsedTime = self.RunCmd(perfRecordPrefix + Cmd, BoolWithStdin, realStdin)
+                '''
+                Calculate the repeat count
+                Make sure every benchmark execute at least "ThresholdTime"
+                '''
+                ThresholdTime = 0.1#FIXME
+                Repeat = int(ThresholdTime // ElapsedTime)
+                OuterLoopCount = 1
+                if Repeat < 5:
+                    Repeat = 5
+                if Repeat > 100:
+                    OuterLoopCount = int(Repeat // 100) + 1
+                    Repeat = 100
+                '''
+                Run with perf stat
+                '''
+                perfStatLoc = "/dev/shm/" + os.path.basename(elfPath) + ".perfStat"
+                perfStatPrefix = "perf stat --output " +  perfStatLoc + " --repeat " + str(Repeat) + " -e cpu-cycles" + " "
+                cycleCount = 0
+                for i in range(OuterLoopCount):
+                    out, err, _ = self.RunCmd(perfStatPrefix + Cmd, BoolWithStdin, realStdin)
+                    featureDict = self.ExtractPerfFeatures(perfStatLoc, "stat", "cpu-cycles")
+                    cycleCount += featureDict["cpu-cycles"]
+                '''
+                Extract Function-Level features
+                '''
+
             except Exception as ex:
                 if err is not None:
                     Log.err(err.decode('utf-8'))
@@ -315,6 +368,6 @@ class PyActorService:
 
             BenchmarkName = BenchmarkNameService()
             BenchmarkName = BenchmarkName.GetFormalName(elfPath)
-            LogTime = TotalTime / Repeat
-            log_msg = BenchmarkName + ", " + RandomSet + ", " + str(LogTime) + "\n"
+            LogCycles =  int(cycleCount // OuterLoopCount)
+            log_msg = BenchmarkName + ", " + RandomSet + ", " + "cpu-cycles:" + str(LogCycles) + "\n"
             Log.record(log_msg)
