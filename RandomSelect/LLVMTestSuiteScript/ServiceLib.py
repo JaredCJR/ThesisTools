@@ -61,7 +61,7 @@ class LogService():
 
         self.StdoutFilePath = Loc + '/' + self.time + "_STDOUT"
         self.StderrFilePath = Loc + '/' + self.time + "_STDERR"
-        self.RecordFilePath = Loc + '/' + self.time + "_Time"
+        self.RecordFilePath = Loc + '/' + self.time + "_Features"
         self.SanityFilePath = Loc + '/' + self.time + "_SanityCheck"
         self.ErrorSetFilePath = Loc + '/' + self.time + "_ErrorSet"
 
@@ -313,7 +313,7 @@ class PyActorService:
                 Calculate the repeat count
                 Make sure every benchmark execute at least "ThresholdTime"
                 '''
-                ThresholdTime = 0.1#FIXME
+                ThresholdTime = 10.0
                 Repeat = int(ThresholdTime // ElapsedTime)
                 OuterLoopCount = 1
                 if Repeat < 5:
@@ -321,8 +321,11 @@ class PyActorService:
                 if Repeat > 100:
                     OuterLoopCount = int(Repeat // 100) + 1
                     Repeat = 100
+                #FIXME:Remove
+                OuterLoopCount = 1
+                Repeat = 1
                 '''
-                Run with perf stat
+                Run with perf stat, which will repeat several times
                 '''
                 perfStatLoc = "/dev/shm/" + os.path.basename(elfPath) + ".perfStat"
                 perfStatPrefix = "perf stat --output " +  perfStatLoc + " --repeat " + str(Repeat) + " -e cpu-cycles" + " "
@@ -334,7 +337,25 @@ class PyActorService:
                 '''
                 Extract Function-Level features
                 '''
-
+                perfReportCmd = "perf report --input=" + perfRecordLoc + " --stdio --force --hide-unresolved"
+                p = sp.Popen(shlex.split(perfReportCmd), stdout = sp.PIPE, stderr= sp.PIPE)
+                out, err = p.communicate()
+                p.wait()
+                Report = out.decode("utf-8")
+                FuncDict = {}
+                for line in Report.splitlines():
+                    '''
+                    ex.
+                        51.89%  viterbi.OriElf  libc-2.23.so       [.] __memcpy_avx_unaligned
+                        23.32%  viterbi.OriElf  viterbi.OriElf     [.] dec_viterbi_F
+                    '''
+                    if (not line.startswith("#")) and line:
+                        #split with unknown length of space, do not pass ' ' into split()
+                        lineList = line.split()
+                        if lineList[2].startswith(os.path.basename(elfPath)):
+                            Percentage = lineList[0][:-1]
+                            FuncName = lineList[4]
+                            FuncDict[FuncName] = float(Percentage)/100.0
             except Exception as ex:
                 if err is not None:
                     Log.err(err.decode('utf-8'))
@@ -367,7 +388,16 @@ class PyActorService:
             RandomSet = ss.ReadCorrespondingSet(elfPath)
 
             BenchmarkName = BenchmarkNameService()
+            #elfPath must be absolute path
             BenchmarkName = BenchmarkName.GetFormalName(elfPath)
-            LogCycles =  int(cycleCount // OuterLoopCount)
-            log_msg = BenchmarkName + ", " + RandomSet + ", " + "cpu-cycles:" + str(LogCycles) + "\n"
+            Cycles = int(cycleCount // OuterLoopCount)
+            LogCycles = "cpu-cycles:" + str(Cycles)
+            FuncUsage = ""
+            for Name, Usage in FuncDict.items():
+                if Usage > 0.01: # Only record those > 1%
+                    Usage = "{0:.3f}".format(Usage)
+                    if Name.endswith("@plt"):
+                        continue
+                    FuncUsage += ", func:{}:{}".format(Name, Usage)
+            log_msg = BenchmarkName + ", " + RandomSet + ", " + LogCycles + FuncUsage + "\n"
             Log.record(log_msg)
