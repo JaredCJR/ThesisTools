@@ -146,7 +146,7 @@ class BenchmarkNameService:
                 ret = ret[len(RemoveWords):]
                 break
         if ret.startswith("./"):
-            ret = ret["./"]
+            ret = ret[len("./"):]
         return self.ReplaceWithDash(ret)
 
 
@@ -183,8 +183,9 @@ class PassSetService:
                 if elfPath.startswith(Set[0]):
                     RandomSet = Set[1].strip()
             if RandomSet == "Error":
-                mail = EmailService()
-                mail.send(Subject="Error Logging PassSet", Msg="Check it:\n{}\n".format(elfPath))
+                if not elfPath.startswith("./"):
+                    mail = EmailService()
+                    mail.send(Subject="Error Logging PassSet", Msg="Check it:\n{}\n".format(elfPath))
         except:
             RandomSet = "Error"
 
@@ -306,26 +307,21 @@ class PyActorService:
                 # write to ram
                 perfRecordLoc = "/dev/shm/" + os.path.basename(elfPath) + ".perfRecord"
                 perfRecordPrefix = "perf record --quiet --output=" + perfRecordLoc + " "
-                out, err, ElapsedTime = self.RunCmd(perfRecordPrefix + Cmd, BoolWithStdin, realStdin)
+                out, err, _ = self.RunCmd(perfRecordPrefix + Cmd, BoolWithStdin, realStdin)
                 '''
-                Calculate the repeat count
+                Calculate the LoopCount
                 Make sure every benchmark execute at least "ThresholdTime"
                 '''
+                out, err, ElapsedTime = self.RunCmd(Cmd, BoolWithStdin, realStdin)
                 ThresholdTime = 10.0
-                Repeat = int(ThresholdTime // ElapsedTime)
-                OuterLoopCount = 1
-                if Repeat < 5:
-                    Repeat = 5
-                if Repeat > 100:
-                    OuterLoopCount = int(Repeat // 100) + 1
-                    Repeat = 100
+                LoopCount = int(ThresholdTime // ElapsedTime)
                 '''
                 Run with perf stat, which will repeat several times
                 '''
                 perfStatLoc = "/dev/shm/" + os.path.basename(elfPath) + ".perfStat"
-                perfStatPrefix = "perf stat --output " +  perfStatLoc + " --repeat " + str(Repeat) + " -e cpu-cycles" + " "
+                perfStatPrefix = "perf stat --output " +  perfStatLoc + " -e cpu-cycles" + " "
                 cycleCount = 0
-                for i in range(OuterLoopCount):
+                for i in range(LoopCount):
                     out, err, _ = self.RunCmd(perfStatPrefix + Cmd, BoolWithStdin, realStdin)
                     featureDict = self.ExtractPerfFeatures(perfStatLoc, "stat", "cpu-cycles")
                     cycleCount += featureDict["cpu-cycles"]
@@ -385,7 +381,7 @@ class PyActorService:
             BenchmarkName = BenchmarkNameService()
             #elfPath must be absolute path
             BenchmarkName = BenchmarkName.GetFormalName(elfPath)
-            Cycles = int(cycleCount // OuterLoopCount)
+            Cycles = int(cycleCount // LoopCount)
             LogCycles = "cpu-cycles:" + str(Cycles)
             FuncUsage = ""
             for Name, Usage in FuncDict.items():

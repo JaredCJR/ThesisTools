@@ -81,7 +81,7 @@ class LitRunner:
             Log.err("Please setup \"lit\" environment variable.\n")
             sys.exit("lit is unknown\n")
         '''
-        pass all tests in one command
+        pass tests in one command
         '''
         Tests = " "
         for test in ListOfTest:
