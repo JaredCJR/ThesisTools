@@ -9,6 +9,7 @@ import shutil
 import time
 import subprocess as sp
 import shlex
+import struct, fcntl
 
 class TimeService:
     DateTimeFormat = "%Y%m%d_%H-%M-%S"
@@ -65,39 +66,36 @@ class LogService():
         self.SanityFilePath = Loc + '/' + self.time + "_SanityCheck"
         self.ErrorSetFilePath = Loc + '/' + self.time + "_ErrorSet"
 
-    def out(self, msg):
-        print(msg, end="")
-        #save to same file for every instance
-        with open(self.StdoutFilePath, "a") as file:
-            file.write(msg)
-            file.close()
-
     def outNotToFile(self, msg):
         print(msg, end="")
 
+    def FileWriter(self, path, msg):
+        file = open(path, "a")
+        fcntl.flock(file, fcntl.LOCK_EX)
+        file.write(msg)
+        fcntl.flock(file, fcntl.LOCK_UN)
+        file.close()
+
+    def out(self, msg):
+        self.outNotToFile(msg)
+        #save to same file for every instance
+        self.FileWriter(self.StdoutFilePath, msg)
+
     def err(self, msg):
         #save to same error file for every instance
-        with open(self.StderrFilePath, "a") as file:
-            file.write(msg)
-            file.close()
+        self.FileWriter(self.StderrFilePath, msg)
 
     def record(self, msg):
         #save to same file for every instance
-        with open(self.RecordFilePath, "a") as file:
-            file.write(msg)
-            file.close()
+        self.FileWriter(self.RecordFilePath, msg)
 
     def sanityLog(self, msg):
         #save to same file for every instance
-        with open(self.SanityFilePath, "a") as file:
-            file.write(msg)
-            file.close()
+        self.FileWriter(self.SanityFilePath, msg)
 
     def ErrorSetLog(self, msg):
         #save to same file for every instance
-        with open(self.ErrorSetFilePath, "a") as file:
-            file.write(msg)
-            file.close()
+        self.FileWriter(self.ErrorSetFilePath, msg)
 
 class EmailService:
     def send(self, Subject, Msg, To="jaredcjr.tw@gmail.com"):
