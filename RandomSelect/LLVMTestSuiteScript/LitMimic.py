@@ -121,12 +121,10 @@ class LitMimic:
     def run(self):
         target = TargetBenchmarks()
         Log = sv.LogService()
-        SuccessBuiltPath = []
+        SuccessBuiltTestPath = []
         for RootPath in target.TargetPathList:
             #Sanity Check
-            '''
             self.SanityCheck(RootPath)
-            '''
 
             #Goal:Distribute PyActor
             for root, dirs, files in os.walk(RootPath):
@@ -172,15 +170,14 @@ class LitMimic:
                             #copy the PyCaller
                             if os.path.exists(PyCallerLoc) == True:
                                 shutil.copy2(PyCallerLoc, ElfPath)
-                                if root not in SuccessBuiltPath:
-                                    SuccessBuiltPath.append(root)
+                                SuccessBuiltTestPath.append(TestFilePath)
                             else:
                                 Log.err("Please \"$ make\" to get PyCaller in {}\n".format(PyCallerLoc))
                                 return
                         else:
                             Log.err("This elf={} filed to build?\n".format(ElfPath))
 
-        return SuccessBuiltPath
+        return SuccessBuiltTestPath
 
 
 

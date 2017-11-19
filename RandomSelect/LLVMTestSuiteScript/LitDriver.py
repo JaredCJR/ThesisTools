@@ -11,6 +11,7 @@ import subprocess as sp
 import progressbar
 import smtplib
 import RandomGenerator as RG
+from random import shuffle
 import re
 import time
 import psutil
@@ -19,6 +20,7 @@ import signal
 class LitRunner:
     def ExecCmd(self, cmd, ShellMode=False, NeedPrintStderr=True, SanityLog=False):
         Log = sv.LogService()
+        err = None
         try:
             #Execute cmd
             p = sp.Popen(shlex.split(cmd), shell=ShellMode, stdout=sp.PIPE, stderr= sp.PIPE)
@@ -68,6 +70,32 @@ class LitRunner:
             file.close()
         Log.out(Msg)
 
+    """
+    execute list of *.test one after another with "lit"
+    This should be thread-safe
+    """
+    def LitWorker(self, ListOfTest, CpuAffinity):
+        Log = sv.LogService()
+        lit = os.getenv('LLVM_THESIS_lit', "Error")
+        if lit == "Error":
+            Log.err("Please setup \"lit\" environment variable.\n")
+            sys.exit("lit is unknown\n")
+        '''
+        pass all tests in one command
+        '''
+        Tests = " "
+        for test in ListOfTest:
+            Tests += test + " "
+        try:
+            lit = lit + " -j1 -q "
+            tasksetPrefix = "taskset -c {} ".format(CpuAffinity)
+            cmd = tasksetPrefix + lit + Tests
+            Log.out("Run:\n{}\n".format(cmd))
+            self.ExecCmd(cmd, ShellMode=False, NeedPrintStderr=True)
+        except Exception as e:
+            Log.err("Why exception happedend in LitWorker?\n{}\n".format(e))
+
+
     def run(self, MailMsg=""):
         time = sv.TimeService()
 
@@ -95,8 +123,9 @@ class LitRunner:
             #build
             os.chdir(RootPath)
             self.ExecCmd("make clean", ShellMode=True)
-            self.ExecCmd("make -j" + CoreNum, ShellMode=True,
-                     NeedPrintStderr=True)
+            BuildCmd = "make -j" + CoreNum
+            Log.out("Build command = \n{}\n".format(BuildCmd))
+            self.ExecCmd(BuildCmd, ShellMode=True, NeedPrintStderr=True)
             #record input set
             RandomSetAllLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSetAll"
             with open(RandomSetAllLoc, "a") as file:
@@ -107,37 +136,50 @@ class LitRunner:
 
         #place the corresponding feature extractor
         actor = lm.LitMimic()
-        SuccessBuiltPath = actor.run()
+        SuccessBuiltTestPath = actor.run()
 
         #remove ".test" directories for those failed to pass sanity check in lit
         RmFailed = sv.PassSetService()
         FailedDirs = RmFailed.RemoveSanityFailedTestDesc(Log.SanityFilePath)
         # Now, all the remained tests should be all reported as successful execution from lit
 
-        #execute it one after another with "lit"
-        lit = os.getenv('LLVM_THESIS_lit', "Error")
-        if lit == "Error":
-            Log.err("Please setup \"lit\" environment variable.\n")
-            sys.exit("lit is unknown\n")
-        bar = progressbar.ProgressBar(redirect_stdout=True)
-        for idx, LitTargetDir in enumerate(SuccessBuiltPath):
-            try:
-                os.chdir(LitTargetDir)
-                cmd = lit + " -j1 -q ./"
-                Log.out("Run: {}\n".format(LitTargetDir))
-                bar.update((idx / len(SuccessBuiltPath)) * 100)
-                self.ExecCmd(cmd, ShellMode=False, NeedPrintStderr=True)
-            except Exception as e:
-                Found = False
-                for FailedDir in FailedDirs:
-                    if FailedDir == LitTargetDir:
-                        Found = True
-                if Found == True:
-                    Log.out("Target Dir: {}  is removed\n".format(LitTargetDir))
-                else:
-                    Log.err("Why exception happedend? in \n{}\n for {}\n".format(LitTargetDir, e))
 
-        os.chdir(pwd)
+        """
+        Run lit in parallel
+        """
+        '''
+        Set LitDriver only use Core 0
+        '''
+        os.system("taskset -p 0x01 {}".format(os.getpid()))
+        '''
+        Split test into multiple list,
+        you need to know what is the physical core number and ID in your computer.
+        '''
+        shuffle(SuccessBuiltTestPath)
+        SplitCount = 5
+        SplitList = []
+        step = int(len(SuccessBuiltTestPath) // SplitCount) + 1
+        for i in range(SplitCount):
+            SplitList.append(SuccessBuiltTestPath[i*step : (i+1)*step])
+
+        '''
+        Run lit in parallel
+        '''
+        workers = []
+        for i in range(SplitCount):
+            CpuAffinity = i + 7
+            p = multiprocessing.Process(target=self.LitWorker, args=(SplitList[i], CpuAffinity))
+            workers.append(p)
+            p.start()
+        Log.out("Waiting for {} workers...\n".format(SplitCount))
+        '''
+        Waiting for all workers
+        '''
+        count = 0
+        for p in workers:
+            count += 1
+            p.join()
+            Log.out("Get worker:{}\n".format(count))
 
         #calculate used time
         EndDateTime = time.GetCurrentLocalTime()

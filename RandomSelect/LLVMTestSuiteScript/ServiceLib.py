@@ -319,9 +319,6 @@ class PyActorService:
                 if Repeat > 100:
                     OuterLoopCount = int(Repeat // 100) + 1
                     Repeat = 100
-                #FIXME:Remove
-                OuterLoopCount = 1
-                Repeat = 1
                 '''
                 Run with perf stat, which will repeat several times
                 '''
