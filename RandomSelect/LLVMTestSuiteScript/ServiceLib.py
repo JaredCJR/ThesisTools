@@ -315,6 +315,8 @@ class PyActorService:
                 out, err, ElapsedTime = self.RunCmd(Cmd, BoolWithStdin, realStdin)
                 ThresholdTime = 10.0
                 LoopCount = int(ThresholdTime // ElapsedTime)
+                if LoopCount < 5:
+                    LoopCount = 5
                 '''
                 Run with perf stat, which will repeat several times
                 '''
