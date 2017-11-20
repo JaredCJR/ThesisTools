@@ -382,13 +382,13 @@ class PyActorService:
             #elfPath must be absolute path
             BenchmarkName = BenchmarkName.GetFormalName(elfPath)
             Cycles = int(cycleCount // LoopCount)
-            LogCycles = "cpu-cycles:" + str(Cycles)
+            LogCycles = "cpu-cycles | " + str(Cycles)
             FuncUsage = ""
             for Name, Usage in FuncDict.items():
                 if Usage > 0.01: # Only record those > 1%
                     Usage = "{0:.3f}".format(Usage)
                     if Name.endswith("@plt"):
                         continue
-                    FuncUsage += ", func:{}:{}".format(Name, Usage)
+                    FuncUsage += ", func | {} | {}".format(Name, Usage)
             log_msg = BenchmarkName + ", " + RandomSet + ", " + LogCycles + FuncUsage + "\n"
             Log.record(log_msg)
