@@ -396,6 +396,7 @@ class PyActorService:
 
             ss = PassSetService()
             RandomSet = ss.ReadCorrespondingSet(elfPath)
+            RandomSet = "set | {}".format(RandomSet)
 
             BenchmarkName = BenchmarkNameService()
             #elfPath must be absolute path
