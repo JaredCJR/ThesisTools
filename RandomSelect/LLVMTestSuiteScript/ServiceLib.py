@@ -270,7 +270,7 @@ class PyActorService:
         Return value: dict = {"feature name": number}
             ex. {"cpu-cycles": 12345}
         """
-        def ExtractPerfFeatures(self, perfStatLoc, perfUtil, *Features):
+        def ExtractPerfStatFeatures(self, perfStatLoc, perfUtil, *Features):
             featureDict = {key: None for key in Features}
             if perfUtil == "stat":
                 with open(perfStatLoc, "r") as file:
@@ -290,6 +290,35 @@ class PyActorService:
                     file.close()
             return featureDict
 
+        """
+        Return Function dict: {"functionName": usage in decimal}
+        ex.
+        case 1:
+            51.89%  viterbi.OriElf  libc-2.23.so       [.] __memcpy_avx_unaligned
+        case 2:
+            23.32%  viterbi.OriElf  viterbi.OriElf     [.] dec_viterbi_F
+        case 3:
+            4.79%  functionobjects  functionobjects.OriElf  [.] std::__introsort_loop<double*, long, __gnu_cxx::__ops::_Iter_comp_iter<bool (*)(double, double)> >
+        """
+        def ExtractPerfRecordFeatures(self, Report, elfPath):
+            FuncDict = {}
+            for line in Report.splitlines():
+                if (not line.startswith("#")) and line:
+                    #split with unknown length of space, do not pass ' ' into split()
+                    lineList = line.split()
+                    if lineList[2].startswith(os.path.basename(elfPath)):
+                        Percentage = lineList[0][:-1]
+                        #case 2
+                        FuncName = lineList[4]
+                        #case 3
+                        if len(lineList) > 5:
+                            FullSubFeature = ""
+                            for SubSubFeature in lineList[4:]:
+                                FullSubFeature += SubSubFeature + " "
+                        FuncName = FullSubFeature
+                        FuncDict[FuncName] = float(Percentage)/100.0
+            return FuncDict
+
         def run(self, elfPath, BoolWithStdin, realStdin=b""):
             Log = PyActorService().Logger()
             #Remove the postfix ".py"
@@ -306,7 +335,7 @@ class PyActorService:
                 '''
                 # write to ram
                 perfRecordLoc = "/dev/shm/" + os.path.basename(elfPath) + ".perfRecord"
-                perfRecordPrefix = "perf record --quiet --output=" + perfRecordLoc + " "
+                perfRecordPrefix = "perf record -e cpu-cycles:ppp --quiet --output=" + perfRecordLoc + " "
                 out, err, _ = self.RunCmd(perfRecordPrefix + Cmd, BoolWithStdin, realStdin)
                 '''
                 Calculate the LoopCount
@@ -325,7 +354,7 @@ class PyActorService:
                 cycleCount = 0
                 for i in range(LoopCount):
                     out, err, _ = self.RunCmd(perfStatPrefix + Cmd, BoolWithStdin, realStdin)
-                    featureDict = self.ExtractPerfFeatures(perfStatLoc, "stat", "cpu-cycles")
+                    featureDict = self.ExtractPerfStatFeatures(perfStatLoc, "stat", "cpu-cycles")
                     cycleCount += featureDict["cpu-cycles"]
                 '''
                 Extract Function-Level features
@@ -335,20 +364,8 @@ class PyActorService:
                 out, err = p.communicate()
                 p.wait()
                 Report = out.decode("utf-8")
-                FuncDict = {}
-                for line in Report.splitlines():
-                    '''
-                    ex.
-                        51.89%  viterbi.OriElf  libc-2.23.so       [.] __memcpy_avx_unaligned
-                        23.32%  viterbi.OriElf  viterbi.OriElf     [.] dec_viterbi_F
-                    '''
-                    if (not line.startswith("#")) and line:
-                        #split with unknown length of space, do not pass ' ' into split()
-                        lineList = line.split()
-                        if lineList[2].startswith(os.path.basename(elfPath)):
-                            Percentage = lineList[0][:-1]
-                            FuncName = lineList[4]
-                            FuncDict[FuncName] = float(Percentage)/100.0
+                FuncDict = self.ExtractPerfRecordFeatures(Report, elfPath)
+
             except Exception as ex:
                 if err is not None:
                     Log.err(err.decode('utf-8'))
@@ -391,6 +408,6 @@ class PyActorService:
                     Usage = "{0:.3f}".format(Usage)
                     if Name.endswith("@plt"):
                         continue
-                    FuncUsage += ", func | {} | {}".format(Name, Usage)
-            log_msg = BenchmarkName + ", " + RandomSet + ", " + LogCycles + FuncUsage + "\n"
+                    FuncUsage += "; func | {} | {}".format(Name, Usage)
+            log_msg = BenchmarkName + "; " + RandomSet + "; " + LogCycles + FuncUsage + "\n"
             Log.record(log_msg)
