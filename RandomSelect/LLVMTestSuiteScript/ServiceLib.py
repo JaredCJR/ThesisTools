@@ -315,7 +315,7 @@ class PyActorService:
                             FullSubFeature = ""
                             for SubSubFeature in lineList[4:]:
                                 FullSubFeature += SubSubFeature + " "
-                        FuncName = FullSubFeature
+                            FuncName = FullSubFeature
                         FuncDict[FuncName] = float(Percentage)/100.0
             return FuncDict
 
