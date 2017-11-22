@@ -96,7 +96,7 @@ class LitRunner:
             Log.err("Why exception happedend in LitWorker?\n{}\n".format(e))
 
 
-    def run(self, MailMsg=""):
+    def run(self, Mode="Standard", MailMsg=""):
         time = sv.TimeService()
 
         #cmake
@@ -151,6 +151,32 @@ class LitRunner:
         Set LitDriver only use Core 0
         '''
         os.system("taskset -p 0x01 {}".format(os.getpid()))
+
+        '''
+        If in "Random" Mode, only run the measurable benchmarks
+        '''
+        if Mode == "Random":
+            MeasurableList = []
+            # Build list of measurable benchmarks
+            benchmarkNameSV = sv.BenchmarkNameService()
+            with open("./GraphGen/output/MeasurableStdBenchmarkMeanAndSigma", 'r') as file:
+                for line in file:
+                    Tuple = line.split(";")
+                    Name = Tuple[0].strip()
+                    newName = benchmarkNameSV.ReplaceAWithB(Name, '.', '/')
+                    newName += '.test'
+                    MeasurableList.append(newName)
+                file.close()
+            for test in SuccessBuiltTestPath:
+                ValidTest = False
+                for measurableTest in MeasurableList:
+                    if test.endswith(measurableTest):
+                        ValidTest = True
+                        break
+                if ValidTest == False:
+                    SuccessBuiltTestPath.remove(test)
+                    Log.out("In Random Mode: remove {}\n".format(test))
+
         '''
         Split test into multiple list,
         you need to know what is the physical core number and ID in your computer.
@@ -274,13 +300,12 @@ class CommonDriver:
         self.KillProcess(self.PID)
         sys.exit()
 
-    def run(self):
+    def run(self, Mode, round=100):
         self.CleanAllResults()
         mail = sv.EmailService()
         ts = sv.TimeService()
         StartTime = ts.GetCurrentLocalTime()
         #How many round do we need?
-        round = 100
         for i in range(round):
             self.PID = os.fork()
             #child
@@ -288,7 +313,7 @@ class CommonDriver:
                 #Build(including cmake) and Execute
                 lit = LitRunner()
                 msg = "{}/{} Round.\n".format(i+1, round)
-                lit.run(MailMsg=msg)
+                lit.run(Mode, MailMsg=msg)
                 #Let parent to go next round
                 sys.exit()
             #parent
@@ -304,7 +329,7 @@ class CommonDriver:
                     else:
                         break
                     #This time depends one machine
-                    if WaitSecs > 5400:
+                    if WaitSecs > 2700:
                         self.KillProcess(self.PID)
                         Log = sv.LogService()
                         Log.outNotToFile("Parent wait too long, abort this round.\n")
@@ -323,5 +348,19 @@ class CommonDriver:
 
 
 if __name__ == '__main__':
+    '''
+    Simpe argument parsing...
+    I don't think this matters.
+    '''
+    print("Usage: $ ./LitDriver.py [Standard | Random]")
+    Mode = "Standard"
+    if len(sys.argv) > 1:
+        if sys.argv[1] != "Random" and sys.argv[1] != "Standard":
+            sys.exit("Wrong arguments.\n")
+        Mode = sys.argv[1]
+    print("LitDriver will start after 3 secs...")
+    print("Mode=\"{}\"\n".format(Mode))
+    time.sleep(3)
+
     driver = CommonDriver()
-    driver.run()
+    driver.run(Mode, 100)

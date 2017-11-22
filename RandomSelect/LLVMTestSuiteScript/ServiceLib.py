@@ -129,13 +129,13 @@ class EmailService:
         self.send(To=To, Subject=MailSubject, Msg=Msg)
 
 class BenchmarkNameService:
-    def ReplaceWithDash(self, str):
+    def ReplaceAWithB(self, str, A, B):
         ret = ""
         for c in str:
-            if c != '/':
+            if c != A:
                 ret += c
             else:
-                ret += '.'
+                ret += B
         return ret
 
     def GetFormalName(self, full_path):
@@ -147,7 +147,7 @@ class BenchmarkNameService:
                 break
         if ret.startswith("./"):
             ret = ret[len("./"):]
-        return self.ReplaceWithDash(ret)
+        return self.ReplaceAWithB(ret, '/', '.')
 
 
 
