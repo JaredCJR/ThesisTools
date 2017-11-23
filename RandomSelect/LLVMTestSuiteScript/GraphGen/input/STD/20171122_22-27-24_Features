@@ -1,0 +1,319 @@
+JM.ldecod.ldecod; set | 7 6; cpu-cycles | 121643103
+kimwitu++.kc; set | 7 6; cpu-cycles | 107810314
+ClamAV.clamscan; set | 7 6; cpu-cycles | 310355866
+SIBsim4.SIBsim4; set | 7 6; cpu-cycles | 7148480968; func | SIM4 | 0.020; func | align_get_dist | 0.159; func | link_msps | 0.717
+lambda-0.1.3.lambda; set | 7 6; cpu-cycles | 8993618347
+JM.lencod.lencod; set | 7 6; cpu-cycles | 10691343514
+aha.aha; set | 7 6; cpu-cycles | 3412341241; func | search | 0.382; func | check | 0.322; func | shl | 0.010; func | shrs | 0.012; func | shr | 0.010; func | fix_operands | 0.142; func | divide | 0.047; func | divu | 0.032
+lemon.lemon; set | 7 6; cpu-cycles | 1944169812; func | ConfigPrint | 0.011; func | Configlist_closure | 0.051; func | CompressTables | 0.015; func | State_find | 0.011; func | Configtable_clear | 0.021; func | FindFirstSets | 0.017; func | FindActions | 0.023; func | FindFollowSets | 0.326; func | append_str | 0.013; func | buildshifts | 0.036; func | ReportOutput | 0.010; func | tplt_print | 0.013
+Burg.burg; set | 7 6; cpu-cycles | 2860220
+SPASS.SPASS; set | 7 6; cpu-cycles | 23991272302
+d.make_dparser; set | 7 6; cpu-cycles | 52515494; func | insert_SNode_internal | 0.065; func | set_add_fn | 0.059; func | set_add | 0.056; func | set_union | 0.057; func | trans_scanner_block_cmp_fn | 0.018; func | build_scanners | 0.146; func | scanner_block_cmp_fn | 0.038; func | commit_tree | 0.058; func | scanner_block_hash_fn | 0.040
+siod.siod; set | 7 6; cpu-cycles | 3733553679
+spiff.spiff; set | 7 6; cpu-cycles | 4317730443
+ASCI_Purple.SMG2000.smg2000; set | 34 25 15 7 16 11 10 3; cpu-cycles | 4306132313
+hexxagon.hexxagon; set | 7 6; cpu-cycles | 22688924842; func | BitBoard64::getBit | 0.334; func | HexxagonBoard::evaluate | 0.192; func | BitBoard64::operator bool  | 0.017; func | BitBoard64::operator= | 0.052; func | alphaBeta | 0.010; func | HexxagonMoveList::addMove | 0.053; func | BitBoard64::operator& | 0.023; func | HexxagonBoard::generateMoveList | 0.259
+sqlite3.sqlite3; set | 7 6; cpu-cycles | 6595051558; func | sqlite3BtreeParseCellPtr | 0.083; func | sqlite3BtreeInitPage | 0.020; func | sqlite3VdbeSerialGet | 0.015; func | sqlite3VdbeMemCopy | 0.013; func | sqlite3MemCompare | 0.021; func | sqlite3VdbeRecordCompare | 0.031; func | reparentPage | 0.013; func | sqlite3BtreeMoveto | 0.039; func | balance_nonroot | 0.017; func | sqlite3PagerAcquire | 0.021; func | sqlite3VdbeExec | 0.225; func | sqlite3VdbeChangeEncoding | 0.012; func | sqlite3BtreeNext | 0.020; func | sqlite3ValueText | 0.014; func | patternCompare | 0.133
+treecc.treecc; set | 7 6; cpu-cycles | 1015750
+BitBench.drop3.drop3; set | 34 25 15 7 16 11 10 3; cpu-cycles | 501899940; func | drop_0xx | 0.983
+hbd.hbd; set | 7 6; cpu-cycles | 4913663
+obsequi.Obsequi; set | 7 6; cpu-cycles | 3802006460; func | does_next_player_win | 0.077; func | negamax | 0.080; func | pack_safe | 0.080; func | toggle_move | 0.091; func | score_move | 0.113; func | pack_vuln | 0.265; func | sort_moves | 0.029; func | hashlookup | 0.190; func | move_generator_stage1 | 0.017; func | does_who_just_moved_win | 0.028
+BitBench.uudecode.uudecode; set | 34 25 15 7 16 11 10 3; cpu-cycles | 196721756; func | decode | 0.941
+BitBench.five11.five11; set | 34 25 15 7 16 11 10 3; cpu-cycles | 3743714710; func | five11 | 0.121; func | main | 0.112
+oggenc.oggenc; set | 7 6; cpu-cycles | 246385193; func | vorbis_lpc_predict | 0.060; func | _vp_couple | 0.045; func | _01forward | 0.025; func | floor1_encode | 0.017; func | bark_noise_hybridmp | 0.095; func | floor1_fit | 0.025; func | _vp_quantize_couple_memo | 0.029; func | dradf4 | 0.022; func | mdct_forward | 0.042; func | mdct_butterflies | 0.029; func | apsort | 0.071; func | _vp_tonemask | 0.112; func | _ve_amp | 0.017; func | mapping0_forward | 0.012; func | seed_chase | 0.061; func | accumulate_fit | 0.038; func | _book_unquantize | 0.020
+DOE-ProxyApps-C.XSBench.XSBench; set | 34 25 15 7 16 11 10 3; cpu-cycles | 8833322507; func | binary_search | 0.330; func | hash | 0.019; func | calculate_macro_xs | 0.195
+minisat.minisat; set | 7 6; cpu-cycles | 15489543023
+BitBench.uuencode.uuencode; set | 34 25 15 7 16 11 10 3; cpu-cycles | 32818576; func | encode_line | 0.675
+lua.lua; set | 7 6; cpu-cycles | 39975758263; func | luaH_get | 0.084; func | luaV_settable | 0.027; func | match | 0.031; func | luaV_gettable | 0.052; func | luaD_poscall | 0.020; func | luaS_newlstr | 0.034; func | sweeplist | 0.033; func | luaD_precall | 0.048; func | luaV_execute | 0.414
+Fhourstones.fhourstones; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2723447768; func | transtore | 0.016; func | transput | 0.163; func | transpose | 0.469; func | wins | 0.122; func | ab | 0.166; func | makemove | 0.021; func | backmove | 0.035
+Fhourstones-3.1.fhourstones3.1; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2995299095
+viterbi.viterbi; set | 7 6; cpu-cycles | 4651506730; func | dec_viterbi_F | 0.237
+sgefa.sgefa; set | 7 6; cpu-cycles | 505486304; func | main | 0.015; func | sgefa | 0.844; func | isamax | 0.017; func | matgen | 0.053; func | sgesl | 0.040
+McCat.09-vor.vor; set | 34 25 15 7 16 11 10 3; cpu-cycles | 334356997; func | splay | 0.664; func | insert | 0.013
+ASC_Sequoia.AMGmk.AMGmk; set | 34 25 15 7 16 11 10 3; cpu-cycles | 17382006034; func | hypre_SeqVectorAxpy | 0.035; func | hypre_BoomerAMGSeqRelax | 0.608; func | hypre_CSRMatrixMatvec | 0.322
+FreeBench.analyzer.analyzer; set | 34 25 15 7 16 11 10 3; cpu-cycles | 144381579
+FreeBench.pcompress2.pcompress2; set | 34 25 15 7 16 11 10 3; cpu-cycles | 344387802; func | encode_symbol | 0.201; func | do_deari | 0.077; func | compare | 0.021; func | do_ari | 0.081; func | compress | 0.015
+FreeBench.distray.distray; set | 34 25 15 7 16 11 10 3; cpu-cycles | 443239271
+McCat.12-IOtest.iotest; set | 34 25 15 7 16 11 10 3; cpu-cycles | 707846485
+FreeBench.fourinarow.fourinarow; set | 34 25 15 7 16 11 10 3; cpu-cycles | 582364427; func | minimax_comp_ab2 | 0.025; func | minimax_player_ab2 | 0.015; func | value | 0.951
+McCat.18-imp.imp; set | 34 25 15 7 16 11 10 3; cpu-cycles | 170646269; func | dfilter | 0.725; func | HorzVariance | 0.150; func | dnon_max | 0.025; func | L_canny | 0.013
+McCat.01-qbsort.qbsort; set | 34 25 15 7 16 11 10 3; cpu-cycles | 136311884; func | LessThan | 0.058; func | QuickSort | 0.048; func | BubbleSort | 0.187
+FreeBench.neural.neural; set | 34 25 15 7 16 11 10 3; cpu-cycles | 540453717; func | main | 0.167; func | runcont | 0.790
+MiBench.automotive-basicmath.automotive-basicmath; set | 34 25 15 7 16 11 10 3; cpu-cycles | 751464006; func | usqrt | 0.015; func | main | 0.014
+FreeBench.pifft.pifft; set | 34 25 15 7 16 11 10 3; cpu-cycles | 236043528; func | rdft | 0.050; func | mp_mul_d2i | 0.308; func | bitrv2conj | 0.013; func | mp_mul_radix_test | 0.019; func | mp_unexp_sub | 0.036; func | bitrv2 | 0.073; func | cftmdl2 | 0.074; func | mp_mulh | 0.073; func | cftb1st | 0.044; func | cftf1st | 0.018; func | cftmdl1 | 0.132; func | cftf082 | 0.018; func | mp_unexp_add | 0.064; func | cftf081 | 0.013; func | mp_mul | 0.013
+7zip.7zip-benchmark; set | 34 25 15 7 16 11 10 3; cpu-cycles | 22521477979; func | CrcUpdateT4 | 0.021; func | LzmaDec_DecodeReal2 | 0.500; func | Bt4_MatchFinder_GetMatches | 0.279; func | LzmaEnc_CodeOneBlock | 0.162
+MiBench.consumer-jpeg.consumer-jpeg; set | 34 25 15 7 16 11 10 3; cpu-cycles | 7205585; func | jpeg_idct_islow | 0.464
+MiBench.consumer-lame.consumer-lame; set | 34 25 15 7 16 11 10 3; cpu-cycles | 389957905; func | HuffmanCode | 0.033; func | putbits | 0.056; func | BF_BitstreamFrame | 0.011; func | quantize_xrpow_ISO | 0.047; func | Huffmancodebits | 0.017; func | choose_table | 0.027; func | mdct_sub48 | 0.102; func | window_subband | 0.151; func | fht | 0.108; func | fft_long | 0.028; func | L3psycho_anal | 0.117; func | count_bits | 0.017; func | fft_short | 0.015; func | outer_loop | 0.030; func | calc_noise1 | 0.019; func | BF_addEntry | 0.019; func | iteration_loop | 0.045
+McCat.05-eks.eks; set | 34 25 15 7 16 11 10 3; cpu-cycles | 9540376; func | QRiterate | 0.660
+MiBench.network-patricia.network-patricia; set | 34 25 15 7 16 11 10 3; cpu-cycles | 246453390
+MallocBench.cfrac.cfrac; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2546294709; func | palloc | 0.014; func | padd | 0.020; func | pidiv | 0.050; func | pfactorQ | 0.044; func | psub | 0.036; func | pcfrac | 0.010; func | psetq | 0.023; func | pdivmod | 0.180; func | pcmp | 0.046; func | pimod | 0.261; func | pmul | 0.032
+MiBench.network-dijkstra.network-dijkstra; set | 34 25 15 7 16 11 10 3; cpu-cycles | 77750519
+McCat.08-main.main; set | 34 25 15 7 16 11 10 3; cpu-cycles | 140269716; func | MultMatrixHPoint | 0.263; func | CalcObject | 0.155; func | TPointToHPoint | 0.243; func | InsertPoint | 0.083; func | CalcObjectChildren | 0.121
+MallocBench.espresso.espresso; set | 34 25 15 7 16 11 10 3; cpu-cycles | 1014243533; func | sm_insert | 0.015; func | scofactor | 0.059; func | full_row | 0.026; func | elim_lowering | 0.061; func | compl_merge | 0.013; func | essen_parts | 0.025; func | massive_count | 0.320; func | cofactor | 0.058; func | expand1 | 0.032; func | do_sm_minimum_cover | 0.014; func | taut_special_cases | 0.028; func | binate_split_select | 0.012
+Olden.mst.mst; set | 34 25 15 7 16 11 10 3; cpu-cycles | 182710026; func | hashfunc | 0.064; func | HashLookup | 0.566; func | HashInsert | 0.082; func | MakeGraph | 0.140
+MiBench.automotive-bitcount.automotive-bitcount; set | 34 25 15 7 16 11 10 3; cpu-cycles | 178285867; func | BW_btbl_bitcount | 0.024; func | ntbl_bitcnt | 0.143; func | main | 0.459; func | ntbl_bitcount | 0.048; func | bit_count | 0.247; func | bitcount | 0.049
+Olden.tsp.tsp; set | 34 25 15 7 16 11 10 3; cpu-cycles | 4097902846; func | tsp | 0.907; func | build_tree | 0.020
+ASC_Sequoia.CrystalMk.CrystalMk; set | 34 25 15 7 16 11 10 3; cpu-cycles | 22709693448; func | Crystal_pow | 0.032; func | Crystal_Cholesky | 0.462; func | SPEdriver | 0.012; func | Crystal_div | 0.195
+MiBench.office-ispell.office-ispell; set | 34 25 15 7 16 11 10 3; cpu-cycles | 1861005
+ASC_Sequoia.IRSmk.IRSmk; set | 34 25 15 7 16 11 10 3; cpu-cycles | 10106182601
+MiBench.telecomm-gsm.telecomm-gsm; set | 34 25 15 7 16 11 10 3; cpu-cycles | 378231921
+McCat.15-trie.trie; set | 34 25 15 7 16 11 10 3; cpu-cycles | 1859957
+Olden.health.health; set | 34 25 15 7 16 11 10 3; cpu-cycles | 543340541
+MiBench.consumer-typeset.consumer-typeset; set | 34 25 15 7 16 11 10 3; cpu-cycles | 273708512
+Bullet.bullet; set | 34 25 15 7 16 11 10 3; cpu-cycles | 11900028962
+MiBench.office-stringsearch.office-stringsearch; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2278764
+Olden.power.power; set | 34 25 15 7 16 11 10 3; cpu-cycles | 3563873132
+FreeBench.mason.mason; set | 34 25 15 7 16 11 10 3; cpu-cycles | 432644277; func | mu | 0.452; func | md | 0.536
+MiBench.security-blowfish.security-blowfish; set | 34 25 15 7 16 11 10 3; cpu-cycles | 1090656
+MiBench.security-rijndael.security-rijndael; set | 34 25 15 7 16 11 10 3; cpu-cycles | 72578786; func | decrypt | 0.631
+MallocBench.gs.gs; set | 34 25 15 7 16 11 10 3; cpu-cycles | 71716130; func | show_proceed | 0.015; func | num_params | 0.014; func | alloc | 0.015; func | gx_copy_cached_char | 0.029; func | zrmoveto | 0.067; func | zshow | 0.014; func | show_continue | 0.015; func | scan_string | 0.029; func | gx_lookup_cached_char | 0.098; func | interp | 0.293; func | gs_distance_transform2fixed | 0.014; func | gs_matrix_invert | 0.029; func | scan_token | 0.043; func | dict_lookup | 0.042; func | gx_lookup_fm_pair | 0.014; func | alloc_free | 0.014; func | zroll | 0.014; func | name_ref | 0.029
+MiBench.telecomm-adpcm.telecomm-adpcm; set | 34 25 15 7 16 11 10 3; cpu-cycles | 220972049; func | adpcm_decoder | 0.786
+Olden.bh.bh; set | 34 25 15 7 16 11 10 3; cpu-cycles | 4408636602; func | walksub | 0.236; func | gravsub | 0.559; func | subdivp | 0.154
+McCat.03-testtrie.testtrie; set | 34 25 15 7 16 11 10 3; cpu-cycles | 18322854; func | trie_scan | 0.161
+NPB-serial.is.is; set | 34 25 15 7 16 11 10 3; cpu-cycles | 18534774318; func | rank | 0.229; func | create_seq | 0.746; func | main | 0.020
+Prolangs-C++.NP.np; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2040703
+Olden.em3d.em3d; set | 34 25 15 7 16 11 10 3; cpu-cycles | 5748407067; func | make_neighbors | 0.859; func | gen_number | 0.042
+McCat.04-bisect.bisect; set | 34 25 15 7 16 11 10 3; cpu-cycles | 253414851; func | dbisect | 0.979
+Olden.voronoi.voronoi; set | 34 25 15 7 16 11 10 3; cpu-cycles | 742554025; func | makeedge | 0.012; func | in_order | 0.010; func | get_points | 0.013; func | do_merge | 0.401
+Olden.perimeter.perimeter; set | 34 25 15 7 16 11 10 3; cpu-cycles | 432458772; func | perimeter | 0.116; func | CountTree | 0.124; func | gtequal_adj_neighbor | 0.363; func | MakeTree | 0.098
+McCat.17-bintr.bintr; set | 34 25 15 7 16 11 10 3; cpu-cycles | 283802850; func | insertSortedBinaryTree | 0.084; func | getSizeBinaryTree | 0.016; func | main | 0.015; func | memberOfBinaryTreeRecurs | 0.802; func | getSumBinaryTree | 0.015
+Olden.treeadd.treeadd; set | 34 25 15 7 16 11 10 3; cpu-cycles | 432982594; func | TreeAlloc | 0.132; func | TreeAdd | 0.134
+MiBench.automotive-susan.automotive-susan; set | 34 25 15 7 16 11 10 3; cpu-cycles | 90038145; func | susan_smoothing | 0.952
+MiBench.security-sha.security-sha; set | 34 25 15 7 16 11 10 3; cpu-cycles | 46110926; func | sha_transform | 0.855
+Prolangs-C++.deriv2.deriv2; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2329911
+MiBench.telecomm-CRC32.telecomm-CRC32; set | 34 25 15 7 16 11 10 3; cpu-cycles | 508260506; func | crc32file | 0.182
+Prolangs-C++.garage.garage; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2063794
+MiBench.telecomm-FFT.telecomm-fft; set | 34 25 15 7 16 11 10 3; cpu-cycles | 128016617; func | fft_float_StrictFP | 0.168; func | main | 0.065; func | fft_float | 0.158
+Olden.bisort.bisort; set | 34 25 15 7 16 11 10 3; cpu-cycles | 1297090796; func | RandTree | 0.316; func | Bisort | 0.064; func | Bimerge | 0.525; func | InOrder | 0.063
+Prolangs-C++.deriv1.deriv1; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2272623
+Prolangs-C++.employ.employ; set | 34 25 15 7 16 11 10 3; cpu-cycles | 15619754
+Prolangs-C++.family.family; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2051573
+Prolangs-C++.ocean.ocean; set | 34 25 15 7 16 11 10 3; cpu-cycles | 137446702; func | Cell::getNeighborWithImage | 0.015; func | operator new@plt  | 0.020; func | main | 0.378; func | Cell::process | 0.030
+Prolangs-C++.office.office; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2242223
+Prolangs-C++.life.life; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2402195087; func | grass::next | 0.037; func | main | 0.059; func | living::sums | 0.369; func | empty::who | 0.012; func | fox::who | 0.048; func | grass::who | 0.080
+Prolangs-C++.primes.primes; set | 34 25 15 7 16 11 10 3; cpu-cycles | 722315397; func | filter::out | 0.988
+Prolangs-C++.fsm.fsm; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2042280
+Prolangs-C++.simul.simul; set | 34 25 15 7 16 11 10 3; cpu-cycles | 12294555; func | pop_around::cycle | 0.658
+Prolangs-C++.shapes.shapes; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2324997
+Prolangs-C++.trees.trees; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2010910
+Prolangs-C++.vcirc.vcirc; set | 34 25 15 7 16 11 10 3; cpu-cycles | 1989093
+PAQ8p.paq8p; set | 34 25 15 7 16 11 10 3; cpu-cycles | 153090519560; func | contextModel2 | 0.407; func | Predictor::update | 0.023; func | Mixer::p | 0.274; func | dmcModel | 0.012; func | ContextMap::mix1 | 0.125; func | ContextMap::E::get | 0.130
+Prolangs-C.TimberWolfMC.timberwolfmc; set | 34 25 15 7 16 11 10 3; cpu-cycles | 769050
+Prolangs-C.cdecl.cdecl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 1227910
+Prolangs-C.agrep.agrep; set | 34 25 15 7 16 11 10 3; cpu-cycles | 7138422; func | agrep | 0.540
+Prolangs-C++.city.city; set | 34 25 15 7 16 11 10 3; cpu-cycles | 16213874; func | broken_light::next_state | 0.279; func | operator<= | 0.469
+Prolangs-C.loader.loader; set | 34 25 15 7 16 11 10 3; cpu-cycles | 745992
+Prolangs-C.allroots.allroots; set | 34 25 15 7 16 11 10 3; cpu-cycles | 811043
+Prolangs-C.fixoutput.fixoutput; set | 34 25 15 7 16 11 10 3; cpu-cycles | 644327
+Prolangs-C.football.football; set | 34 25 15 7 16 11 10 3; cpu-cycles | 556977
+Prolangs-C++.objects.objects; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2084388
+Prolangs-C.gnugo.gnugo; set | 34 25 15 7 16 11 10 3; cpu-cycles | 79431805; func | findsaver | 0.093; func | count | 0.815; func | eval | 0.019
+Prolangs-C.unix-smail.unix-smail; set | 34 25 15 7 16 11 10 3; cpu-cycles | 4116676
+TSVC.ControlFlow-flt.ControlFlow-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 11900411460; func | s2711 | 0.052; func | s161 | 0.030; func | s273 | 0.107; func | s2712 | 0.048; func | s442 | 0.018; func | s1161 | 0.057; func | s271 | 0.231; func | s1279 | 0.016; func | s481 | 0.016; func | s2710 | 0.010; func | s276 | 0.060; func | s272 | 0.064; func | s162 | 0.057; func | s2275 | 0.076; func | s277 | 0.013; func | s441 | 0.026; func | s279 | 0.013; func | s274 | 0.021; func | s278 | 0.034; func | s482 | 0.013; func | s443 | 0.029
+Prolangs-C.compiler.compiler; set | 34 25 15 7 16 11 10 3; cpu-cycles | 669862
+Prolangs-C.archie-client.archie; set | 34 25 15 7 16 11 10 3; cpu-cycles | 616223
+TSVC.Expansion-flt.Expansion-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 4316532740; func | s257 | 0.039; func | s261 | 0.092; func | s256 | 0.072; func | s2251 | 0.106; func | s251 | 0.136; func | s255 | 0.057; func | s254 | 0.082; func | s258 | 0.016; func | s1251 | 0.197; func | s252 | 0.027; func | s3251 | 0.081; func | s253 | 0.094
+Ptrdist.bc.bc; set | 34 25 15 7 16 11 10 3; cpu-cycles | 1210368188; func | get_array_num | 0.012; func | free_num | 0.017; func | load_var | 0.012; func | execute | 0.141; func | _do_add | 0.012; func | bc_divide | 0.110; func | bc_multiply | 0.052
+Prolangs-C.simulator.simulator; set | 34 25 15 7 16 11 10 3; cpu-cycles | 739619
+TSVC.GlobalDataFlow-dbl.GlobalDataFlow-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 9728645911; func | s151 | 0.086; func | s131 | 0.085; func | s141 | 0.054; func | s4121 | 0.021; func | s452 | 0.096; func | s132 | 0.164; func | s152 | 0.044; func | s431 | 0.146; func | s471 | 0.020
+Ptrdist.ft.ft; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2826992348; func | GenGraph | 0.861; func | DeleteMin | 0.013; func | MST | 0.063; func | PrintGraph | 0.020
+Ptrdist.anagram.anagram; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2047681623; func | BuildWord | 0.195; func | FindAnagram | 0.654; func | main | 0.063
+TSVC.IndirectAddressing-flt.IndirectAddressing-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 7486347504; func | s4113 | 0.120; func | s4116 | 0.163; func | s4112 | 0.100; func | s4117 | 0.107; func | s4115 | 0.214; func | s491 | 0.134; func | s4114 | 0.156
+Ptrdist.yacr2.yacr2; set | 34 25 15 7 16 11 10 3; cpu-cycles | 1558238439; func | CleanNet | 0.014; func | NoHCV | 0.071; func | Maze3 | 0.706; func | ExtendOK | 0.042; func | DFSAboveVCG | 0.043; func | VCV | 0.018; func | Maze2Mech | 0.045
+TSVC.ControlFlow-dbl.ControlFlow-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 12971126820
+TSVC.ControlLoops-dbl.ControlLoops-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 8497897849
+Prolangs-C.assembler.assembler; set | 34 25 15 7 16 11 10 3; cpu-cycles | 714280
+TSVC.InductionVariable-dbl.InductionVariable-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 10584678440; func | s125 | 0.053; func | s123 | 0.060; func | s124 | 0.074; func | s453 | 0.243; func | s128 | 0.149; func | s121 | 0.122; func | s127 | 0.122; func | s122 | 0.139; func | s126 | 0.037
+TSVC.LoopRerolling-dbl.LoopRerolling-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 15469068089; func | s1351 | 0.152; func | s352 | 0.384; func | s353 | 0.107; func | s351 | 0.352
+TSVC.CrossingThresholds-dbl.CrossingThresholds-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 7478588573; func | s2101 | 0.011; func | s293 | 0.124; func | s2102 | 0.231; func | s1281 | 0.323; func | s281 | 0.096; func | s2111 | 0.074; func | s291 | 0.087; func | s292 | 0.054
+TSVC.Packing-dbl.Packing-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 7661438532
+TSVC.Equivalencing-flt.Equivalencing-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 3906958178
+Prolangs-C.bison.mybison; set | 34 25 15 7 16 11 10 3; cpu-cycles | 4158960
+TSVC.InductionVariable-flt.InductionVariable-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 8497652625; func | s121 | 0.067; func | s127 | 0.138; func | s122 | 0.172; func | s124 | 0.069; func | s123 | 0.069; func | s453 | 0.302; func | s128 | 0.123; func | s125 | 0.029; func | s126 | 0.030
+TSVC.LinearDependence-dbl.LinearDependence-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 19059407384; func | s114 | 0.029; func | s115 | 0.113; func | s113 | 0.120; func | s1115 | 0.035; func | s112 | 0.090; func | s119 | 0.022; func | s1113 | 0.060; func | s118 | 0.027; func | s1112 | 0.049; func | s1111 | 0.138; func | s1119 | 0.013; func | s000 | 0.018; func | s111 | 0.030; func | s116 | 0.255
+TSVC.Reductions-flt.Reductions-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 19689445652
+Trimaran.enc-md5.enc-md5; set | 34 25 15 7 16 11 10 3; cpu-cycles | 4565805884; func | md5_process | 0.993
+TSVC.LoopRestructuring-dbl.LoopRestructuring-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 13188106107; func | s2233 | 0.134; func | s233 | 0.258; func | s221 | 0.047; func | s235 | 0.267; func | s1232 | 0.069; func | s232 | 0.029; func | s1221 | 0.029; func | s231 | 0.134; func | s222 | 0.031
+TSVC.LinearDependence-flt.LinearDependence-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 16476450713; func | s1111 | 0.160; func | s1112 | 0.029; func | s118 | 0.025; func | s1115 | 0.027; func | s1113 | 0.070; func | s119 | 0.013; func | s111 | 0.035; func | s115 | 0.131; func | s116 | 0.223; func | s112 | 0.105; func | s113 | 0.139; func | s114 | 0.026
+TSVC.Symbolics-dbl.Symbolics-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 8410707276; func | s173 | 0.434; func | s175 | 0.052; func | s171 | 0.051; func | s172 | 0.174; func | s174 | 0.289
+Prolangs-C.plot2fig.plot2fig; set | 34 25 15 7 16 11 10 3; cpu-cycles | 723718
+mediabench.adpcm.rawcaudio.rawcaudio; set | 34 25 15 7 16 11 10 3; cpu-cycles | 8330138; func | adpcm_coder | 0.521
+TSVC.NodeSplitting-flt.NodeSplitting-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 15559042044
+Trimaran.enc-3des.enc-3des; set | 34 25 15 7 16 11 10 3; cpu-cycles | 4197333128; func | des_crypt | 0.163; func | des3_crypt | 0.833
+SciMark2-C.scimark2; set | 34 25 15 7 16 11 10 3; cpu-cycles | 139753263726
+Ptrdist.ks.ks; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2586694261; func | FindMaxGpAndSwap | 0.988
+mediabench.gsm.toast.toast; set | 34 25 15 7 16 11 10 3; cpu-cycles | 46085042; func | Gsm_Long_Term_Predictor | 0.503; func | Short_term_analysis_filtering | 0.182; func | Gsm_Preprocess | 0.102; func | Gsm_RPE_Encoding | 0.044
+Trimaran.enc-rc4.enc-rc4; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2265407078; func | main | 0.996
+TSVC.Searching-flt.Searching-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 8161439547; func | s332 | 0.405; func | s331 | 0.593
+TSVC.GlobalDataFlow-flt.GlobalDataFlow-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 5001681337
+TSVC.ControlLoops-flt.ControlLoops-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 7795839315; func | vas | 0.029; func | vbor | 0.222; func | vtv | 0.038; func | vag | 0.025; func | vpvtv | 0.022; func | vdotr | 0.268; func | vpvpv | 0.023; func | vtvtv | 0.023; func | vsumr | 0.270; func | vpv | 0.038
+BenchmarkGame.nsieve-bits; set | 3 19 34 15; cpu-cycles | 1673412630; func | main | 0.995
+VersaBench.dbms.dbms; set | 34 25 15 7 16 11 10 3; cpu-cycles | 3137551785; func | keysUnion | 0.017; func | getString | 0.039; func | chooseEntry | 0.015; func | volume | 0.020; func | penalty | 0.017; func | insertEntry | 0.013; func | keyUnion | 0.016; func | consistentKey | 0.344; func | deleteEntry | 0.193
+TSVC.StatementReordering-flt.StatementReordering-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 6073533835
+BenchmarkGame.puzzle; set | 3 19 34 15; cpu-cycles | 410446446
+TSVC.CrossingThresholds-flt.CrossingThresholds-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 5399885480; func | s2111 | 0.099; func | s2102 | 0.263; func | s291 | 0.100; func | s292 | 0.072; func | s2101 | 0.017; func | s293 | 0.151; func | s1281 | 0.198; func | s281 | 0.100
+TSVC.IndirectAddressing-dbl.IndirectAddressing-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 8541977574; func | s491 | 0.158; func | s4112 | 0.100; func | s4115 | 0.184; func | s4113 | 0.149; func | s4117 | 0.108; func | s4114 | 0.159; func | s4116 | 0.141
+VersaBench.ecbdes.ecbdes; set | 34 25 15 7 16 11 10 3; cpu-cycles | 5574460376
+TSVC.Symbolics-flt.Symbolics-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 4611814904; func | s174 | 0.205; func | s172 | 0.317; func | s175 | 0.041; func | s173 | 0.396; func | s171 | 0.040
+BenchmarkGame.spectral-norm; set | 3 19 34 15; cpu-cycles | 3218578827; func | eval_AtA_times_u | 0.998
+TSVC.Equivalencing-dbl.Equivalencing-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 5036544130
+Trimaran.netbench-crc.netbench-crc; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2065345095; func | main | 0.917
+Adobe-C++.loop_unroll; set | 3 19 34 15; cpu-cycles | 5846993824; func | loop_inner_body<17, double>::do_work  | 0.161; func | loop_inner_body<25, double>::do_work  | 0.063; func | loop_inner_body<9, double>::do_work  | 0.368
+TSVC.LoopRerolling-flt.LoopRerolling-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 12675638104; func | s351 | 0.319; func | s353 | 0.132; func | s1351 | 0.080; func | s352 | 0.468
+TSVC.Expansion-dbl.Expansion-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 7002900406
+Adobe-C++.simple_types_constant_folding; set | 3 19 34 15; cpu-cycles | 2208162333
+VersaBench.8b10b.8b10b; set | 34 25 15 7 16 11 10 3; cpu-cycles | 11927311755; func | calc | 0.889; func | runTestbench | 0.111
+TSVC.LoopRestructuring-flt.LoopRestructuring-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 9812783996
+BenchmarkGame.fannkuch; set | 3 19 34 15; cpu-cycles | 6156066166; func | main | 0.999
+VersaBench.beamformer.beamformer; set | 34 25 15 7 16 11 10 3; cpu-cycles | 2354045967; func | begin | 0.828
+Dhrystone.dry; set | 3 19 34 15; cpu-cycles | 1001489951; func | Proc0 | 0.995
+TSVC.NodeSplitting-dbl.NodeSplitting-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 17061846806; func | s2244 | 0.055; func | s244 | 0.070; func | s243 | 0.061; func | s242 | 0.082; func | s241 | 0.657; func | s1244 | 0.075
+TSVC.Recurrences-flt.Recurrences-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 11526565587
+CoyoteBench.huffbench; set | 3 19 34 15; cpu-cycles | 29593700231; func | compdecomp | 0.989
+mediabench.g721.g721encode.encode; set | 34 25 15 7 16 11 10 3; cpu-cycles | 93182103; func | step_size | 0.019; func | g721_encoder | 0.085; func | main | 0.022; func | update | 0.320; func | fmult | 0.344; func | predictor_zero | 0.028; func | quantize | 0.077
+TSVC.Packing-flt.Packing-flt; set | 34 25 15 7 16 11 10 3; cpu-cycles | 6815436674
+TSVC.Searching-dbl.Searching-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 8032545455; func | s331 | 0.601; func | s332 | 0.398
+Misc-C++.mandel-text; set | 3 19 34 15; cpu-cycles | 5292103520; func | main | 0.999
+Trimaran.enc-pc1.enc-pc1; set | 34 25 15 7 16 11 10 3; cpu-cycles | 1183293047; func | main | 0.049; func | assemble | 0.945
+Misc-C++.Large.sphereflake; set | 3 19 34 15; cpu-cycles | 18182381899; func | node_t::intersect<false> | 0.583; func | main | 0.405
+TSVC.Recurrences-dbl.Recurrences-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 11538852366; func | s321 | 0.444; func | s322 | 0.333; func | s323 | 0.222
+mediabench.jpeg.jpeg-6a.cjpeg; set | 34 25 15 7 16 11 10 3; cpu-cycles | 6621514; func | jpeg_gen_optimal_table | 0.429
+Misc-C++.stepanov_container; set | 3 19 34 15; cpu-cycles | 11308667698; func | set_test | 0.173; func | list_test | 0.019; func | std::__introsort_loop<double*, long, __gnu_cxx::__ops::_Iter_less_iter>  | 0.094; func | std::_Rb_tree<double, double, std::_Identity<double>, std::less<double>, std::allocator<double> >::_M_erase  | 0.020; func | std::__introsort_loop<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter>  | 0.047; func | std::__unguarded_partition_pivot<std::_Deque_iterator<double, double&, double*>, __gnu_cxx::__ops::_Iter_less_iter>  | 0.053; func | std::__cxx11::list<double, std::allocator<double> >::sort  | 0.109; func | std::_Rb_tree<double, double, std::_Identity<double>, std::less<double>, std::allocator<double> >::_M_get_insert_hint_equal_pos  | 0.228; func | std::__final_insertion_sort<double*, __gnu_cxx::__ops::_Iter_less_iter>  | 0.028
+VersaBench.bmm.bmm; set | 34 25 15 7 16 11 10 3; cpu-cycles | 5435184605; func | matmult | 0.995
+Misc.dt; set | 3 19 34 15; cpu-cycles | 2234316085; func | main | 0.998
+BenchmarkGame.Large.fasta; set | 3 19 34 15; cpu-cycles | 2125369689; func | main | 0.951
+Misc.evalloop; set | 3 19 34 15; cpu-cycles | 1260130111; func | eval | 0.726; func | execute | 0.271
+tramp3d-v4.tramp3d-v4; set | 34 25 15 7 16 11 10 3; cpu-cycles | 874506489; func | Adv5::Y::MomentumfluxX<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, CompFwd<Engine<3, Vector<3, double, Full>, BrickViewU>, Loc<1> > >, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.025; func | Adv5::Z::Energyflux<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.019; func | Adv5::Z::MomentumfluxY<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, CompFwd<Engine<3, Vector<3, double, Full>, BrickViewU>, Loc<1> > >, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.029; func | Adv5::Z::MomentumfluxZ<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.020; func | Adv5::Y::MomentumfluxZ<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, CompFwd<Engine<3, Vector<3, double, Full>, BrickViewU>, Loc<1> > >, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, ExpressionTag<BinaryNode<OpAdd, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Scalar<double> > > >, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.026; func | Adv5::Y::MomentumfluxY<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.020; func | LoopApplyEvaluator::evaluate<ApplyMultiArgLoc<MultiArg2<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >, Adv5::VelupdY<3> >, Interval<3> >  | 0.019; func | LoopApplyEvaluator::evaluate<ApplyMultiArgLoc<MultiArg3<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >, Adv5::X::Momentumflux2X<3> >, Interval<3> >  | 0.010; func | KernelEvaluator<InlineKernelTag>::evaluate<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickView>, OpAssign, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, ExpressionTag<UnaryNode<FnSqrt, BinaryNode<OpDivide, BinaryNode<OpMultiply, Scalar<double>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickView> >, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickView> > > > >, Interval<3> >  | 0.029; func | KernelEvaluator<InlineKernelTag>::evaluate<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickView>, OpAssign, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, ExpressionTag<BinaryNode<OpMultiply, Scalar<double>, BinaryNode<OpAdd, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickView>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickView> > > > >, Interval<3> >  | 0.011; func | LoopApplyEvaluator::evaluate<ApplyMultiArgLoc<MultiArg2<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >, Adv5::Ekin<3> >, Interval<3> >  | 0.060; func | Forgas::TUpd<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, ConstantFunction>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, Zero<double>, ConstantFunction> >  | 0.011; func | Adv5::X::MomentumfluxY<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, CompFwd<Engine<3, Vector<3, double, Full>, BrickViewU>, Loc<1> > >, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.029; func | Adv5::X::Energyflux<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.019; func | Forgas::TGuess<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, ConstantFunction>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, Zero<double>, ConstantFunction>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, ConstantFunction> >  | 0.024; func | Adv5::Y::Energyflux<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.019; func | Adv5::Y::Massflow<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.019; func | KernelEvaluator<InlineKernelTag>::evaluate<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickView>, OpAssign, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickView>, Interval<3> >  | 0.035; func | CFL::CflFunctor<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, ConstantFunction>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.019; func | LoopApplyEvaluator::evaluate<ApplyMultiArgLoc<MultiArg2<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >, Adv5::VelupdZ<3> >, Interval<3> >  | 0.012; func | Forgas::VYUpd<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.016; func | GridLayout<3>::~GridLayout | 0.011; func | Adv5::Z::Massflow<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.017; func | Adv5::X::MomentumfluxX<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.020; func | Adv5::X::MomentumfluxZ<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, CompFwd<Engine<3, Vector<3, double, Full>, BrickViewU>, Loc<1> > >, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, ExpressionTag<BinaryNode<OpAdd, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Scalar<double> > > >, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.026; func | Forgas::APressure<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.017; func | Adv5::X::Massflow<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.020; func | LoopApplyEvaluator::evaluate<ApplyMultiArgLoc<MultiArg2<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >, Adv5::VelupdX<3> >, Interval<3> >  | 0.016; func | KernelEvaluator<InlineKernelTag>::evaluate<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickView>, OpAssign, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, ExpressionTag<BinaryNode<OpDivide, BinaryNode<OpSubtract, BinaryNode<OpDivide, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickView>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickView> >, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickView> >, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, ConstantFunction> > > >, Interval<3> >  | 0.034; func | Adv5::Z::MomentumfluxX<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, CompFwd<Engine<3, Vector<3, double, Full>, BrickViewU>, Loc<1> > >, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.030; func | Forgas::VXUpd<3>::operator()<Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU>, Field<UniformRectilinearMesh<MeshTraits<3, double, UniformRectilinearTag, CartesianTag, 3> >, double, BrickViewU> >  | 0.024
+TSVC.Reductions-dbl.Reductions-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 11475356493; func | s311 | 0.187; func | s316 | 0.093; func | s314 | 0.094; func | s3111 | 0.017; func | s315 | 0.019; func | s3112 | 0.019; func | s13110 | 0.014; func | s3110 | 0.014; func | s3113 | 0.076; func | s31111 | 0.024; func | s313 | 0.102; func | s312 | 0.187; func | s317 | 0.047; func | s318 | 0.032; func | s319 | 0.074
+Misc.himenobmtxpa; set | 3 19 34 15; cpu-cycles | 1760474781; func | jacobi | 0.988
+Misc.lowercase; set | 3 19 34 15; cpu-cycles | 733742
+Adobe-C++.simple_types_loop_invariant; set | 3 19 34 15; cpu-cycles | 5288611338
+TSVC.StatementReordering-dbl.StatementReordering-dbl; set | 34 25 15 7 16 11 10 3; cpu-cycles | 8038554316
+Misc.pi; set | 3 19 34 15; cpu-cycles | 2198933646
+Misc.flops-1; set | 3 19 34 15; cpu-cycles | 11420910493
+BenchmarkGame.n-body; set | 3 19 34 15; cpu-cycles | 4517104134; func | advance | 0.998
+Misc.flops-4; set | 3 19 34 15; cpu-cycles | 7209217851; func | main | 0.999
+Trimaran.netbench-url.netbench-url; set | 34 25 15 7 16 11 10 3; cpu-cycles | 10004109798; func | find_destination | 0.993
+BenchmarkGame.recursive; set | 3 19 34 15; cpu-cycles | 2392887788; func | fibFP | 0.530; func | ack | 0.271; func | tak | 0.197
+Misc.salsa20; set | 3 19 34 15; cpu-cycles | 15356008991
+Dhrystone.fldry; set | 3 19 34 15; cpu-cycles | 1157253000; func | Proc0 | 0.995
+Misc.whetstone; set | 3 19 34 15; cpu-cycles | 3357456562; func | main | 0.331
+llubenchmark.llu; set | 34 25 15 7 16 11 10 3; cpu-cycles | 13235144826
+Misc.flops-5; set | 3 19 34 15; cpu-cycles | 13834128056; func | main | 0.995
+mediabench.adpcm.rawdaudio.rawdaudio; set | 34 25 15 7 16 11 10 3; cpu-cycles | 3315681
+Linpack.linpack-pc; set | 3 19 34 15; cpu-cycles | 4211754957; func | dgesl | 0.021; func | main | 0.278; func | dgefa | 0.698
+mediabench.mpeg2.mpeg2dec.mpeg2decode; set | 34 25 15 7 16 11 10 3; cpu-cycles | 41727585
+Misc.fp-convert; set | 3 19 34 15; cpu-cycles | 8956982766
+CoyoteBench.almabench; set | 3 19 34 15; cpu-cycles | 41677916424; func | planetpv | 0.097
+McGill.chomp; set | 3 19 34 15; cpu-cycles | 4799952896
+nbench.nbench; set | 34 25 15 7 16 11 10 3; cpu-cycles | 4340444034
+Misc.mandel-2; set | 3 19 34 15; cpu-cycles | 4257315370
+CoyoteBench.fftbench; set | 3 19 34 15; cpu-cycles | 2322273632
+sim.sim; set | 34 25 15 7 16 11 10 3; cpu-cycles | 8499250710
+McGill.misr; set | 3 19 34 15; cpu-cycles | 336182420
+Polybench.datamining.covariance.covariance; set | 3 19 34 15; cpu-cycles | 6881115383; func | main | 0.987
+McGill.exptree; set | 3 19 34 15; cpu-cycles | 955963
+Adobe-C++.functionobjects; set | 3 19 34 15; cpu-cycles | 10193064147; func | quicksort<double*, bool (*)(double, double)>  | 0.214; func | less_than_function2 | 0.058; func | std::__introsort_loop<double*, long, __gnu_cxx::__ops::_Iter_comp_iter<std::less<double> > >  | 0.046; func | quicksort<double*> | 0.068; func | std::__introsort_loop<double*, long, __gnu_cxx::__ops::_Iter_less_iter>  | 0.046; func | main | 0.032; func | std::__final_insertion_sort<double*, __gnu_cxx::__ops::_Iter_comp_iter<less_than_functor> >  | 0.020; func | std::__introsort_loop<double*, long, __gnu_cxx::__ops::_Iter_comp_iter<bool (*)(double, double)> >  | 0.049; func | std::__introsort_loop<double*, long, __gnu_cxx::__ops::_Iter_comp_iter<inline_less_than_functor> >  | 0.047; func | quicksort<double*, less_than_functor>  | 0.072; func | quicksort<double*, inline_less_than_functor>  | 0.072; func | quicksort<double*, std::less<double> >  | 0.072; func | std::__final_insertion_sort<double*, __gnu_cxx::__ops::_Iter_less_iter>  | 0.020; func | std::__final_insertion_sort<double*, __gnu_cxx::__ops::_Iter_comp_iter<std::less<double> > >  | 0.020; func | less_than_function1 | 0.022; func | std::__introsort_loop<double*, long, __gnu_cxx::__ops::_Iter_comp_iter<less_than_functor> >  | 0.046; func | std::__final_insertion_sort<double*, __gnu_cxx::__ops::_Iter_comp_iter<inline_less_than_functor> >  | 0.020
+McGill.queens; set | 3 19 34 15; cpu-cycles | 5662314008; func | find | 0.993
+Misc.flops-2; set | 3 19 34 15; cpu-cycles | 2716498674
+Adobe-C++.stepanov_abstraction; set | 3 19 34 15; cpu-cycles | 14303776749
+Misc.flops-8; set | 3 19 34 15; cpu-cycles | 12089853995; func | main | 0.996
+Misc-C++-EH.spirit; set | 3 19 34 15; cpu-cycles | 23087172281
+Adobe-C++.stepanov_vector; set | 3 19 34 15; cpu-cycles | 7684438770; func | test_insertion_sort<double*, double>  | 0.015; func | benchmark::heapsort<std::reverse_iterator<double*>, double>  | 0.024; func | benchmark::quicksort<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, double>  | 0.021; func | test_insertion_sort<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, double>  | 0.015; func | benchmark::quicksort<std::reverse_iterator<std::reverse_iterator<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > > > >, double>  | 0.047; func | main | 0.596; func | benchmark::quicksort<double*, double>  | 0.023; func | benchmark::heapsort<std::reverse_iterator<std::reverse_iterator<double*> >, double>  | 0.020; func | benchmark::quicksort<std::reverse_iterator<std::reverse_iterator<double*> >, double>  | 0.024; func | benchmark::heapsort<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, double>  | 0.021; func | benchmark::heapsort<std::reverse_iterator<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > > >, double>  | 0.050; func | benchmark::heapsort<std::reverse_iterator<std::reverse_iterator<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > > > >, double>  | 0.042; func | benchmark::heapsort<double*, double>  | 0.021; func | benchmark::quicksort<std::reverse_iterator<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > > >, double>  | 0.046; func | benchmark::quicksort<std::reverse_iterator<double*>, double>  | 0.023
+BenchmarkGame.partialsums; set | 3 19 34 15; cpu-cycles | 1896889276; func | main | 0.169
+Misc-C++.Large.ray; set | 3 19 34 15; cpu-cycles | 10449120983
+Misc-C++.bigfib; set | 3 19 34 15; cpu-cycles | 711615127; func | BigInt::BigInt | 0.469
+CoyoteBench.lpbench; set | 3 19 34 15; cpu-cycles | 9969094646; func | main | 0.012; func | dgefa | 0.985
+Misc-C++.oopack_v1p8; set | 3 19 34 15; cpu-cycles | 536779557; func | IteratorBenchmark::c_style | 0.147; func | MaxBenchmark::c_style | 0.114; func | IteratorBenchmark::oop_style | 0.147; func | ComplexBenchmark::oop_style | 0.012; func | MatrixBenchmark::oop_style | 0.219; func | MaxBenchmark::oop_style | 0.112; func | ComplexBenchmark::c_style | 0.014; func | MatrixBenchmark::c_style | 0.209
+Misc.ffbench; set | 3 19 34 15; cpu-cycles | 2016271361; func | fourn | 0.996
+Misc.flops; set | 3 19 34 15; cpu-cycles | 34398013185; func | main | 1.000
+Polybench.linear-algebra.kernels.2mm.2mm; set | 3 19 34 15; cpu-cycles | 60933004431; func | main | 0.996
+Polybench.linear-algebra.kernels.3mm.3mm; set | 3 19 34 15; cpu-cycles | 84932382618; func | main | 0.998
+Misc.perlin; set | 3 19 34 15; cpu-cycles | 13083318346
+Misc-C++.stepanov_v1p2; set | 3 19 34 15; cpu-cycles | 26194793565; func | test<Double*, Double>  | 0.077; func | test<reverse_iterator<Double*, Double>, Double>  | 0.077; func | test<reverse_iterator<reverse_iterator<Double_pointer, Double>, Double>, Double>  | 0.077; func | test<reverse_iterator<double*, double>, double>  | 0.077; func | test<Double_pointer, Double>  | 0.077; func | test<reverse_iterator<Double_pointer, Double>, Double>  | 0.077; func | test0 | 0.077; func | test<reverse_iterator<reverse_iterator<double*, double>, double>, double>  | 0.077; func | test<double*, double>  | 0.077; func | test<double_pointer, double>  | 0.077; func | test<reverse_iterator<reverse_iterator<Double*, Double>, Double>, Double>  | 0.077; func | test<reverse_iterator<reverse_iterator<double_pointer, double>, double>, double>  | 0.077; func | test<reverse_iterator<double_pointer, double>, double>  | 0.077
+Polybench.linear-algebra.kernels.bicg.bicg; set | 3 19 34 15; cpu-cycles | 694129129
+Misc.flops-3; set | 3 19 34 15; cpu-cycles | 16921799639; func | main | 0.997
+Misc.richards_benchmark; set | 3 19 34 15; cpu-cycles | 1707451728; func | idlefn | 0.087; func | handlerfn | 0.226; func | workfn | 0.033; func | schedule | 0.499; func | devfn | 0.151
+Polybench.linear-algebra.kernels.gesummv.gesummv; set | 3 19 34 15; cpu-cycles | 1006734744; func | main | 0.949
+Misc.flops-7; set | 3 19 34 15; cpu-cycles | 5256162777; func | main | 0.997
+Misc.ReedSolomon; set | 3 19 34 15; cpu-cycles | 10341923620; func | rsenc_204 | 0.367; func | main | 0.014; func | rsdec_204 | 0.545
+Polybench.linear-algebra.kernels.atax.atax; set | 3 19 34 15; cpu-cycles | 567533150; func | main | 0.942
+Polybench.linear-algebra.kernels.mvt.mvt; set | 3 19 34 15; cpu-cycles | 845629663; func | main | 0.970
+Misc.mandel; set | 3 19 34 15; cpu-cycles | 2732025958; func | mandel | 0.448
+Misc.fbench; set | 3 19 34 15; cpu-cycles | 5781653761
+Polybench.linear-algebra.kernels.cholesky.cholesky; set | 3 19 34 15; cpu-cycles | 1521823294; func | main | 0.990
+Polybench.linear-algebra.kernels.syr2k.syr2k; set | 3 19 34 15; cpu-cycles | 29072050618; func | main | 0.996
+Polybench.linear-algebra.kernels.gemver.gemver; set | 3 19 34 15; cpu-cycles | 1108900352; func | main | 0.921
+Polybench.linear-algebra.solvers.gramschmidt.gramschmidt; set | 3 19 34 15; cpu-cycles | 5624234508; func | main | 0.720
+Polybench.linear-algebra.kernels.doitgen.doitgen; set | 3 19 34 15; cpu-cycles | 2816612626
+Misc.flops-6; set | 3 19 34 15; cpu-cycles | 10978876222; func | main | 1.000
+Polybench.stencils.fdtd-2d.fdtd-2d; set | 3 19 34 15; cpu-cycles | 1911144282
+Polybench.medley.reg_detect.reg_detect; set | 3 19 34 15; cpu-cycles | 56924565; func | main | 0.904
+Polybench.linear-algebra.kernels.trisolv.trisolv; set | 3 19 34 15; cpu-cycles | 567593518
+Misc.matmul_f64_4x4; set | 3 19 34 15; cpu-cycles | 4297557451
+Polybench.stencils.jacobi-2d-imper.jacobi-2d-imper; set | 3 19 34 15; cpu-cycles | 528238043; func | main | 0.961
+Polybench.linear-algebra.solvers.dynprog.dynprog; set | 3 19 34 15; cpu-cycles | 958170445; func | main | 0.984
+Polybench.stencils.fdtd-apml.fdtd-apml; set | 3 19 34 15; cpu-cycles | 2888225952
+Polybench.stencils.jacobi-1d-imper.jacobi-1d-imper; set | 3 19 34 15; cpu-cycles | 11386976
+Shootout-C++.Shootout-C++-ary; set | 3 19 34 15; cpu-cycles | 90787882
+Shootout-C++.Shootout-C++-ary3; set | 3 19 34 15; cpu-cycles | 3816256391
+Polybench.stencils.seidel-2d.seidel-2d; set | 3 19 34 15; cpu-cycles | 2134002364; func | main | 0.989
+Shootout-C++.Shootout-C++-fibo; set | 3 19 34 15; cpu-cycles | 4387131285; func | fib | 1.000
+Shootout-C++.Shootout-C++-lists; set | 3 19 34 15; cpu-cycles | 9727475712; func | operator new@plt  | 0.012; func | test_lists | 0.129; func | operator delete@plt  | 0.013
+Misc.oourafft; set | 3 19 34 15; cpu-cycles | 20354998029; func | cft1st | 0.227; func | cdft | 0.060; func | cftfsub | 0.037; func | cftmdl | 0.580; func | bitrv2 | 0.015; func | main | 0.066
+Shootout-C++.Shootout-C++-hash2; set | 3 19 34 15; cpu-cycles | 5798635701; func | main | 0.536; func | __gnu_cxx::hashtable<std::pair<char const* const, int>, char const*, __gnu_cxx::hash<char const*>, std::_Select1st<std::pair<char const* const, int> >, eqstr, std::allocator<int> >::resize  | 0.035
+Shootout-C++.Shootout-C++-methcall; set | 3 19 34 15; cpu-cycles | 10754813372; func | NthToggle::activate | 0.198; func | main | 0.530; func | Toggle::activate | 0.271
+Polybench.datamining.correlation.correlation; set | 3 19 34 15; cpu-cycles | 6425976319
+Shootout-C++.Shootout-C++-matrix; set | 3 19 34 15; cpu-cycles | 3888952064; func | main | 0.984
+Shootout-C++.Shootout-C++-moments; set | 3 19 34 15; cpu-cycles | 175057690
+Polybench.linear-algebra.kernels.symm.symm; set | 3 19 34 15; cpu-cycles | 47876054644; func | main | 0.998
+Shootout-C++.Shootout-C++-random; set | 3 19 34 15; cpu-cycles | 5753725750; func | main | 0.997
+Polybench.linear-algebra.kernels.trmm.trmm; set | 3 19 34 15; cpu-cycles | 7792953465; func | main | 0.997
+Shootout-C++.Shootout-C++-sieve; set | 3 19 34 15; cpu-cycles | 4823372774; func | sieve | 0.919
+Shootout-C++.Shootout-C++-hello; set | 3 19 34 15; cpu-cycles | 2511406
+Shootout-C++.Shootout-C++-objinst; set | 3 19 34 15; cpu-cycles | 2578613
+Polybench.stencils.adi.adi; set | 3 19 34 15; cpu-cycles | 9465781714; func | kernel_adi | 0.983; func | main | 0.014
+Polybench.linear-algebra.kernels.gemm.gemm; set | 3 19 34 15; cpu-cycles | 30589127927; func | main | 0.999
+Shootout-C++.Shootout-C++-ackermann; set | 3 19 34 15; cpu-cycles | 2598905880; func | Ack | 0.998
+Shootout-C++.Shootout-C++-ary2; set | 3 19 34 15; cpu-cycles | 66777830; func | main | 0.583
+Shootout-C++.Shootout-C++-spellcheck; set | 3 19 34 15; cpu-cycles | 2475795
+Polybench.linear-algebra.kernels.syrk.syrk; set | 3 19 34 15; cpu-cycles | 15917681804; func | main | 0.998
+Shootout-C++.Shootout-C++-hash; set | 3 19 34 15; cpu-cycles | 1099857660; func | main | 0.193; func | __gnu_cxx::hashtable<std::pair<char const* const, int>, char const*, __gnu_cxx::hash<char const*>, std::_Select1st<std::pair<char const* const, int> >, eqstr, std::allocator<int> >::resize  | 0.104
+Polybench.linear-algebra.solvers.durbin.durbin; set | 3 19 34 15; cpu-cycles | 1389893345; func | main | 0.950
+Shootout-C++.Shootout-C++-reversefile; set | 3 19 34 15; cpu-cycles | 2374478
+Shootout-C++.Shootout-C++-nestedloop; set | 3 19 34 15; cpu-cycles | 2403123
+Shootout-C++.Shootout-C++-heapsort; set | 3 19 34 15; cpu-cycles | 8031344870; func | main | 0.998
+Shootout-C++.Shootout-C++-strcat; set | 3 19 34 15; cpu-cycles | 136715724; func | main | 0.284; func | std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >::_M_append@plt  | 0.055
+Polybench.linear-algebra.solvers.lu.lu; set | 3 19 34 15; cpu-cycles | 5688096; func | main | 0.486
+Shootout-C++.Shootout-C++-sumcol; set | 3 19 34 15; cpu-cycles | 2313926
+Shootout.Shootout-lists; set | 3 19 34 15; cpu-cycles | 13065860180; func | test_lists | 0.881
+Shootout.Shootout-fib2; set | 3 19 34 15; cpu-cycles | 4838551629; func | fib | 0.994
+Shootout-C++.Shootout-C++-wordfreq; set | 3 19 34 15; cpu-cycles | 2047220
+Shootout-C++.Shootout-C++-wc; set | 3 19 34 15; cpu-cycles | 2249915
+Shootout.Shootout-heapsort; set | 3 19 34 15; cpu-cycles | 7772044595; func | main | 0.993
+Polybench.medley.floyd-warshall.floyd-warshall; set | 3 19 34 15; cpu-cycles | 20773827409; func | main | 0.999
+Shootout.Shootout-sieve; set | 3 19 34 15; cpu-cycles | 15081448713; func | main | 0.993
+Shootout.Shootout-matrix; set | 3 19 34 15; cpu-cycles | 3490753859; func | main | 0.998
+Shootout-C++.EH.Shootout-C++-except; set | 3 19 34 15; cpu-cycles | 380097421; func | hi_function | 0.064
+Shootout.Shootout-ackermann; set | 3 19 34 15; cpu-cycles | 8969717; func | Ack | 0.354
+Shootout-C++.Shootout-C++-lists1; set | 3 19 34 15; cpu-cycles | 503438115; func | operator delete@plt  | 0.012; func | main | 0.152
+Shootout.Shootout-ary3; set | 3 19 34 15; cpu-cycles | 3137611616; func | main | 0.994
+Shootout.Shootout-methcall; set | 3 19 34 15; cpu-cycles | 9696493859
+Shootout.Shootout-hash; set | 3 19 34 15; cpu-cycles | 9606205977; func | main | 0.355
+Stanford.IntMM; set | 3 19 34 15; cpu-cycles | 2505663
+Stanford.Queens; set | 3 19 34 15; cpu-cycles | 20897520; func | Try | 0.806
+Shootout.Shootout-hello; set | 3 19 34 15; cpu-cycles | 786773
+Stanford.Perm; set | 3 19 34 15; cpu-cycles | 46499030; func | Permute | 0.882
+Shootout.Shootout-nestedloop; set | 3 19 34 15; cpu-cycles | 789273
+Shootout.Shootout-random; set | 3 19 34 15; cpu-cycles | 5743102425; func | main | 0.999
+Stanford.Towers; set | 3 19 34 15; cpu-cycles | 27366051; func | tower | 0.838
+Stanford.Quicksort; set | 3 19 34 15; cpu-cycles | 96851580; func | main | 0.050; func | Quicksort | 0.903
+Stanford.Puzzle; set | 3 19 34 15; cpu-cycles | 317323750; func | Trial | 0.979
+Shootout.Shootout-objinst; set | 3 19 34 15; cpu-cycles | 712320
+Stanford.Oscar; set | 3 19 34 15; cpu-cycles | 8838894; func | Fft | 0.520
+Shootout.Shootout-strcat; set | 3 19 34 15; cpu-cycles | 350406282; func | main | 0.296
+Stanford.Treesort; set | 3 19 34 15; cpu-cycles | 185022549; func | Checktree | 0.093; func | Trees | 0.628
+SmallPT.smallpt; set | 3 19 34 15; cpu-cycles | 25060123473; func | radiance | 0.748; func | main | 0.023
+Stanford.Bubblesort; set | 3 19 34 15; cpu-cycles | 61342247; func | Bubble | 0.930
+Stanford.FloatMM; set | 3 19 34 15; cpu-cycles | 663658567; func | Mm | 0.998
+Stanford.RealMM; set | 3 19 34 15; cpu-cycles | 2966986; func | Mm | 0.713
