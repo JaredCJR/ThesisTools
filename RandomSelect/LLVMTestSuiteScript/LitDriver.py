@@ -108,7 +108,7 @@ class LitRunner:
         benchmarkNameSV = sv.BenchmarkNameService()
         if Mode == "Random":
             TargetLoc = "./GraphGen/output/MeasurableStdBenchmarkMeanAndSigma"
-        else if Mode == "Selected.SingleCore":
+        elif Mode == "Selected.SingleCore":
             TargetLoc = "./GraphGen/output/RemovedStdBenchmarkSigma"
 
         # Build list of measurable benchmarks
