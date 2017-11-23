@@ -3,91 +3,122 @@ import os
 import sys
 import atexit
 import signal
+'''
+TCP server lib
+'''
+import time
+import socketserver
 
-def daemonize(pidfile, *, stdin='/dev/null',
-                          stdout='/dev/null',
-                          stderr='/dev/null'):
+class tcpServer:
+    class TCPHandler(socketserver.StreamRequestHandler):
+        def handle(self):
+            # self.rfile is a file-like object created by the handler;
+            # we can now use e.g. readline() instead of raw recv() calls
+            # Get byte-object
+            self.data = self.rfile.readline().strip()
+            print("{} wrote: {}".format(self.client_address[0], self.data.decode('utf-8')))
+            # Likewise, self.wfile is a file-like object used to write back
+            # to the client
+            # Only accept byte-object
+            self.wfile.write(self.data.upper())
 
-    if os.path.exists(pidfile):
-        raise RuntimeError('Already running')
+    def CreateTcpServer(self, HOST, PORT):
+        # Create the server, binding to localhost on port 9999
+        server = socketserver.TCPServer((HOST, PORT), self.TCPHandler)
+        # Activate the server; this will keep running until you
+        # interrupt the program with Ctrl-C
+        server.serve_forever()
 
-    # First fork (detaches from parent)
-    try:
-        if os.fork() > 0:
-            raise SystemExit(0)   # Parent exit
-    except OSError as e:
-        raise RuntimeError('fork #1 failed.')
 
-    os.chdir('/')
-    os.umask(0)
-    os.setsid()
-    # Second fork (relinquish session leadership)
-    try:
-        if os.fork() > 0:
-            raise SystemExit(0)
-    except OSError as e:
-        raise RuntimeError('fork #2 failed.')
+class Daemon:
+    def daemonize(self, pidfile, *, stdin='/dev/null',
+                                    stdout='/dev/null',
+                                    stderr='/dev/null'):
 
-    # Flush I/O buffers
-    sys.stdout.flush()
-    sys.stderr.flush()
+        if os.path.exists(pidfile):
+            raise RuntimeError('Already running')
 
-    # Replace file descriptors for stdin, stdout, and stderr
-    with open(stdin, 'rb', 0) as f:
-        os.dup2(f.fileno(), sys.stdin.fileno())
-    with open(stdout, 'ab', 0) as f:
-        os.dup2(f.fileno(), sys.stdout.fileno())
-    with open(stderr, 'ab', 0) as f:
-        os.dup2(f.fileno(), sys.stderr.fileno())
+        # First fork (detaches from parent)
+        try:
+            if os.fork() > 0:
+                raise SystemExit(0)   # Parent exit
+        except OSError as e:
+            raise RuntimeError('fork #1 failed.')
 
-    # Write the PID file
-    with open(pidfile,'w') as f:
-        print(os.getpid(),file=f)
+        os.chdir('/')
+        os.umask(0)
+        os.setsid()
+        # Second fork (relinquish session leadership)
+        try:
+            if os.fork() > 0:
+                raise SystemExit(0)
+        except OSError as e:
+            raise RuntimeError('fork #2 failed.')
 
-    # Arrange to have the PID file removed on exit/signal
-    atexit.register(lambda: os.remove(pidfile))
+        # Flush I/O buffers
+        sys.stdout.flush()
+        sys.stderr.flush()
 
-    # Signal handler for termination (required)
-    def sigterm_handler(signo, frame):
-        raise SystemExit(1)
+        # Replace file descriptors for stdin, stdout, and stderr
+        with open(stdin, 'rb', 0) as f:
+            os.dup2(f.fileno(), sys.stdin.fileno())
+        with open(stdout, 'wb', 0) as f:
+            os.dup2(f.fileno(), sys.stdout.fileno())
+        with open(stderr, 'wb', 0) as f:
+            os.dup2(f.fileno(), sys.stderr.fileno())
 
-    signal.signal(signal.SIGTERM, sigterm_handler)
+        # Write the PID file
+        with open(pidfile,'w') as f:
+            print(os.getpid(),file=f)
 
-def main():
-    import time
-    sys.stdout.write('Daemon started with pid {}\n'.format(os.getpid()))
-    while True:
-        sys.stdout.write('Daemon Alive! {}\n'.format(time.ctime()))
-        time.sleep(10)
+        # Arrange to have the PID file removed on exit/signal
+        atexit.register(lambda: os.remove(pidfile))
+
+        # Signal handler for termination (required)
+        def sigterm_handler(signo, frame):
+            raise SystemExit(1)
+
+        signal.signal(signal.SIGTERM, sigterm_handler)
+
+    def main(self):
+        sys.stdout.write('Daemon started with pid {}\n'.format(os.getpid()))
+        Host, Port = "127.0.0.1", 9999
+        server = tcpServer()
+        sys.stdout.write('TCP server started with ip:{} port:{}\n'.format(Host, Port))
+        server.CreateTcpServer(Host, Port)
+
+    def run(self, argv):
+        DaemonName = "PredictionDaemon"
+        PidFile = '/tmp/' + DaemonName + '.pid'
+        LogFile = '/tmp/' + DaemonName + '.log'
+
+        if len(argv) != 2:
+            print('Usage: {} [start|stop]'.format(argv[0]), file=sys.stderr)
+            raise SystemExit(1)
+
+        if argv[1] == 'start':
+            try:
+                self.daemonize(PidFile,
+                          stdout=LogFile,
+                          stderr=LogFile)
+            except RuntimeError as e:
+                print(e, file=sys.stderr)
+                raise SystemExit(1)
+
+            self.main()
+
+        elif argv[1] == 'stop':
+            if os.path.exists(PidFile):
+                with open(PidFile) as f:
+                    os.kill(int(f.read()), signal.SIGTERM)
+            else:
+                print(DaemonName + ':Not running', file=sys.stderr)
+                raise SystemExit(1)
+
+        else:
+            print(DaemonName + ':Unknown command {!r}'.format(argv[1]), file=sys.stderr)
+            raise SystemExit(1)
 
 if __name__ == '__main__':
-    DaemonName = "PredictionDaemon"
-    PidFile = '/tmp/' + DaemonName + '.pid'
-    LogFile = '/tmp/' + DaemonName + '.log'
-
-    if len(sys.argv) != 2:
-        print('Usage: {} [start|stop]'.format(sys.argv[0]), file=sys.stderr)
-        raise SystemExit(1)
-
-    if sys.argv[1] == 'start':
-        try:
-            daemonize(PidFile,
-                      stdout=LogFile,
-                      stderr=LogFile)
-        except RuntimeError as e:
-            print(e, file=sys.stderr)
-            raise SystemExit(1)
-
-        main()
-
-    elif sys.argv[1] == 'stop':
-        if os.path.exists(PidFile):
-            with open(PidFile) as f:
-                os.kill(int(f.read()), signal.SIGTERM)
-        else:
-            print(DaemonName + ':Not running', file=sys.stderr)
-            raise SystemExit(1)
-
-    else:
-        print(DaemonName + ':Unknown command {!r}'.format(sys.argv[1]), file=sys.stderr)
-        raise SystemExit(1)
+    daemon = Daemon()
+    daemon.run(sys.argv)
