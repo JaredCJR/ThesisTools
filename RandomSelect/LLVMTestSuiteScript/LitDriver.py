@@ -95,6 +95,41 @@ class LitRunner:
         except Exception as e:
             Log.err("Why exception happedend in LitWorker?\n{}\n".format(e))
 
+    """
+    Input:
+    1. Mode: see __main__
+    2. InputBuiltList: usually, this will be "SuccessBuiltTestPath"
+    3. TargetListLoc: The file that contains the benchmark name which you would like to run
+    No Return Value: List is a mutable type, we direct modify the InputBuiltList
+    """
+    def PickTests(self, Mode, InputBuiltList)
+        TargetLoc = ""
+        KeepList = []
+        benchmarkNameSV = sv.BenchmarkNameService()
+        if Mode == "Random":
+            TargetLoc = "./GraphGen/output/MeasurableStdBenchmarkMeanAndSigma"
+        else if Mode == "Selected.SingleCore":
+            TargetLoc = "./GraphGen/output/RemovedStdBenchmarkSigma"
+
+        # Build list of measurable benchmarks
+        with open(TargetLoc, 'r') as file:
+            for line in file:
+                Tuple = line.split(";")
+                Name = Tuple[0].strip()
+                newName = benchmarkNameSV.ReplaceAWithB(Name, '.', '/')
+                newName += '.test'
+                KeepList.append(newName)
+            file.close()
+        for test in InputBuiltList:
+            ValidTest = False
+            for keepIt in KeepList:
+                if test.endswith(keepIt):
+                    ValidTest = True
+                    break
+            if ValidTest == False:
+                InputBuiltList.remove(test)
+                Log.out("In {} Mode: remove {}\n".format(Mode, test))
+
 
     def run(self, Mode="Standard", MailMsg=""):
         time = sv.TimeService()
@@ -153,37 +188,22 @@ class LitRunner:
         os.system("taskset -p 0x01 {}".format(os.getpid()))
 
         '''
-        If in "Random" Mode, only run the measurable benchmarks
+        Select the test that we want to run 
         '''
-        if Mode == "Random":
-            MeasurableList = []
-            # Build list of measurable benchmarks
-            benchmarkNameSV = sv.BenchmarkNameService()
-            with open("./GraphGen/output/MeasurableStdBenchmarkMeanAndSigma", 'r') as file:
-                for line in file:
-                    Tuple = line.split(";")
-                    Name = Tuple[0].strip()
-                    newName = benchmarkNameSV.ReplaceAWithB(Name, '.', '/')
-                    newName += '.test'
-                    MeasurableList.append(newName)
-                file.close()
-            for test in SuccessBuiltTestPath:
-                ValidTest = False
-                for measurableTest in MeasurableList:
-                    if test.endswith(measurableTest):
-                        ValidTest = True
-                        break
-                if ValidTest == False:
-                    SuccessBuiltTestPath.remove(test)
-                    Log.out("In Random Mode: remove {}\n".format(test))
+        if Mode != "Standard":
+            self.PickTests(Mode, SuccessBuiltTestPath)
 
         '''
         Split test into multiple list,
         you need to know what is the physical core number and ID in your computer.
         '''
-        shuffle(SuccessBuiltTestPath)
-        SplitCount = 5
+        if Mode == "Selected.SingleCore":
+            SplitCount = 1
+        else:
+            SplitCount = 5
+
         SplitList = []
+        shuffle(SuccessBuiltTestPath)
         step = int(len(SuccessBuiltTestPath) // SplitCount) + 1
         for i in range(SplitCount):
             SplitList.append(SuccessBuiltTestPath[i*step : (i+1)*step])
@@ -352,10 +372,11 @@ if __name__ == '__main__':
     Simpe argument parsing...
     I don't think this matters.
     '''
-    print("Usage: $ ./LitDriver.py [Standard | Random]")
+    print("Usage: $ ./LitDriver.py [Standard | Random | Selected.SingleCore]")
     Mode = "Standard"
+    Candidate = ["Standard", "Random", "Selected.SingleCore"]
     if len(sys.argv) > 1:
-        if sys.argv[1] != "Random" and sys.argv[1] != "Standard":
+        if sys.argv[1] not in Candidate:
             sys.exit("Wrong arguments.\n")
         Mode = sys.argv[1]
     print("LitDriver will start after 3 secs...")
