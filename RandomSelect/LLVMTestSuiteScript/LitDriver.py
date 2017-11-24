@@ -100,17 +100,22 @@ class LitRunner:
     1. Mode: see __main__
     2. InputBuiltList: usually, this will be "SuccessBuiltTestPath"
     3. TargetListLoc: The file that contains the benchmark name which you would like to run
-    No Return Value: List is a mutable type, we direct modify the InputBuiltList
+    Return Value: List of tests' path
     """
-    def PickTests(self, Mode, InputBuiltList)
+    def PickTests(self, Mode, InputBuiltList):
         TargetLoc = ""
         KeepList = []
+        retList = []
+        Log = sv.LogService()
         benchmarkNameSV = sv.BenchmarkNameService()
         if Mode == "Random":
             TargetLoc = "./GraphGen/output/MeasurableStdBenchmarkMeanAndSigma"
         elif Mode == "Selected.SingleCore":
             TargetLoc = "./GraphGen/output/RemovedStdBenchmarkSigma"
+        else:
+            return
 
+        Log.out("PickTests(): Mode={}, List = {}\n".format(Mode, TargetLoc))
         # Build list of measurable benchmarks
         with open(TargetLoc, 'r') as file:
             for line in file:
@@ -121,14 +126,13 @@ class LitRunner:
                 KeepList.append(newName)
             file.close()
         for test in InputBuiltList:
-            ValidTest = False
             for keepIt in KeepList:
                 if test.endswith(keepIt):
-                    ValidTest = True
+                    retList.append(test)
                     break
-            if ValidTest == False:
-                InputBuiltList.remove(test)
-                Log.out("In {} Mode: remove {}\n".format(Mode, test))
+        Log.out("Keep Test List size = {}\n".format(len(KeepList)))
+        Log.out("In {} Mode: retList = {}\n".format(Mode, len(retList)))
+        return retList
 
 
     def run(self, Mode="Standard", MailMsg=""):
@@ -188,10 +192,10 @@ class LitRunner:
         os.system("taskset -p 0x01 {}".format(os.getpid()))
 
         '''
-        Select the test that we want to run 
+        Select the test that we want to run
         '''
         if Mode != "Standard":
-            self.PickTests(Mode, SuccessBuiltTestPath)
+            SuccessBuiltTestPath = self.PickTests(Mode, SuccessBuiltTestPath)
 
         '''
         Split test into multiple list,
