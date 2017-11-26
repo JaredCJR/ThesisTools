@@ -45,5 +45,10 @@ cat README
 (follow the README guide)
 
 cd -
-./LitDriver.py
+./LitDriver.py [Standard | Random | Selected.SingleCore]
+[
+ "Standard" must with official Clang-5.0 |
+ "Random" must with Benchmark-Level Thesis-Clang-5.0 |
+ "Selected.SingleCore" must with official Clang-5.0 to show that proper multi-thread does not affect the experiments.
+]
 ```
