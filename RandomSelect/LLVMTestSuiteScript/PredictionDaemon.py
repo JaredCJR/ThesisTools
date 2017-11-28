@@ -3,27 +3,55 @@ import os
 import sys
 import atexit
 import signal
-'''
+"""
 TCP server lib
-'''
+"""
 import time
 import socketserver
+import socket
+"""
+Predictor
+"""
+import RandomGenerator as RG
+
+
+class ResponseActor:
+    def Echo(self, InputString, SenderIpString):
+        retString = ""
+        '''
+        Random Prediction
+        '''
+        predictor = RG.FunctionLevelPredictor()
+        SetList = predictor.RandomPassSet()
+        # Convert list into string
+        for Pass in SetList:
+            retString = retString + str(Pass) + " "
+        return retString
 
 class tcpServer:
     class TCPHandler(socketserver.StreamRequestHandler):
         def handle(self):
-            # self.rfile is a file-like object created by the handler;
-            # we can now use e.g. readline() instead of raw recv() calls
-            # Get byte-object
+            '''
+            self.rfile is a file-like object created by the handler;
+            we can now use e.g. readline() instead of raw recv() calls
+            Get byte-object
+            '''
             self.data = self.rfile.readline().strip()
-            print("{} wrote: {}".format(self.client_address[0], self.data.decode('utf-8')))
-            # Likewise, self.wfile is a file-like object used to write back
-            # to the client
-            # Only accept byte-object
-            self.wfile.write(self.data.upper())
+            #print("{} wrote: {}".format(self.client_address[0], self.data.decode('utf-8')))
+            actor = ResponseActor()
+            WriteContent = actor.Echo(self.data.decode('utf-8'), self.client_address[0])
+            '''
+            Likewise, self.wfile is a file-like object used to write back
+            to the client
+            Only accept byte-object
+            '''
+            self.wfile.write(WriteContent.encode('utf-8'))
+            #self.wfile.write(self.data.upper())
 
     def CreateTcpServer(self, HOST, PORT):
-        # Create the server, binding to localhost on port 9999
+        # Make port reusable
+        socketserver.TCPServer.allow_reuse_address = True
+        # Create the server, binding to localhost on port
         server = socketserver.TCPServer((HOST, PORT), self.TCPHandler)
         # Activate the server; this will keep running until you
         # interrupt the program with Ctrl-C
@@ -82,7 +110,12 @@ class Daemon:
 
     def main(self):
         sys.stdout.write('Daemon started with pid {}\n'.format(os.getpid()))
-        Host, Port = "127.0.0.1", 9999
+        Host = "127.0.0.1"
+        Port = 7521
+        '''
+        If the port is opened, close it!
+        '''
+
         server = tcpServer()
         sys.stdout.write('TCP server started with ip:{} port:{}\n'.format(Host, Port))
         server.CreateTcpServer(Host, Port)

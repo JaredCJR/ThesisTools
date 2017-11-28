@@ -1,0 +1,47 @@
+minisat.minisat; set | 23 13 21 15 17 2 22 27 29 33 12 9 26 30 5 28; cpu-cycles | 13806567797; func | Solver::search | 0.022; func | Solver::litRedundant | 0.175; func | Solver::pickBranchLit | 0.041; func | Solver::propagate | 0.577; func | Solver::analyze | 0.153
+Fhourstones.fhourstones; set | 20 6 27 25 16 3 2 30; cpu-cycles | 1816772709; func | makemove | 0.048; func | transput | 0.121; func | backmove | 0.040; func | transtore | 0.033; func | ab | 0.279; func | transpose | 0.233; func | wins | 0.237
+McCat.09-vor.vor; set | 20 6 27 25 16 3 2 30; cpu-cycles | 287706801; func | splay | 0.674; func | construct_ch | 0.015; func | insert | 0.018
+Olden.mst.mst; set | 20 6 27 25 16 3 2 30; cpu-cycles | 161753518; func | hashfunc | 0.118; func | HashLookup | 0.470; func | HashInsert | 0.185; func | MakeGraph | 0.099; func | Do_all_BlueRule | 0.012
+Prolangs-C++.NP.np; set | 20 6 27 25 16 3 2 30; cpu-cycles | 1804803
+Ptrdist.ft.ft; set | 20 6 27 25 16 3 2 30; cpu-cycles | 1945529425; func | GenGraph | 0.904; func | DeleteMin | 0.013; func | MST | 0.028
+VersaBench.dbms.dbms; set | 20 6 27 25 16 3 2 30; cpu-cycles | 2898767327; func | insertEntry | 0.015; func | keysUnion | 0.018; func | keyUnion | 0.015; func | deleteEntry | 0.180; func | chooseEntry | 0.016; func | penalty | 0.021; func | consistentKey | 0.364; func | volume | 0.017; func | getString | 0.040
+llubenchmark.llu; set | 20 6 27 25 16 3 2 30; cpu-cycles | 13154469203; func | main | 0.998
+CoyoteBench.fftbench; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 1932067898; func | polynomial<double>::fft | 0.667; func | polynomial<double>::inverse_fft | 0.297; func | main | 0.011
+CoyoteBench.lpbench; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 5792215464; func | main | 0.016; func | dgefa | 0.979
+McGill.chomp; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 4741674639; func | make_play | 0.012; func | make_list | 0.961
+McGill.exptree; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 724523
+Misc-C++.stepanov_container; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 9469562242; func | std::__introsort_loop<double*, long, __gnu_cxx::__ops::_Iter_less_iter>  | 0.110; func | list_test | 0.017; func | set_test | 0.188; func | std::__unguarded_partition_pivot<std::_Deque_iterator<double, double&, double*>, __gnu_cxx::__ops::_Iter_less_iter>  | 0.062; func | std::__final_insertion_sort<double*, __gnu_cxx::__ops::_Iter_less_iter>  | 0.033; func | std::_Rb_tree<double, double, std::_Identity<double>, std::less<double>, std::allocator<double> >::_M_erase  | 0.013; func | std::_Rb_tree<double, double, std::_Identity<double>, std::less<double>, std::allocator<double> >::_M_get_insert_hint_equal_pos  | 0.210; func | std::__final_insertion_sort<std::_Deque_iterator<double, double&, double*>, __gnu_cxx::__ops::_Iter_less_iter>  | 0.011; func | std::__introsort_loop<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter>  | 0.055; func | std::__cxx11::list<double, std::allocator<double> >::sort  | 0.116; func | std::__final_insertion_sort<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, __gnu_cxx::__ops::_Iter_less_iter>  | 0.010
+Misc.lowercase; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 700081
+Polybench.datamining.correlation.correlation; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 5027770995; func | main | 0.015; func | kernel_correlation | 0.982
+Polybench.datamining.covariance.covariance; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 5174515673; func | main | 0.997
+Polybench.linear-algebra.kernels.2mm.2mm; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 51812830372; func | main | 0.999
+Polybench.linear-algebra.kernels.3mm.3mm; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 78230393032; func | main | 0.999
+Polybench.linear-algebra.kernels.atax.atax; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 561762470; func | main | 0.957
+Polybench.linear-algebra.kernels.cholesky.cholesky; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 1491768093; func | main | 0.992
+Polybench.linear-algebra.kernels.gemm.gemm; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 24614021261; func | main | 0.999
+Polybench.linear-algebra.kernels.gemver.gemver; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 1088187283; func | main | 0.941
+Polybench.linear-algebra.kernels.mvt.mvt; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 822368307; func | main | 0.986
+Polybench.linear-algebra.kernels.symm.symm; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 39828611652; func | main | 0.998
+Polybench.linear-algebra.kernels.trisolv.trisolv; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 546544020; func | main | 0.915
+Polybench.linear-algebra.kernels.trmm.trmm; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 7172388957; func | main | 0.998
+Polybench.stencils.adi.adi; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 9238408281; func | kernel_adi | 0.983; func | main | 0.015
+Polybench.stencils.fdtd-2d.fdtd-2d; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 1338800633; func | init_array | 0.091; func | main | 0.883
+Polybench.stencils.jacobi-2d-imper.jacobi-2d-imper; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 468489692; func | main | 0.971
+Shootout-C++.Shootout-C++-ary; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 50058021; func | main | 0.582
+Shootout-C++.Shootout-C++-ary2; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 54406529; func | main | 0.647
+Shootout-C++.Shootout-C++-ary3; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 1427303485; func | main | 0.996
+Shootout-C++.Shootout-C++-heapsort; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 6529590798; func | main | 0.998
+Shootout-C++.Shootout-C++-hello; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 1979854
+Shootout-C++.Shootout-C++-moments; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 139624250; func | std::__introselect<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > >, long, __gnu_cxx::__ops::_Iter_less_iter>  | 0.176; func | moments<double>::moments<__gnu_cxx::__normal_iterator<double*, std::vector<double, std::allocator<double> > > >  | 0.387; func | main | 0.092
+Shootout-C++.Shootout-C++-nestedloop; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 1978375
+Shootout-C++.Shootout-C++-objinst; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 2076841
+Shootout-C++.Shootout-C++-reversefile; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 1973204
+Shootout-C++.Shootout-C++-spellcheck; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 1998276
+Shootout-C++.Shootout-C++-sumcol; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 1992787
+Shootout-C++.Shootout-C++-wc; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 1998388
+Shootout-C++.Shootout-C++-wordfreq; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 1794415
+Shootout.Shootout-ary3; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 1640592311; func | main | 0.991
+Shootout.Shootout-heapsort; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 6589331044; func | main | 0.993
+Shootout.Shootout-hello; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 682032
+Shootout.Shootout-nestedloop; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 690703
+Shootout.Shootout-objinst; set | 1 33 28 7 23 5 32 21 9; cpu-cycles | 687294
