@@ -1,0 +1,5 @@
+SingleSource/Benchmarks/Polybench/stencils/adi/adi.test, 27 3 25 8 23 16 15 29 24 19 12
+MultiSource/Applications/JM/lencod/lencod.test, 18 13 7 8 27 30 29
+MultiSource/Applications/lemon/lemon.test, 18 13 7 8 27 30 29
+MultiSource/Applications/d/make_dparser.test, 18 13 7 8 27 30 29
+MultiSource/Applications/oggenc/oggenc.test, 18 13 7 8 27 30 29
