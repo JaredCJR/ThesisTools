@@ -177,11 +177,14 @@ class LitRunner:
         actor = lm.LitMimic()
         SuccessBuiltTestPath = actor.run()
 
-        #remove ".test" directories for those failed to pass sanity check in lit
+        #remove ".test" for those failed to pass sanity check in lit
         RmFailed = sv.PassSetService()
-        FailedDirs = RmFailed.RemoveSanityFailedTestDesc(Log.SanityFilePath)
+        FailedTests = RmFailed.RemoveSanityFailedTestDesc(Log.SanityFilePath)
+        for test in SuccessBuiltTestPath:
+            if test in FailedTests:
+                os.remove(test)
+                Log.out("Remove test in SuccessBuiltTestPath:{}\n".format(test))
         # Now, all the remained tests should be all reported as successful execution from lit
-
 
         """
         Run lit in parallel

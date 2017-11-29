@@ -206,22 +206,21 @@ class PassSetService:
         InputSetDict = self.GetInputSetDict()
         LLVMTestSuiteBuildPath = os.getenv('LLVM_THESIS_TestSuite', "Error")
         #return the build failed dirs
-        FailedDirs = []
+        FailedTests = []
         for test in FailList:
             RealPath = LLVMTestSuiteBuildPath + "/" + test
-            DirPath = os.path.dirname(RealPath)
-            if os.path.exists(DirPath) == True:
-                Log.sanityLog("Remove: " + DirPath + "\n")
-                shutil.rmtree(DirPath)
+            if os.path.exists(RealPath) == True:
+                Log.sanityLog("Remove: " + RealPath + "\n")
+                os.remove(RealPath)
             else:
-                Log.out("Try to remove {}, but it does not exists\n".format(DirPath))
+                Log.out("Try to remove {}, but it does not exists\n".format(RealPath))
             # Log the error set for the corresponding application
             Dirs = [dir.strip() for dir in test.split('/')]
             key = LLVMTestSuiteBuildPath + '/' + Dirs[0] + '/' + Dirs[1] + '/'
             ErrorSet = InputSetDict[key]
-            FailedDirs.append(DirPath)
+            FailedTests.append(RealPath)
             Log.ErrorSetLog(test + ", " + ErrorSet + "\n")
-        return FailedDirs
+        return FailedTests
 
     def RecordBuildFailedPassSet(self):
         RandomSetLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSet"
