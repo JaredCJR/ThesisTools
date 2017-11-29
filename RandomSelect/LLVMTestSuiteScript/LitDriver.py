@@ -182,8 +182,8 @@ class LitRunner:
         FailedTests = RmFailed.RemoveSanityFailedTestDesc(Log.SanityFilePath)
         for test in SuccessBuiltTestPath:
             if test in FailedTests:
-                os.remove(test)
-                Log.out("Remove test in SuccessBuiltTestPath:{}\n".format(test))
+                SuccessBuiltTestPath.remove(test)
+                Log.out("Remove \"{}\" in SuccessBuiltTestPath\n".format(test))
         # Now, all the remained tests should be all reported as successful execution from lit
 
         """
@@ -391,4 +391,4 @@ if __name__ == '__main__':
     time.sleep(3)
 
     driver = CommonDriver()
-    driver.run(Mode, 100)
+    driver.run(Mode, 10)
