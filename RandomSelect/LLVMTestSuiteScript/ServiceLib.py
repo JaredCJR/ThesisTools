@@ -34,6 +34,7 @@ class LogService():
     StderrFilePath = None
     StdoutFilePath = None
     RecordFilePath = None
+    RecordFunctionInfoFilePath = None
     SanityFilePath = None
     ErrorSetFilePath = None
     time = None
@@ -63,6 +64,7 @@ class LogService():
         self.StdoutFilePath = Loc + '/' + self.time + "_STDOUT"
         self.StderrFilePath = Loc + '/' + self.time + "_STDERR"
         self.RecordFilePath = Loc + '/' + self.time + "_Features"
+        self.RecordFunctionInfoFilePath = Loc + '/' + self.time + "_FuncSet"
         self.SanityFilePath = Loc + '/' + self.time + "_SanityCheck"
         self.ErrorSetFilePath = Loc + '/' + self.time + "_ErrorSet"
 
@@ -88,6 +90,10 @@ class LogService():
     def record(self, msg):
         #save to same file for every instance
         self.FileWriter(self.RecordFilePath, msg)
+
+    def recordFuncInfo(self, msg):
+        #save to same file for every instance
+        self.FileWriter(self.RecordFunctionInfoFilePath, msg)
 
     def sanityLog(self, msg):
         #save to same file for every instance
@@ -406,7 +412,7 @@ class PyActorService:
             for Name, Usage in FuncDict.items():
                 if Usage > 0.01: # Only record those > 1%
                     Usage = "{0:.3f}".format(Usage)
-                    if Name.endswith("@plt"):
+                    if Name.strip().endswith("@plt"):
                         continue
                     FuncUsage += "; func | {} | {}".format(Name, Usage)
             log_msg = BenchmarkName + "; " + RandomSet + "; " + LogCycles + FuncUsage + "\n"

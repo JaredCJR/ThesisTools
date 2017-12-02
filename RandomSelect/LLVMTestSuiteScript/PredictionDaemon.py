@@ -13,20 +13,43 @@ import socket
 Predictor
 """
 import RandomGenerator as RG
+import ServiceLib as sv
 
 
 class ResponseActor:
+    """
+    Input: "InputString" must be demangled function name
+    """
     def Echo(self, InputString, SenderIpString):
+        Log = sv.LogService()
         retString = ""
-        print(InputString)
         '''
-        Random Prediction
+        Gather Benchmark information
         '''
-        predictor = RG.FunctionLevelPredictor()
-        SetList = predictor.RandomPassSet()
+        msg = "Function:\"{}\"".format(InputString)
+        InfoFile = open("/tmp/PredictionDaemon.info", "r")
+        Info = InfoFile.read()
+        InfoFile.close()
+        lines = Info.splitlines()
+        BenchmarkName = lines[0]
+        BestSet = lines[1]
+        FunctionList = lines[2:]
+        '''
+        Use random passes or best passes?
+        '''
+        Mode = ""
+        if InputString in FunctionList:
+            predictor = RG.FunctionLevelPredictor()
+            SetList = predictor.RandomPassSet()
+            for Pass in SetList:
+                retString = retString + str(Pass) + " "
+            Mode = "RandomSet"
+        else:
+            retString = BestSet
+            Mode = "BestSet"
         # Convert list into string
-        for Pass in SetList:
-            retString = retString + str(Pass) + " "
+        Log.recordFuncInfo("{}; set | {}; func | {}; mode | {}\n".format(BenchmarkName, 
+            retString, InputString, Mode))
         return retString
 
 class tcpServer:
