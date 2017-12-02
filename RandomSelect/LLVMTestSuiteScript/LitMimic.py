@@ -149,6 +149,7 @@ class LitMimic:
                                 if line.startswith("RUN:"):
                                     if line.find("<") != -1:
                                         NeedStdin = True
+                            TestFile.close()
                         #Do what we want: rename elf and copy actor
                         ElfName = file.replace(test_pattern, '')
                         ElfPath = os.path.join(root, ElfName)
@@ -179,6 +180,89 @@ class LitMimic:
 
         return SuccessBuiltTestPath
 
+    """
+    Run SanityCheck.
+    If failed, do not add the test to return value.
+    Return Value: a list of ".test" to run
+    """
+    def CheckAssignedTest(self, TestFilePath):
+        Log = sv.LogService()
+        LitExec = drv.LitRunner()
+        '''
+        Suppose the we are currently in $LLVM_THESIS_TestSuite
+        '''
+        Found = False
+        for root, dirs, files in os.walk("."):
+            for file in files:
+                candidate = os.path.join(os.path.abspath(root), file)
+                if candidate.endswith(TestFilePath):
+                    TestFilePath = candidate
+                    Found = True
+                    break
+            if Found == True:
+                break
+        if Found == False:
+            Log.err("Cannot find test file:{}\n".format(TestFilePath))
+            return ""
+        '''
+        Sanity Check
+        '''
+        SanityOK = True
+        lit = os.getenv('LLVM_THESIS_lit', "Error")
+        cmd = lit + " -q -j1 " + TestFilePath
+        Log.out("Sanity Check: \"{}\"\n".format(cmd))
+        out, err = LitExec.ExecCmd(cmd, ShellMode=False,
+                NeedPrintStderr=True, SanityLog=True, RetOutErr=True)
+        # "lit -q" will not output anything if success.
+        if out is not None:
+            out = out.decode('utf-8')
+            for line in out.splitlines():
+                if line.startswith("    test-suite :: "):
+                    Log.err("Failed in sanity check:{}; msg={}\n".format(TestFilePath, out))
+                    SanityOK = False
+                    break
+        if SanityOK == False:
+            return ""
+
+        '''
+        Distribute PyActor
+        '''
+        #Does this benchmark need stdin?
+        NeedStdin = False
+        with open(TestFilePath, "r") as TestFile:
+            for line in TestFile:
+                if line.startswith("RUN:"):
+                    if line.find("<") != -1:
+                        NeedStdin = True
+            TestFile.close()
+        #Do what we want: rename elf and copy actor
+        ElfPath = TestFilePath.replace(".test", '')
+        NewElfPath = ElfPath + ".OriElf"
+        #based on "stdin" for to copy the right ones
+        if NeedStdin == True:
+            PyCallerLoc = self.PyCallerLoc_withStdin
+            PyActorLoc = self.PyActorLoc_withStdin
+        else:
+            PyCallerLoc = self.PyCallerLoc_withoutStdin
+            PyActorLoc = self.PyActorLoc_withoutStdin
+        root = os.getenv("LLVM_THESIS_Random_LLVMTestSuiteScript", "Error")
+        PyCallerLoc = os.path.join(os.path.abspath(root), PyCallerLoc[2:])
+        PyActorLoc = os.path.join(os.path.abspath(root), PyActorLoc[2:])
+        #if build success, copy it
+        if os.path.exists(ElfPath) == True:
+            #rename the real elf
+            shutil.move(ElfPath, NewElfPath)
+            #copy the feature-extractor
+            shutil.copy2(PyActorLoc, ElfPath + ".py")
+            #copy the PyCaller
+            if os.path.exists(PyCallerLoc) == True:
+                shutil.copy2(PyCallerLoc, ElfPath)
+            else:
+                Log.err("Please \"$ make\" to get PyCaller in {}\n".format(PyCallerLoc))
+                return
+        else:
+            Log.err("This elf={} filed to build?\n".format(ElfPath))
+        return TestFilePath
 
 
 

@@ -18,6 +18,7 @@ import RandomGenerator as RG
 class ResponseActor:
     def Echo(self, InputString, SenderIpString):
         retString = ""
+        print(InputString)
         '''
         Random Prediction
         '''
@@ -39,7 +40,8 @@ class tcpServer:
             self.data = self.rfile.readline().strip()
             #print("{} wrote: {}".format(self.client_address[0], self.data.decode('utf-8')))
             actor = ResponseActor()
-            WriteContent = actor.Echo(self.data.decode('utf-8'), self.client_address[0])
+            Str = self.data.decode('utf-8')
+            WriteContent = actor.Echo(Str, self.client_address[0])
             '''
             Likewise, self.wfile is a file-like object used to write back
             to the client

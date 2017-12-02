@@ -18,7 +18,7 @@ import psutil
 import signal
 
 class LitRunner:
-    def ExecCmd(self, cmd, ShellMode=False, NeedPrintStderr=True, SanityLog=False):
+    def ExecCmd(self, cmd, ShellMode=False, NeedPrintStderr=True, SanityLog=False, RetOutErr=False):
         Log = sv.LogService()
         err = None
         try:
@@ -40,6 +40,8 @@ class LitRunner:
                         ps.RecordBuildFailedPassSet()
             if NeedPrintStderr and err is not None:
                 Log.outNotToFile(err.decode('utf-8'))
+            if RetOutErr:
+                return out, err
         except Exception as e:
             Log.err("----------------------------------------------------------\n")
             Log.err("Exception= {}".format(str(e)) + "\n")
@@ -137,54 +139,124 @@ class LitRunner:
 
     def run(self, Mode="Standard", MailMsg=""):
         time = sv.TimeService()
-
         #cmake
         self.CmakeTestSuite()
         #if you disable cmake, you need to enable the following line
         #time.DelTimeStamp()
 
-        StartDateTime = time.GetCurrentLocalTime()
-        Target = lm.TargetBenchmarks()
         Log = sv.LogService()
+        if Mode != "Random-FunctionLevel":
+            StartDateTime = time.GetCurrentLocalTime()
+            Target = lm.TargetBenchmarks()
 
-        #build target tests
-        pwd = os.getcwd()
-        #Remove the previous record
-        RandomSetAllLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSetAll"
-        if os.path.isfile(RandomSetAllLoc):
-            os.remove(RandomSetAllLoc)
-
-        CoreNum = str(multiprocessing.cpu_count())
-        for RootPath in Target.TargetPathList:
-            #generate pass set
-            rg_driver = RG.FileDriver()
-            RetSet = rg_driver.run()
-            #build
-            os.chdir(RootPath)
-            self.ExecCmd("make clean", ShellMode=True)
-            BuildCmd = "make -j" + CoreNum
-            Log.out("Build command = \n{}\n".format(BuildCmd))
-            self.ExecCmd(BuildCmd, ShellMode=True, NeedPrintStderr=True)
-            #record input set
+            #build target tests
+            pwd = os.getcwd()
+            #Remove the previous record
             RandomSetAllLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSetAll"
-            with open(RandomSetAllLoc, "a") as file:
-                file.write(RootPath + ", " + RetSet + "\n")
+            if os.path.isfile(RandomSetAllLoc):
+                os.remove(RandomSetAllLoc)
+
+            CoreNum = str(multiprocessing.cpu_count())
+            for RootPath in Target.TargetPathList:
+                #generate pass set
+                rg_driver = RG.FileDriver()
+                RetSet = rg_driver.run()
+                #build
+                os.chdir(RootPath)
+                self.ExecCmd("make clean", ShellMode=True)
+                BuildCmd = "make -j" + CoreNum
+                Log.out("Build command = \"{}\"\n".format(BuildCmd))
+                self.ExecCmd(BuildCmd, ShellMode=True, NeedPrintStderr=True)
+                #record input set
+                RandomSetAllLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSetAll"
+                with open(RandomSetAllLoc, "a") as file:
+                    file.write(RootPath + ", " + RetSet + "\n")
+                    file.close()
+
+            os.chdir(pwd)
+
+            #place the corresponding feature extractor
+            actor = lm.LitMimic()
+            SuccessBuiltTestPath = actor.run()
+
+            #remove ".test" for those failed to pass sanity check in lit
+            RmFailed = sv.PassSetService()
+            FailedTests = RmFailed.RemoveSanityFailedTestDesc(Log.SanityFilePath)
+            for test in SuccessBuiltTestPath:
+                if test in FailedTests:
+                    SuccessBuiltTestPath.remove(test)
+                    Log.out("Remove \"{}\" in SuccessBuiltTestPath\n".format(test))
+            # Now, all the remained tests should be all reported as successful execution from lit
+        else:
+            """
+            Mode == Random-FunctionLevel
+            """
+            '''
+            Create list of benchmarks that we want
+            '''
+            BestSetDict = {}
+            with open("./GraphGen/output/BenchmarkLevel-BestSpeedupWithPassSet-GraphRecord", 'r') as file:
+                for line in file:
+                    '''
+                    ex.
+                    Polybench.linear-algebra.kernels.bicg.bicg; norm-best-speedup-cpu-cycles | 1.0217267071474758; norm-worst-speedup-cpu-cycles | 1.0057724483708175; best-PassSet | 14 25 18 30 27 26 28 13 19 29 6 12 32 10 34 7 4 1 11
+                    '''
+                    LineInfo = line.split(";")
+                    BestSetDict[LineInfo[0]] = LineInfo[3].strip().split("|")[1]
                 file.close()
-
-        os.chdir(pwd)
-
-        #place the corresponding feature extractor
-        actor = lm.LitMimic()
-        SuccessBuiltTestPath = actor.run()
-
-        #remove ".test" for those failed to pass sanity check in lit
-        RmFailed = sv.PassSetService()
-        FailedTests = RmFailed.RemoveSanityFailedTestDesc(Log.SanityFilePath)
-        for test in SuccessBuiltTestPath:
-            if test in FailedTests:
-                SuccessBuiltTestPath.remove(test)
-                Log.out("Remove \"{}\" in SuccessBuiltTestPath\n".format(test))
-        # Now, all the remained tests should be all reported as successful execution from lit
+            '''
+            Get the profiled function as the available benchmarks
+            '''
+            FuncBenchmarksInfo = []
+            with open("./Input/StdBaseFeatures", "r") as file:
+                for line in file:
+                    LineInfo = line.split(";")
+                    #only leave those has at least 3(6=3+3) function profiled.
+                    if len(LineInfo) >= 6 and LineInfo[0] in list(BestSetDict.keys()):
+                        FuncBenchmarksInfo.append(LineInfo)
+                file.close()
+            '''
+            Get the "make" target and write to file for daemon to know the function usage
+            Then, "make it and sanity check."
+            '''
+            MakeList = []
+            actor = lm.LitMimic()
+            bns = sv.BenchmarkNameService()
+            SuccessBuiltTestPath = []
+            pwd = os.getcwd()
+            for info in FuncBenchmarksInfo:
+                DaemonSource = open("/tmp/PredictionDaemon.info", "w")
+                name = info[0].split('.')[-1]
+                FullName = info[0]
+                MakeList.append(name)
+                record = name + "\n"
+                record = record + BestSetDict[info[0]] + "\n"
+                for usage in info[3:]:
+                    '''
+                    ex. Shootout-C++.Shootout-C++-lists1; set | 16 28 17 3; cpu-cycles | 445744256; func | operator delete@plt  | 0.013; func | main | 0.223
+                    '''
+                    FuncName = usage.split("|")[1].strip()
+                    record = record + FuncName + "\n"
+                DaemonSource.write(record)
+                DaemonSource.close()
+                """
+                build single test
+                """
+                path = os.getenv('LLVM_THESIS_TestSuite', 'Err')
+                os.chdir(path)
+                CoreNum = str(multiprocessing.cpu_count())
+                BuildCmd = "make " + name + " -j" + CoreNum
+                Log.out("Build command = \"{}\"\n".format(BuildCmd))
+                self.ExecCmd(BuildCmd, ShellMode=False, NeedPrintStderr=True)
+                """
+                Sanity Check with single core
+                """
+                #place the corresponding feature extractor
+                FullName = bns.ReplaceAWithB(FullName, '.', '/')
+                FullName += '.test'
+                SuccessBuiltTestPath.append(actor.CheckAssignedTest(FullName))
+                # Now, all the remained tests should be all reported as successful execution from lit
+                os.chdir(pwd)
 
         """
         Run lit in parallel
@@ -301,7 +373,7 @@ class CommonDriver:
     def CleanAllResults(self):
         #If we use LogService, it will leave TimeStamp in the "results"
         #Therefore, we only use "print"
-        response = "Yes, I want."
+        response = "Yes, I do."
         print("Do you want to remove all the files in the \"results\" directory?")
         print("[Enter] \"{}\" to do this.".format(response))
         print("Other response will not remove the files.")
@@ -379,9 +451,9 @@ if __name__ == '__main__':
     Simpe argument parsing...
     I don't think this matters.
     '''
-    print("Usage: $ ./LitDriver.py [Standard | Random | Selected.SingleCore]")
+    print("Usage: $ ./LitDriver.py [Standard | Random-BenchmarkLevel | Selected.SingleCore | Random-FunctionLevel]")
     Mode = "Standard"
-    Candidate = ["Standard", "Random", "Selected.SingleCore"]
+    Candidate = ["Standard", "Random-BenchmarkLevel", "Selected.SingleCore", "Random-FunctionLevel"]
     if len(sys.argv) > 1:
         if sys.argv[1] not in Candidate:
             sys.exit("Wrong arguments.\n")
@@ -391,4 +463,4 @@ if __name__ == '__main__':
     time.sleep(3)
 
     driver = CommonDriver()
-    driver.run(Mode, 10)
+    driver.run(Mode, 1)
