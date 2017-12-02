@@ -115,7 +115,7 @@ class LitRunner:
         elif Mode == "Selected.SingleCore":
             TargetLoc = "./GraphGen/output/RemovedStdBenchmarkSigma"
         else:
-            return
+            return InputBuiltList
 
         Log.out("PickTests(): Mode={}, List = {}\n".format(Mode, TargetLoc))
         # Build list of measurable benchmarks
@@ -145,8 +145,8 @@ class LitRunner:
         #time.DelTimeStamp()
 
         Log = sv.LogService()
+        StartDateTime = time.GetCurrentLocalTime()
         if Mode != "Random-FunctionLevel":
-            StartDateTime = time.GetCurrentLocalTime()
             Target = lm.TargetBenchmarks()
 
             #build target tests
