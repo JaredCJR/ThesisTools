@@ -130,6 +130,9 @@ class Daemon:
 
         if os.path.exists(pidfile):
             raise RuntimeError('Already running')
+        else:
+            if os.path.exists(LogFile):
+                os.remove(LogFile)
 
         # First fork (detaches from parent)
         try:
@@ -193,8 +196,6 @@ class Daemon:
         if len(argv) != 2:
             print('Usage: {} [start|stop]'.format(argv[0]), file=sys.stderr)
             raise SystemExit(1)
-        if os.path.exists(LogFile):
-            os.remove(LogFile)
 
         if argv[1] == 'start':
             try:
