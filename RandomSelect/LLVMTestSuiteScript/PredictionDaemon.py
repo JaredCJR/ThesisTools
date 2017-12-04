@@ -14,6 +14,7 @@ Predictor
 """
 import RandomGenerator as RG
 import ServiceLib as sv
+import re
 
 
 class ResponseActor:
@@ -38,7 +39,44 @@ class ResponseActor:
         Use random passes or best passes?
         '''
         Mode = ""
-        if InputString in FunctionList:
+        UseRandomSet = False
+        Skip = False
+        InputString = InputString.strip()
+        OrigInputString = InputString
+        if InputString == "DecodeFailed-GetBestSet" or (not InputString):
+            UseRandomSet = False
+            Skip = True
+        # C-style matching
+        if InputString in FunctionList and not Skip:
+            UseRandomSet = True
+        # C++-style matching
+        # perf cannot get argument information, but clang can.
+        # We need to use regular exp. to match it.
+        # This may match the wrong one, but that is okay.
+        if UseRandomSet == False and (not Skip):
+            try:
+                # Replace all space in function name
+                InputString = InputString.replace(' ', '')
+                newFunctionList = []
+                for func in FunctionList:
+                    newFunctionList.append(func.replace(' ', ''))
+                FunctionList = newFunctionList
+                ReEscapedInput = re.escape(InputString)
+                SearchTarget = ".*{func}.*".format(func=ReEscapedInput)
+                r = re.compile(SearchTarget)
+                reRetList = list(filter(r.search, FunctionList))
+                if reRetList:
+                    UseRandomSet = True
+                else:
+                    for func in FunctionList:
+                        # In most cases, InputString has more information than perf profiled function.
+                        if re.search(re.escape(func), InputString):
+                            UseRandomSet = True
+                            break
+            except Exception as e:
+                print("Exception: {}\n SearchTarget:\"{}\"\n".format(e, SearchTarget))
+        # If the search result is not empty and not failed to decode, use random set.
+        if UseRandomSet and not Skip:
             predictor = RG.FunctionLevelPredictor()
             SetList = predictor.RandomPassSet()
             for Pass in SetList:
@@ -48,8 +86,8 @@ class ResponseActor:
             retString = BestSet
             Mode = "BestSet"
         # Convert list into string
-        Log.recordFuncInfo("{}; set | {}; func | {}; mode | {}\n".format(BenchmarkName, 
-            retString, InputString, Mode))
+        Log.recordFuncInfo("{}; set | {}; func | {}; mode | {}\n".format(BenchmarkName,
+            retString, OrigInputString, Mode))
         return retString
 
 class tcpServer:
@@ -63,7 +101,10 @@ class tcpServer:
             self.data = self.rfile.readline().strip()
             #print("{} wrote: {}".format(self.client_address[0], self.data.decode('utf-8')))
             actor = ResponseActor()
-            Str = self.data.decode('utf-8')
+            try:
+                Str = self.data.decode('utf-8')
+            except Exception as e:
+                Str = "DecodeFailed-GetBestSet"
             WriteContent = actor.Echo(Str, self.client_address[0])
             '''
             Likewise, self.wfile is a file-like object used to write back
@@ -71,7 +112,6 @@ class tcpServer:
             Only accept byte-object
             '''
             self.wfile.write(WriteContent.encode('utf-8'))
-            #self.wfile.write(self.data.upper())
 
     def CreateTcpServer(self, HOST, PORT):
         # Make port reusable
@@ -153,6 +193,8 @@ class Daemon:
         if len(argv) != 2:
             print('Usage: {} [start|stop]'.format(argv[0]), file=sys.stderr)
             raise SystemExit(1)
+        if os.path.exists(LogFile):
+            os.remove(LogFile)
 
         if argv[1] == 'start':
             try:
