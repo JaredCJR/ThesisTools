@@ -45,10 +45,15 @@ cat README
 (follow the README guide)
 
 cd -
-./LitDriver.py [Standard | Random | Selected.SingleCore]
+./LitDriver.py [Standard | Random | Selected.SingleCore | Random-FunctionLevel]
 [
  "Standard" must with official Clang-5.0 |
  "Random" must with Benchmark-Level Thesis-Clang-5.0 |
  "Selected.SingleCore" must with official Clang-5.0 to show that proper multi-thread does not affect the experiments.
+ "Random-FunctionLevel" must with Function-Level Thesis-Clang-5.0
 ]
+
 ```
+* `Benchmark-Level Thesis-Clang-5.0` is the branch of `RandomSelect-BenchmarkLevel` in JaredCJR/llvm and JaredCJR/clang
+* `Function-Level Thesis-Clang-5.0` is the branch of `RandomSelect-FunctionLevel` in JaredCJR/llvm and JaredCJR/clang
+* Both of two `Thesis-Clang-5.0` must use the branch `thesis_50` of JaredCJR/test-suite
