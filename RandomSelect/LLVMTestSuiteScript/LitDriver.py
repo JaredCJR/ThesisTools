@@ -192,6 +192,15 @@ class LitRunner:
             Mode == Random-FunctionLevel
             """
             '''
+            Start Prediction Daemon
+            '''
+            daemonLoc = os.getenv('LLVM_THESIS_Random_LLVMTestSuiteScript', 'Daemon Error')
+            daemonLoc += '/' + 'PredictionDaemon.py'
+            Cmd = daemonLoc + ' ' + 'stop'
+            self.ExecCmd(Cmd, ShellMode=False, NeedPrintStderr=True)
+            Cmd = daemonLoc + ' ' + 'start'
+            self.ExecCmd(Cmd, ShellMode=False, NeedPrintStderr=True)
+            '''
             Create list of benchmarks that we want
             '''
             BestSetDict = {}
@@ -463,4 +472,4 @@ if __name__ == '__main__':
     time.sleep(3)
 
     driver = CommonDriver()
-    driver.run(Mode, round=1)
+    driver.run(Mode, round=100)

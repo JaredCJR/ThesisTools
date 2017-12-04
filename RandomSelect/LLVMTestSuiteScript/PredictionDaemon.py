@@ -124,11 +124,11 @@ class tcpServer:
 
 
 class Daemon:
-    def daemonize(self, pidfile, *, stdin='/dev/null',
+    def daemonize(self, PidFile, LogFile, *, stdin='/dev/null',
                                     stdout='/dev/null',
                                     stderr='/dev/null'):
 
-        if os.path.exists(pidfile):
+        if os.path.exists(PidFile):
             raise RuntimeError('Already running')
         else:
             if os.path.exists(LogFile):
@@ -164,11 +164,11 @@ class Daemon:
             os.dup2(f.fileno(), sys.stderr.fileno())
 
         # Write the PID file
-        with open(pidfile,'w') as f:
+        with open(PidFile,'w') as f:
             print(os.getpid(),file=f)
 
         # Arrange to have the PID file removed on exit/signal
-        atexit.register(lambda: os.remove(pidfile))
+        atexit.register(lambda: os.remove(PidFile))
 
         # Signal handler for termination (required)
         def sigterm_handler(signo, frame):
@@ -200,6 +200,7 @@ class Daemon:
         if argv[1] == 'start':
             try:
                 self.daemonize(PidFile,
+                          LogFile,
                           stdout=LogFile,
                           stderr=LogFile)
             except RuntimeError as e:
