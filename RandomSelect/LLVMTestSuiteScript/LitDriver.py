@@ -139,6 +139,16 @@ class LitRunner:
 
     def run(self, Mode="Standard", MailMsg=""):
         time = sv.TimeService()
+        if Mode == "Random-FunctionLevel":
+            '''
+            Start Prediction Daemon, this must before cmake
+            '''
+            daemonLoc = os.getenv('LLVM_THESIS_Random_LLVMTestSuiteScript', 'Daemon Error')
+            daemonLoc += '/' + 'PredictionDaemon.py'
+            Cmd = daemonLoc + ' ' + 'stop'
+            self.ExecCmd(Cmd, ShellMode=False, NeedPrintStderr=True)
+            Cmd = daemonLoc + ' ' + 'start'
+            self.ExecCmd(Cmd, ShellMode=False, NeedPrintStderr=True)
         #cmake
         self.CmakeTestSuite()
         #if you disable cmake, you need to enable the following line
@@ -191,15 +201,6 @@ class LitRunner:
             """
             Mode == Random-FunctionLevel
             """
-            '''
-            Start Prediction Daemon
-            '''
-            daemonLoc = os.getenv('LLVM_THESIS_Random_LLVMTestSuiteScript', 'Daemon Error')
-            daemonLoc += '/' + 'PredictionDaemon.py'
-            Cmd = daemonLoc + ' ' + 'stop'
-            self.ExecCmd(Cmd, ShellMode=False, NeedPrintStderr=True)
-            Cmd = daemonLoc + ' ' + 'start'
-            self.ExecCmd(Cmd, ShellMode=False, NeedPrintStderr=True)
             '''
             Create list of benchmarks that we want
             '''
