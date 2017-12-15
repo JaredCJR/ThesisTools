@@ -57,3 +57,13 @@ cd -
 * `Benchmark-Level Thesis-Clang-5.0` is the branch of `RandomSelect-BenchmarkLevel` in JaredCJR/llvm and JaredCJR/clang
 * `Function-Level Thesis-Clang-5.0` is the branch of `RandomSelect-FunctionLevel` in JaredCJR/llvm and JaredCJR/clang
 * Both of two `Thesis-Clang-5.0` must use the branch `thesis_50` of JaredCJR/test-suite
+
+If lit failed, how to see the program output message?
+------------------------------------------------------------
+* The original lit will remove the ".test.output" file.
+  * The lit in our version already modified to leave it there for debugging.
+```
+cd llvm-source/test-suite/build/path-to-your-target-build/
+lit XXX.test # run again to produce the error message
+cat Output/XXX.test.out # This is what you want.
+```
