@@ -20,6 +20,9 @@ export LLVM_THESIS_Random_LLVMTestSuite_Results=$LLVM_THESIS_Random_LLVMTestSuit
 export LLVM_THESIS_lit="$LLVM_THESIS_HOME/utils/lit/lit.py"
 export PYTHONPATH=$LLVM_THESIS_Random_LLVMTestSuiteScript:$LLVM_THESIS_RandomHome:$PYTHONPATH
 alias lit=$LLVM_THESIS_lit  #this lit is modified to read the above env
+
+# Make sure $clang++ and $clang are using your build
+export PATH=$LLVM_THESIS_HOME/build-release-gcc7/bin:$PATH
 ```
 
 
