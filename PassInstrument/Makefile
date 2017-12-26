@@ -61,7 +61,7 @@ PassRewriter: $(SRC)
 	$(CXX) $(CXXFLAGS) $(LLVM_CXXFLAGS) $(CLANG_INCLUDES) $^ \
         $(CLANG_LIBS) $(LLVM_LDFLAGS) -o $@
 
-rewrite: PassRewriter
+rewrite-sample: PassRewriter
 	# copy the original file to prepare for rewrite
 	cp ~/workspace/llvm-thesis/lib/Transforms/Scalar/DCE.cpp ./
 	# Make sure all braces are located properly
