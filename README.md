@@ -59,7 +59,10 @@ cd -
 ```
 * `Benchmark-Level Thesis-Clang-5.0` is the branch of `RandomSelect-BenchmarkLevel` in JaredCJR/llvm and JaredCJR/clang
 * `Function-Level Thesis-Clang-5.0` is the branch of `RandomSelect-FunctionLevel` in JaredCJR/llvm and JaredCJR/clang
+    * `$ ./PredictionDaemon.py start` and `$ ./PredictionDaemon.py stop` may be necessary.
+
 * Both of two `Thesis-Clang-5.0` must use the branch `thesis_50` of JaredCJR/test-suite
+* `ThesisTools` always need to be the latest version for all branches
 
 If lit failed, how to see the program output message?
 ------------------------------------------------------------
