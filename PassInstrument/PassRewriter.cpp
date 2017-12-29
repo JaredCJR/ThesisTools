@@ -132,6 +132,23 @@ public:
 private:
   Rewriter &Rewrite;
 };
+
+class CaseStmtHandler : public MatchFinder::MatchCallback {
+public:
+  CaseStmtHandler(Rewriter &Rewrite) : Rewrite(Rewrite) {}
+
+  virtual void run(const MatchFinder::MatchResult &Result) {
+    if (const CaseStmt *CaseS = 
+        Result.Nodes.getNodeAs<clang::CaseStmt>("caseStmt")) {
+      Rewrite.InsertTextAfterToken(CaseS->getColonLoc(), "\n//MyTry case\n");
+    }
+  }
+
+private:
+  Rewriter &Rewrite;
+};
+
+
 // Implementation of the ASTConsumer interface for reading an AST produced
 // by the Clang parser. It registers a couple of matchers and runs them on
 // the AST.
@@ -139,7 +156,8 @@ class MyASTConsumer : public ASTConsumer {
 public:
   MyASTConsumer(Rewriter &R) : HandlerForIf(R), HandlerForFor(R), 
                 HandlerForForRange(R), HandlerForWhile(R),
-                HandlerForDoWhile(R), HandlerForBreak(R){
+                HandlerForDoWhile(R), HandlerForBreak(R),
+                HandlerForCase(R) {
     // Add a simple matcher for finding 'if' statements.
     Matcher.addMatcher(ifStmt().bind("ifStmt"), &HandlerForIf);
     // Add a simple matcher for finding 'for' statements.
@@ -152,6 +170,8 @@ public:
     Matcher.addMatcher(doStmt().bind("do-whileStmt"), &HandlerForDoWhile);
     // Add a simple matcher for finding 'break' statements.
     Matcher.addMatcher(breakStmt().bind("breakStmt"), &HandlerForBreak);
+    // Add a simple matcher for finding 'case' statements.
+    Matcher.addMatcher(caseStmt().bind("caseStmt"), &HandlerForCase);
   }
 
 
@@ -167,6 +187,7 @@ private:
   WhileStmtHandler HandlerForWhile;
   DoWhileStmtHandler HandlerForDoWhile;
   BreakStmtHandler HandlerForBreak;
+  CaseStmtHandler HandlerForCase;
   MatchFinder Matcher;
 };
 
