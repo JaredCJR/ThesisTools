@@ -1,12 +1,6 @@
 //------------------------------------------------------------------------------
-// AST matching sample. Demonstrates:
-//
-// * How to write a simple source tool using libTooling.
-// * How to use AST matchers to find interesting AST nodes.
-// * How to use the Rewriter API to rewrite the source code.
-//
-// Eli Bendersky (eliben@gmail.com)
-// This code is in the public domain
+// Author: Chang, Jia-Rung (jaredcjr.tw@gmail.com)
+// Based on Eli's example. (eliben@gmail.com)
 //------------------------------------------------------------------------------
 #include <string>
 
@@ -19,14 +13,29 @@
 #include "clang/Rewrite/Core/Rewriter.h"
 #include "clang/Tooling/CommonOptionsParser.h"
 #include "clang/Tooling/Tooling.h"
+#include "clang/AST/StmtCXX.h"
 #include "llvm/Support/raw_ostream.h"
+#include <iostream>
 
 using namespace clang;
 using namespace clang::ast_matchers;
 using namespace clang::driver;
 using namespace clang::tooling;
 
-static llvm::cl::OptionCategory MatcherSampleCategory("Matcher Sample");
+static llvm::cl::OptionCategory MatcherSampleCategory("Pass Rewriter For Instrumentation");
+
+namespace InsertHelpers {
+  // Insert API after the starting brace of the matched statement.
+  void InsertAPI(const clang::Stmt *stmt, StringRef API, clang::Rewriter &Rewrite) {
+    Stmt::const_child_iterator Istart = stmt->child_begin();
+    Stmt::const_child_iterator Iend = stmt->child_end();
+    if (Istart != Iend)
+      if (*Istart){
+        Rewrite.InsertText((*Istart)->getLocStart(), API, true, true);
+      }
+  }
+}
+
 
 class IfStmtHandler : public MatchFinder::MatchCallback {
 public:
@@ -36,11 +45,10 @@ public:
     // The matched 'if' statement was bound to 'ifStmt'.
     if (const IfStmt *IfS = Result.Nodes.getNodeAs<clang::IfStmt>("ifStmt")) {
       const Stmt *Then = IfS->getThen();
-      Rewrite.InsertText(Then->getLocStart(), "// the 'if' part\n", true, true);
+      InsertHelpers::InsertAPI(Then, "//MyTry if\n", Rewrite);
 
       if (const Stmt *Else = IfS->getElse()) {
-        Rewrite.InsertText(Else->getLocStart(), "// the 'else' part\n", true,
-                           true);
+        InsertHelpers::InsertAPI(Else, "//MyTry else\n", Rewrite);
       }
     }
   }
@@ -49,48 +57,103 @@ private:
   Rewriter &Rewrite;
 };
 
-class IncrementForLoopHandler : public MatchFinder::MatchCallback {
+class ForLoopHandler : public MatchFinder::MatchCallback {
 public:
-  IncrementForLoopHandler(Rewriter &Rewrite) : Rewrite(Rewrite) {}
+  ForLoopHandler(Rewriter &Rewrite) : Rewrite(Rewrite) {}
 
   virtual void run(const MatchFinder::MatchResult &Result) {
-    const VarDecl *IncVar = Result.Nodes.getNodeAs<VarDecl>("incVarName");
-    Rewrite.InsertText(IncVar->getLocStart(), "/* increment */", true, true);
+    if (const ForStmt *ForS = Result.Nodes.getNodeAs<clang::ForStmt>("forStmt")) {
+      const Stmt *For = ForS->getBody();
+      InsertHelpers::InsertAPI(For, "//MyTry for\n", Rewrite);
+    }
   }
 
 private:
   Rewriter &Rewrite;
 };
 
+class ForRangeLoopHandler : public MatchFinder::MatchCallback {
+public:
+  ForRangeLoopHandler(Rewriter &Rewrite) : Rewrite(Rewrite) {}
+
+  virtual void run(const MatchFinder::MatchResult &Result) {
+    if (const CXXForRangeStmt *ForRangeS = 
+        Result.Nodes.getNodeAs<clang::CXXForRangeStmt>("for-rangeStmt")) {
+      const Stmt *ForRange = ForRangeS->getBody();
+      InsertHelpers::InsertAPI(ForRange, "//MyTry for-range\n", Rewrite);
+    }
+  }
+
+private:
+  Rewriter &Rewrite;
+};
+
+class WhileStmtHandler : public MatchFinder::MatchCallback {
+public:
+  WhileStmtHandler(Rewriter &Rewrite) : Rewrite(Rewrite) {}
+
+  virtual void run(const MatchFinder::MatchResult &Result) {
+    if (const WhileStmt *WhileS = Result.Nodes.getNodeAs<clang::WhileStmt>("whileStmt")) {
+      const Stmt *While = WhileS->getBody();
+      InsertHelpers::InsertAPI(While, "//MyTry while\n", Rewrite);
+    }
+  }
+
+private:
+  Rewriter &Rewrite;
+};
+
+class DoWhileStmtHandler : public MatchFinder::MatchCallback {
+public:
+  DoWhileStmtHandler(Rewriter &Rewrite) : Rewrite(Rewrite) {}
+
+  virtual void run(const MatchFinder::MatchResult &Result) {
+    if (const DoStmt *DoWhileS = Result.Nodes.getNodeAs<clang::DoStmt>("do-whileStmt")) {
+      const Stmt *DoWhile = DoWhileS->getBody();
+      InsertHelpers::InsertAPI(DoWhile, "//MyTry do-while\n", Rewrite);
+    }
+  }
+
+private:
+  Rewriter &Rewrite;
+};
+
+class BreakStmtHandler : public MatchFinder::MatchCallback {
+public:
+  BreakStmtHandler(Rewriter &Rewrite) : Rewrite(Rewrite) {}
+
+  virtual void run(const MatchFinder::MatchResult &Result) {
+    if (const BreakStmt *BreakS = 
+        Result.Nodes.getNodeAs<clang::BreakStmt>("breakStmt")) {
+      Rewrite.InsertTextBefore(BreakS->getLocStart(), "//MyTry break\n");
+    }
+  }
+
+private:
+  Rewriter &Rewrite;
+};
 // Implementation of the ASTConsumer interface for reading an AST produced
 // by the Clang parser. It registers a couple of matchers and runs them on
 // the AST.
 class MyASTConsumer : public ASTConsumer {
 public:
-  MyASTConsumer(Rewriter &R) : HandlerForIf(R), HandlerForFor(R) {
+  MyASTConsumer(Rewriter &R) : HandlerForIf(R), HandlerForFor(R), 
+                HandlerForForRange(R), HandlerForWhile(R),
+                HandlerForDoWhile(R), HandlerForBreak(R){
     // Add a simple matcher for finding 'if' statements.
     Matcher.addMatcher(ifStmt().bind("ifStmt"), &HandlerForIf);
-
-    // Add a complex matcher for finding 'for' loops with an initializer set
-    // to 0, < comparison in the codition and an increment. For example:
-    //
-    //  for (int i = 0; i < N; ++i)
-    Matcher.addMatcher(
-        forStmt(hasLoopInit(declStmt(hasSingleDecl(
-                    varDecl(hasInitializer(integerLiteral(equals(0))))
-                        .bind("initVarName")))),
-                hasIncrement(unaryOperator(
-                    hasOperatorName("++"),
-                    hasUnaryOperand(declRefExpr(to(
-                        varDecl(hasType(isInteger())).bind("incVarName")))))),
-                hasCondition(binaryOperator(
-                    hasOperatorName("<"),
-                    hasLHS(ignoringParenImpCasts(declRefExpr(to(
-                        varDecl(hasType(isInteger())).bind("condVarName"))))),
-                    hasRHS(expr(hasType(isInteger()))))))
-            .bind("forLoop"),
-        &HandlerForFor);
+    // Add a simple matcher for finding 'for' statements.
+    Matcher.addMatcher(forStmt().bind("forStmt"), &HandlerForFor);
+    // Add a simple matcher for finding 'CXX11 for-range' statements.
+    Matcher.addMatcher(cxxForRangeStmt().bind("for-rangeStmt"), &HandlerForForRange);
+    // Add a simple matcher for finding 'while' statements.
+    Matcher.addMatcher(whileStmt().bind("whileStmt"), &HandlerForWhile);
+    // Add a simple matcher for finding 'do-while' statements.
+    Matcher.addMatcher(doStmt().bind("do-whileStmt"), &HandlerForDoWhile);
+    // Add a simple matcher for finding 'break' statements.
+    Matcher.addMatcher(breakStmt().bind("breakStmt"), &HandlerForBreak);
   }
+
 
   void HandleTranslationUnit(ASTContext &Context) override {
     // Run the matchers when we have the whole TU parsed.
@@ -99,7 +162,11 @@ public:
 
 private:
   IfStmtHandler HandlerForIf;
-  IncrementForLoopHandler HandlerForFor;
+  ForLoopHandler HandlerForFor;
+  ForRangeLoopHandler HandlerForForRange;
+  WhileStmtHandler HandlerForWhile;
+  DoWhileStmtHandler HandlerForDoWhile;
+  BreakStmtHandler HandlerForBreak;
   MatchFinder Matcher;
 };
 
