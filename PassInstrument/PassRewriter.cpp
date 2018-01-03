@@ -60,7 +60,6 @@ namespace InsertHelpers {
     clang::SourceLocation Loc = stmt->getLocEnd();
     unsigned LineNum = sm.getSpellingLineNumber(Loc);
     StringRef FilePath = sm.getFilename(Loc);
-    //FIXME: rewrite will make the line number wrong
     //llvm::errs() << "File:" << FilePath << " Line:" << LineNum << "\n";
   }
 }
