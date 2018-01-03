@@ -2,8 +2,6 @@
 // Author: Chang, Jia-Rung (jaredcjr.tw@gmail.com)
 // Based on Eli's example. (eliben@gmail.com)
 //------------------------------------------------------------------------------
-#include <string>
-
 #include "clang/AST/AST.h"
 #include "clang/AST/ASTConsumer.h"
 #include "clang/Basic/SourceManager.h"
@@ -18,6 +16,9 @@
 #include "clang/AST/StmtCXX.h"
 #include "llvm/Support/raw_ostream.h"
 #include <iostream>
+#include <string>
+#include <fstream>
+#include <cstdlib>
 
 using namespace clang;
 using namespace clang::ast_matchers;
@@ -31,6 +32,26 @@ static llvm::cl::OptionCategory MatcherSampleCategory("Pass Rewriter For Instrum
 namespace InsertHelpers {
   // Global var to count the index id (id != index)
   unsigned InsertIndexId = 0;
+  // Record to database
+  void RecordMatchedLoc(clang::SourceLocation loc, clang::SourceManager &sm) {
+    unsigned LineNum = sm.getSpellingLineNumber(loc);
+    std::string FilePath = sm.getFilename(loc).str();
+    // Record to file as database
+    const char* env_p = std::getenv("LLVM_THESIS_InstrumentHome");
+    if (!env_p) {
+      llvm::errs() << "$LLVM_THESIS_InstrumentHome is not defined.\n";
+      exit(EXIT_FAILURE);
+    }
+    std::string DatabaseLoc = std::string(env_p) + std::string("/Database/database");
+    std::ofstream database;
+    database.open(DatabaseLoc.c_str(), std::ios::app);
+    if (!database) {
+      llvm::errs() << "Open database failed\n";
+      exit(EXIT_FAILURE);
+    }
+    database << FilePath << ", " << InsertIndexId << "\n";
+    database.close();
+  }
   // Insert API after the starting brace of the matched statement.
   // More specific, this api is for: for(...), while(...), etc.
   void InsertApiInCompStmt(const clang::Stmt *stmt, clang::Rewriter &Rewrite) {
@@ -38,29 +59,25 @@ namespace InsertHelpers {
     Stmt::const_child_iterator Iend = stmt->child_end();
     if (Istart != Iend)
       if (*Istart){
-        Rewrite.InsertTextBefore((*Istart)->getLocStart(), PassPeeper_post);
-        Rewrite.InsertTextBefore((*Istart)->getLocStart(), std::to_string(InsertHelpers::InsertIndexId));
-        Rewrite.InsertTextBefore((*Istart)->getLocStart(), PassPeeper_pre);
         if (Rewrite.getSourceMgr().isInMainFile((*Istart)->getLocStart())) {
+          clang::SourceLocation loc = (*Istart)->getLocStart();
+          Rewrite.InsertTextBefore(loc, PassPeeper_post);
+          Rewrite.InsertTextBefore(loc, std::to_string(InsertHelpers::InsertIndexId));
+          Rewrite.InsertTextBefore(loc, PassPeeper_pre);
+          RecordMatchedLoc(loc, Rewrite.getSourceMgr());
           InsertIndexId++;
         }
       }
   }
   // This is for "case" and "break"
   void InsertApiInSingleStmt(const clang::SourceLocation SL, clang::Rewriter &Rewrite) {
-    Rewrite.InsertTextAfter(SL, PassPeeper_pre);
-    Rewrite.InsertTextAfter(SL, std::to_string(InsertHelpers::InsertIndexId));
-    Rewrite.InsertTextAfter(SL, PassPeeper_post);
     if (Rewrite.getSourceMgr().isInMainFile(SL)) {
+      Rewrite.InsertTextAfter(SL, PassPeeper_pre);
+      Rewrite.InsertTextAfter(SL, std::to_string(InsertHelpers::InsertIndexId));
+      Rewrite.InsertTextAfter(SL, PassPeeper_post);
+      RecordMatchedLoc(SL, Rewrite.getSourceMgr());
       InsertIndexId++;
     }
-  }
-  // Get the source file and line to record it.
-  void RecordMatchedLoc(const clang::Stmt *stmt, clang::SourceManager &sm) {
-    clang::SourceLocation Loc = stmt->getLocEnd();
-    unsigned LineNum = sm.getSpellingLineNumber(Loc);
-    StringRef FilePath = sm.getFilename(Loc);
-    //llvm::errs() << "File:" << FilePath << " Line:" << LineNum << "\n";
   }
 }
 
@@ -74,7 +91,6 @@ public:
     if (const IfStmt *IfS = Result.Nodes.getNodeAs<clang::IfStmt>("ifStmt")) {
       const Stmt *Then = IfS->getThen();
       InsertHelpers::InsertApiInCompStmt(Then, Rewrite);
-      //InsertHelpers::RecordMatchedLoc(Then, Rewrite.getSourceMgr());
 
       if (const Stmt *Else = IfS->getElse()) {
         InsertHelpers::InsertApiInCompStmt(Else, Rewrite);
