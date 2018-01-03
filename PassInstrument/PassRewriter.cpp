@@ -6,6 +6,8 @@
 
 #include "clang/AST/AST.h"
 #include "clang/AST/ASTConsumer.h"
+#include "clang/Basic/SourceManager.h"
+#include "clang/Basic/SourceLocation.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
 #include "clang/Frontend/CompilerInstance.h"
@@ -21,20 +23,45 @@ using namespace clang;
 using namespace clang::ast_matchers;
 using namespace clang::driver;
 using namespace clang::tooling;
-
-#define PassPeeper "PassPrediction::PassPeeper(__FILE__, __LINE__);\n"
+#define PassPeeper_pre  "PassPrediction::PassPeeper(__FILE__, __LINE__, "
+#define PassPeeper_post ");\n"
 
 static llvm::cl::OptionCategory MatcherSampleCategory("Pass Rewriter For Instrumentation");
 
 namespace InsertHelpers {
+  // Global var to count the index id (id != index)
+  unsigned InsertIndexId = 0;
   // Insert API after the starting brace of the matched statement.
-  void InsertAPI(const clang::Stmt *stmt, StringRef API, clang::Rewriter &Rewrite) {
+  // More specific, this api is for: for(...), while(...), etc.
+  void InsertApiInCompStmt(const clang::Stmt *stmt, clang::Rewriter &Rewrite) {
     Stmt::const_child_iterator Istart = stmt->child_begin();
     Stmt::const_child_iterator Iend = stmt->child_end();
     if (Istart != Iend)
       if (*Istart){
-        Rewrite.InsertText((*Istart)->getLocStart(), API, true, true);
+        Rewrite.InsertTextBefore((*Istart)->getLocStart(), PassPeeper_post);
+        Rewrite.InsertTextBefore((*Istart)->getLocStart(), std::to_string(InsertHelpers::InsertIndexId));
+        Rewrite.InsertTextBefore((*Istart)->getLocStart(), PassPeeper_pre);
+        if (Rewrite.getSourceMgr().isInMainFile((*Istart)->getLocStart())) {
+          InsertIndexId++;
+        }
       }
+  }
+  // This is for "case" and "break"
+  void InsertApiInSingleStmt(const clang::SourceLocation SL, clang::Rewriter &Rewrite) {
+    Rewrite.InsertTextAfter(SL, PassPeeper_pre);
+    Rewrite.InsertTextAfter(SL, std::to_string(InsertHelpers::InsertIndexId));
+    Rewrite.InsertTextAfter(SL, PassPeeper_post);
+    if (Rewrite.getSourceMgr().isInMainFile(SL)) {
+      InsertIndexId++;
+    }
+  }
+  // Get the source file and line to record it.
+  void RecordMatchedLoc(const clang::Stmt *stmt, clang::SourceManager &sm) {
+    clang::SourceLocation Loc = stmt->getLocEnd();
+    unsigned LineNum = sm.getSpellingLineNumber(Loc);
+    StringRef FilePath = sm.getFilename(Loc);
+    //FIXME: rewrite will make the line number wrong
+    //llvm::errs() << "File:" << FilePath << " Line:" << LineNum << "\n";
   }
 }
 
@@ -47,10 +74,11 @@ public:
     // The matched 'if' statement was bound to 'ifStmt'.
     if (const IfStmt *IfS = Result.Nodes.getNodeAs<clang::IfStmt>("ifStmt")) {
       const Stmt *Then = IfS->getThen();
-      InsertHelpers::InsertAPI(Then, PassPeeper, Rewrite);
+      InsertHelpers::InsertApiInCompStmt(Then, Rewrite);
+      //InsertHelpers::RecordMatchedLoc(Then, Rewrite.getSourceMgr());
 
       if (const Stmt *Else = IfS->getElse()) {
-        InsertHelpers::InsertAPI(Else, PassPeeper, Rewrite);
+        InsertHelpers::InsertApiInCompStmt(Else, Rewrite);
       }
     }
   }
@@ -66,7 +94,7 @@ public:
   virtual void run(const MatchFinder::MatchResult &Result) {
     if (const ForStmt *ForS = Result.Nodes.getNodeAs<clang::ForStmt>("forStmt")) {
       const Stmt *For = ForS->getBody();
-      InsertHelpers::InsertAPI(For, PassPeeper, Rewrite);
+      InsertHelpers::InsertApiInCompStmt(For, Rewrite);
     }
   }
 
@@ -82,7 +110,7 @@ public:
     if (const CXXForRangeStmt *ForRangeS = 
         Result.Nodes.getNodeAs<clang::CXXForRangeStmt>("for-rangeStmt")) {
       const Stmt *ForRange = ForRangeS->getBody();
-      InsertHelpers::InsertAPI(ForRange, PassPeeper, Rewrite);
+      InsertHelpers::InsertApiInCompStmt(ForRange, Rewrite);
     }
   }
 
@@ -97,7 +125,7 @@ public:
   virtual void run(const MatchFinder::MatchResult &Result) {
     if (const WhileStmt *WhileS = Result.Nodes.getNodeAs<clang::WhileStmt>("whileStmt")) {
       const Stmt *While = WhileS->getBody();
-      InsertHelpers::InsertAPI(While, PassPeeper, Rewrite);
+      InsertHelpers::InsertApiInCompStmt(While, Rewrite);
     }
   }
 
@@ -112,7 +140,7 @@ public:
   virtual void run(const MatchFinder::MatchResult &Result) {
     if (const DoStmt *DoWhileS = Result.Nodes.getNodeAs<clang::DoStmt>("do-whileStmt")) {
       const Stmt *DoWhile = DoWhileS->getBody();
-      InsertHelpers::InsertAPI(DoWhile, PassPeeper, Rewrite);
+      InsertHelpers::InsertApiInCompStmt(DoWhile, Rewrite);
     }
   }
 
@@ -127,7 +155,7 @@ public:
   virtual void run(const MatchFinder::MatchResult &Result) {
     if (const BreakStmt *BreakS = 
         Result.Nodes.getNodeAs<clang::BreakStmt>("breakStmt")) {
-      Rewrite.InsertTextBefore(BreakS->getLocStart(), PassPeeper);
+      InsertHelpers::InsertApiInSingleStmt(BreakS->getLocStart(), Rewrite);
     }
   }
 
@@ -142,7 +170,7 @@ public:
   virtual void run(const MatchFinder::MatchResult &Result) {
     if (const CaseStmt *CaseS = 
         Result.Nodes.getNodeAs<clang::CaseStmt>("caseStmt")) {
-      Rewrite.InsertTextAfterToken(CaseS->getColonLoc(), PassPeeper);
+      InsertHelpers::InsertApiInSingleStmt(CaseS->getColonLoc(), Rewrite);
     }
   }
 
