@@ -22,6 +22,8 @@ using namespace clang::ast_matchers;
 using namespace clang::driver;
 using namespace clang::tooling;
 
+#define PassPeeper "PassPrediction::PassPeeper(__FILE__, __LINE__);\n"
+
 static llvm::cl::OptionCategory MatcherSampleCategory("Pass Rewriter For Instrumentation");
 
 namespace InsertHelpers {
@@ -45,10 +47,10 @@ public:
     // The matched 'if' statement was bound to 'ifStmt'.
     if (const IfStmt *IfS = Result.Nodes.getNodeAs<clang::IfStmt>("ifStmt")) {
       const Stmt *Then = IfS->getThen();
-      InsertHelpers::InsertAPI(Then, "//MyTry if\n", Rewrite);
+      InsertHelpers::InsertAPI(Then, PassPeeper, Rewrite);
 
       if (const Stmt *Else = IfS->getElse()) {
-        InsertHelpers::InsertAPI(Else, "//MyTry else\n", Rewrite);
+        InsertHelpers::InsertAPI(Else, PassPeeper, Rewrite);
       }
     }
   }
@@ -64,7 +66,7 @@ public:
   virtual void run(const MatchFinder::MatchResult &Result) {
     if (const ForStmt *ForS = Result.Nodes.getNodeAs<clang::ForStmt>("forStmt")) {
       const Stmt *For = ForS->getBody();
-      InsertHelpers::InsertAPI(For, "//MyTry for\n", Rewrite);
+      InsertHelpers::InsertAPI(For, PassPeeper, Rewrite);
     }
   }
 
@@ -80,7 +82,7 @@ public:
     if (const CXXForRangeStmt *ForRangeS = 
         Result.Nodes.getNodeAs<clang::CXXForRangeStmt>("for-rangeStmt")) {
       const Stmt *ForRange = ForRangeS->getBody();
-      InsertHelpers::InsertAPI(ForRange, "//MyTry for-range\n", Rewrite);
+      InsertHelpers::InsertAPI(ForRange, PassPeeper, Rewrite);
     }
   }
 
@@ -95,7 +97,7 @@ public:
   virtual void run(const MatchFinder::MatchResult &Result) {
     if (const WhileStmt *WhileS = Result.Nodes.getNodeAs<clang::WhileStmt>("whileStmt")) {
       const Stmt *While = WhileS->getBody();
-      InsertHelpers::InsertAPI(While, "//MyTry while\n", Rewrite);
+      InsertHelpers::InsertAPI(While, PassPeeper, Rewrite);
     }
   }
 
@@ -110,7 +112,7 @@ public:
   virtual void run(const MatchFinder::MatchResult &Result) {
     if (const DoStmt *DoWhileS = Result.Nodes.getNodeAs<clang::DoStmt>("do-whileStmt")) {
       const Stmt *DoWhile = DoWhileS->getBody();
-      InsertHelpers::InsertAPI(DoWhile, "//MyTry do-while\n", Rewrite);
+      InsertHelpers::InsertAPI(DoWhile, PassPeeper, Rewrite);
     }
   }
 
@@ -125,7 +127,7 @@ public:
   virtual void run(const MatchFinder::MatchResult &Result) {
     if (const BreakStmt *BreakS = 
         Result.Nodes.getNodeAs<clang::BreakStmt>("breakStmt")) {
-      Rewrite.InsertTextBefore(BreakS->getLocStart(), "//MyTry break\n");
+      Rewrite.InsertTextBefore(BreakS->getLocStart(), PassPeeper);
     }
   }
 
@@ -140,7 +142,7 @@ public:
   virtual void run(const MatchFinder::MatchResult &Result) {
     if (const CaseStmt *CaseS = 
         Result.Nodes.getNodeAs<clang::CaseStmt>("caseStmt")) {
-      Rewrite.InsertTextAfterToken(CaseS->getColonLoc(), "\n//MyTry case\n");
+      Rewrite.InsertTextAfterToken(CaseS->getColonLoc(), PassPeeper);
     }
   }
 
