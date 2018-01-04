@@ -1,6 +1,6 @@
 #!/bin/bash
 LLVMHeaders=${LLVM_THESIS_HOME}/include/llvm
-SystemHeaders=`cat ${LLVM_THESIS_HOME}/ThesisTools/PassInstrument/script/SystemHeaders`
+SystemHeaders=`cat ${LLVM_THESIS_InstrumentHome}/script/SystemHeaders`
 AdditionalHeaders=${LLVM_THESIS_HOME}/lib/Transforms/InstCombine
 
 Headers=$SystemHeaders" -I"$LLVMHeaders" -I"$AdditionalHeaders

@@ -24,14 +24,15 @@ using namespace clang;
 using namespace clang::ast_matchers;
 using namespace clang::driver;
 using namespace clang::tooling;
-#define PassPeeper_pre  "PassPrediction::PassPeeper(__FILE__, __LINE__, "
-#define PassPeeper_post ");\n"
+#define PassPeeper_pre  "PassPrediction::PassPeeper(__FILE__, "
+#define PassPeeper_post ");"
 
 static llvm::cl::OptionCategory MatcherSampleCategory("Pass Rewriter For Instrumentation");
 
 namespace InsertHelpers {
   // Global var to count the index id (id != index)
   unsigned InsertIndexId = 0;
+
   // Record to database
   void RecordMatchedLoc(clang::SourceLocation loc, clang::SourceManager &sm) {
     unsigned LineNum = sm.getSpellingLineNumber(loc);
@@ -52,16 +53,18 @@ namespace InsertHelpers {
     database << FilePath << ", " << InsertIndexId << "\n";
     database.close();
   }
+
   // Insert API after the starting brace of the matched statement.
   // More specific, this api is for: for(...), while(...), etc.
-  void InsertApiInCompStmt(const clang::Stmt *stmt, clang::Rewriter &Rewrite) {
+  void InsertApiInCompStmt(const clang::Stmt *stmt, clang::Rewriter &Rewrite, std::string comment) {
     Stmt::const_child_iterator Istart = stmt->child_begin();
     Stmt::const_child_iterator Iend = stmt->child_end();
     if (Istart != Iend)
       if (*Istart){
         if (Rewrite.getSourceMgr().isInMainFile((*Istart)->getLocStart())) {
           clang::SourceLocation loc = (*Istart)->getLocStart();
-          Rewrite.InsertTextBefore(loc, PassPeeper_post);
+          std::string post = std::string(PassPeeper_post) + std::string("// ") + comment + std::string("\n");
+          Rewrite.InsertTextBefore(loc, post);
           Rewrite.InsertTextBefore(loc, std::to_string(InsertHelpers::InsertIndexId));
           Rewrite.InsertTextBefore(loc, PassPeeper_pre);
           RecordMatchedLoc(loc, Rewrite.getSourceMgr());
@@ -69,12 +72,26 @@ namespace InsertHelpers {
         }
       }
   }
-  // This is for "case" and "break"
-  void InsertApiInSingleStmt(const clang::SourceLocation SL, clang::Rewriter &Rewrite) {
+  // This is for "break"
+  void InsertApiInSingleStmt(const clang::SourceLocation SL, clang::Rewriter &Rewrite, std::string comment) {
     if (Rewrite.getSourceMgr().isInMainFile(SL)) {
       Rewrite.InsertTextAfter(SL, PassPeeper_pre);
       Rewrite.InsertTextAfter(SL, std::to_string(InsertHelpers::InsertIndexId));
-      Rewrite.InsertTextAfter(SL, PassPeeper_post);
+      std::string post = std::string(PassPeeper_post) + std::string("// ") + comment + std::string("\n");
+      Rewrite.InsertTextAfter(SL, post);
+      RecordMatchedLoc(SL, Rewrite.getSourceMgr());
+      InsertIndexId++;
+    }
+  }
+  // This is for "case"
+  void ReplaceApiAfterMark(const clang::SourceLocation SL, clang::Rewriter &Rewrite, 
+      std::string &mark, std::string comment) {
+    if (Rewrite.getSourceMgr().isInMainFile(SL)) {
+      std::string api(PassPeeper_pre);
+      api = api + std::to_string(InsertHelpers::InsertIndexId) + 
+        PassPeeper_post + std::string("// ") + comment + std::string("\n");
+      api = mark + api;
+      Rewrite.ReplaceText(SL, 1, api);
       RecordMatchedLoc(SL, Rewrite.getSourceMgr());
       InsertIndexId++;
     }
@@ -90,10 +107,10 @@ public:
     // The matched 'if' statement was bound to 'ifStmt'.
     if (const IfStmt *IfS = Result.Nodes.getNodeAs<clang::IfStmt>("ifStmt")) {
       const Stmt *Then = IfS->getThen();
-      InsertHelpers::InsertApiInCompStmt(Then, Rewrite);
+      InsertHelpers::InsertApiInCompStmt(Then, Rewrite, "if");
 
       if (const Stmt *Else = IfS->getElse()) {
-        InsertHelpers::InsertApiInCompStmt(Else, Rewrite);
+        InsertHelpers::InsertApiInCompStmt(Else, Rewrite, "else");
       }
     }
   }
@@ -109,7 +126,7 @@ public:
   virtual void run(const MatchFinder::MatchResult &Result) {
     if (const ForStmt *ForS = Result.Nodes.getNodeAs<clang::ForStmt>("forStmt")) {
       const Stmt *For = ForS->getBody();
-      InsertHelpers::InsertApiInCompStmt(For, Rewrite);
+      InsertHelpers::InsertApiInCompStmt(For, Rewrite, "for");
     }
   }
 
@@ -125,7 +142,7 @@ public:
     if (const CXXForRangeStmt *ForRangeS = 
         Result.Nodes.getNodeAs<clang::CXXForRangeStmt>("for-rangeStmt")) {
       const Stmt *ForRange = ForRangeS->getBody();
-      InsertHelpers::InsertApiInCompStmt(ForRange, Rewrite);
+      InsertHelpers::InsertApiInCompStmt(ForRange, Rewrite, "for-range");
     }
   }
 
@@ -140,7 +157,7 @@ public:
   virtual void run(const MatchFinder::MatchResult &Result) {
     if (const WhileStmt *WhileS = Result.Nodes.getNodeAs<clang::WhileStmt>("whileStmt")) {
       const Stmt *While = WhileS->getBody();
-      InsertHelpers::InsertApiInCompStmt(While, Rewrite);
+      InsertHelpers::InsertApiInCompStmt(While, Rewrite, "while");
     }
   }
 
@@ -155,7 +172,7 @@ public:
   virtual void run(const MatchFinder::MatchResult &Result) {
     if (const DoStmt *DoWhileS = Result.Nodes.getNodeAs<clang::DoStmt>("do-whileStmt")) {
       const Stmt *DoWhile = DoWhileS->getBody();
-      InsertHelpers::InsertApiInCompStmt(DoWhile, Rewrite);
+      InsertHelpers::InsertApiInCompStmt(DoWhile, Rewrite, "do-while");
     }
   }
 
@@ -170,7 +187,7 @@ public:
   virtual void run(const MatchFinder::MatchResult &Result) {
     if (const BreakStmt *BreakS = 
         Result.Nodes.getNodeAs<clang::BreakStmt>("breakStmt")) {
-      InsertHelpers::InsertApiInSingleStmt(BreakS->getLocStart(), Rewrite);
+      InsertHelpers::InsertApiInSingleStmt(BreakS->getLocStart(), Rewrite, "break");
     }
   }
 
@@ -185,7 +202,8 @@ public:
   virtual void run(const MatchFinder::MatchResult &Result) {
     if (const CaseStmt *CaseS = 
         Result.Nodes.getNodeAs<clang::CaseStmt>("caseStmt")) {
-      InsertHelpers::InsertApiInSingleStmt(CaseS->getColonLoc(), Rewrite);
+      std::string colon(":");
+      InsertHelpers::ReplaceApiAfterMark(CaseS->getColonLoc(), Rewrite, colon, "case");
     }
   }
 
@@ -241,8 +259,15 @@ class MyFrontendAction : public ASTFrontendAction {
 public:
   MyFrontendAction() {}
   void EndSourceFileAction() override {
-    TheRewriter.getEditBuffer(TheRewriter.getSourceMgr().getMainFileID())
-        .write(llvm::outs());
+    SourceManager & sm = TheRewriter.getSourceMgr();
+    FileID fileID = sm.getMainFileID();
+    std::string path = sm.getFilename(sm.getLocForStartOfFile(fileID)).str();
+    std::error_code ec;
+    llvm::raw_fd_ostream *stream = new llvm::raw_fd_ostream(path, ec, llvm::sys::fs::OpenFlags::F_RW);
+    // Write to original file.
+    TheRewriter.getEditBuffer(fileID)
+        .write(*stream);
+    stream->close();
   }
 
   std::unique_ptr<ASTConsumer> CreateASTConsumer(CompilerInstance &CI,
