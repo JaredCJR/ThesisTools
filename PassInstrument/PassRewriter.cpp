@@ -19,6 +19,7 @@
 #include <string>
 #include <fstream>
 #include <cstdlib>
+#include <unordered_map>
 
 using namespace clang;
 using namespace clang::ast_matchers;
@@ -32,11 +33,30 @@ static llvm::cl::OptionCategory MatcherSampleCategory("Pass Rewriter For Instrum
 namespace InsertHelpers {
   // Global var to count the index id (id != index)
   unsigned InsertIndexId = 0;
+  // Prevent insert multiple times, such as template
+  std::unordered_map<std::string, bool> RewriteMap; // <file_name--line_num, bool>
+
+  // Construct key for RewriteMap
+  std::string ConstructKey(clang::SourceLocation loc, clang::SourceManager &sm) {
+    std::string FilePath = sm.getFilename(loc).str();
+    unsigned LineNum = sm.getSpellingLineNumber(loc);
+    return FilePath + "--" + std::to_string(LineNum);
+  }
+
+  // Check key existence
+  bool CheckKeyExists(clang::SourceLocation loc, clang::SourceManager &sm) {
+    if (RewriteMap.find(ConstructKey(loc, sm)) != RewriteMap.end()) {
+      return true;
+    }
+    return false;
+  }
 
   // Record to database
   void RecordMatchedLoc(clang::SourceLocation loc, clang::SourceManager &sm) {
-    unsigned LineNum = sm.getSpellingLineNumber(loc);
     std::string FilePath = sm.getFilename(loc).str();
+    unsigned LineNum = sm.getSpellingLineNumber(loc);
+    // Record to map to prevent rewriting multiple times
+    RewriteMap[ConstructKey(loc, sm)] = true;
     // Record to file as database
     const char* env_p = std::getenv("LLVM_THESIS_InstrumentHome");
     if (!env_p) {
@@ -50,7 +70,7 @@ namespace InsertHelpers {
       llvm::errs() << "Open database failed\n";
       exit(EXIT_FAILURE);
     }
-    database << FilePath << ", " << InsertIndexId << "\n";
+    database << FilePath << ", " << LineNum << ", " << InsertIndexId << "\n";
     database.close();
   }
 
@@ -63,6 +83,9 @@ namespace InsertHelpers {
       if (*Istart){
         if (Rewrite.getSourceMgr().isInMainFile((*Istart)->getLocStart())) {
           clang::SourceLocation loc = (*Istart)->getLocStart();
+          if (CheckKeyExists(loc, Rewrite.getSourceMgr())) {
+            return;
+          }
           std::string post = std::string(PassPeeper_post) + std::string("// ") + comment + std::string("\n");
           Rewrite.InsertTextBefore(loc, post);
           Rewrite.InsertTextBefore(loc, std::to_string(InsertHelpers::InsertIndexId));
@@ -75,6 +98,9 @@ namespace InsertHelpers {
   // This is for "break"
   void InsertApiInSingleStmt(const clang::SourceLocation SL, clang::Rewriter &Rewrite, std::string comment) {
     if (Rewrite.getSourceMgr().isInMainFile(SL)) {
+      if (CheckKeyExists(SL, Rewrite.getSourceMgr())) {
+        return;
+      }
       Rewrite.InsertTextAfter(SL, PassPeeper_pre);
       Rewrite.InsertTextAfter(SL, std::to_string(InsertHelpers::InsertIndexId));
       std::string post = std::string(PassPeeper_post) + std::string("// ") + comment + std::string("\n");
@@ -87,6 +113,9 @@ namespace InsertHelpers {
   void ReplaceApiAfterMark(const clang::SourceLocation SL, clang::Rewriter &Rewrite, 
       std::string &mark, std::string comment) {
     if (Rewrite.getSourceMgr().isInMainFile(SL)) {
+      if (CheckKeyExists(SL, Rewrite.getSourceMgr())) {
+        return;
+      }
       std::string api(PassPeeper_pre);
       api = api + std::to_string(InsertHelpers::InsertIndexId) + 
         PassPeeper_post + std::string("// ") + comment + std::string("\n");
