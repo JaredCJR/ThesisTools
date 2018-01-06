@@ -43,6 +43,15 @@ namespace InsertHelpers {
     return FilePath + "--" + std::to_string(LineNum);
   }
 
+  // The MainFile does not mean that it is in the target source file
+  bool isFileNameReadable(clang::SourceLocation loc, clang::SourceManager &sm) {
+    std::string FilePath = sm.getFilename(loc).str();
+    if (FilePath.empty()) {
+      return false;
+    }
+    return true;
+  }
+
   // Check key existence
   bool CheckKeyExists(clang::SourceLocation loc, clang::SourceManager &sm) {
     if (RewriteMap.find(ConstructKey(loc, sm)) != RewriteMap.end()) {
@@ -82,15 +91,16 @@ namespace InsertHelpers {
     if (Istart != Iend)
       if (*Istart){
         if (Rewrite.getSourceMgr().isInMainFile((*Istart)->getLocStart())) {
-          clang::SourceLocation loc = (*Istart)->getLocStart();
-          if (CheckKeyExists(loc, Rewrite.getSourceMgr())) {
+          clang::SourceLocation SL = (*Istart)->getLocStart();
+          if (CheckKeyExists(SL, Rewrite.getSourceMgr()) || 
+              !isFileNameReadable(SL, Rewrite.getSourceMgr())) {
             return;
           }
           std::string post = std::string(PassPeeper_post) + std::string("// ") + comment + std::string("\n");
-          Rewrite.InsertTextBefore(loc, post);
-          Rewrite.InsertTextBefore(loc, std::to_string(InsertHelpers::InsertIndexId));
-          Rewrite.InsertTextBefore(loc, PassPeeper_pre);
-          RecordMatchedLoc(loc, Rewrite.getSourceMgr());
+          Rewrite.InsertTextBefore(SL, post);
+          Rewrite.InsertTextBefore(SL, std::to_string(InsertHelpers::InsertIndexId));
+          Rewrite.InsertTextBefore(SL, PassPeeper_pre);
+          RecordMatchedLoc(SL, Rewrite.getSourceMgr());
           InsertIndexId++;
         }
       }
@@ -98,7 +108,8 @@ namespace InsertHelpers {
   // This is for "break"
   void InsertApiInSingleStmt(const clang::SourceLocation SL, clang::Rewriter &Rewrite, std::string comment) {
     if (Rewrite.getSourceMgr().isInMainFile(SL)) {
-      if (CheckKeyExists(SL, Rewrite.getSourceMgr())) {
+      if (CheckKeyExists(SL, Rewrite.getSourceMgr()) || 
+          !isFileNameReadable(SL, Rewrite.getSourceMgr())) {
         return;
       }
       Rewrite.InsertTextAfter(SL, PassPeeper_pre);
@@ -113,7 +124,8 @@ namespace InsertHelpers {
   void ReplaceApiAfterMark(const clang::SourceLocation SL, clang::Rewriter &Rewrite, 
       std::string &mark, std::string comment) {
     if (Rewrite.getSourceMgr().isInMainFile(SL)) {
-      if (CheckKeyExists(SL, Rewrite.getSourceMgr())) {
+      if (CheckKeyExists(SL, Rewrite.getSourceMgr()) || 
+          !isFileNameReadable(SL, Rewrite.getSourceMgr())) {
         return;
       }
       std::string api(PassPeeper_pre);
