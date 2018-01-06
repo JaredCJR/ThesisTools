@@ -11,6 +11,7 @@ echo "Assume \"TidyAllPasses.sh\" is already done."
 sleep 3
 # Clear previous database(rewritten log)
 rm -f $Database/database
+rm -f $Database/FeatureSize
 
 # Copy for instrumenting them.
 rm -rf $RewrittenDir
@@ -38,5 +39,8 @@ done
 
 
 cd -
+
+# Record feature size
+bash $LLVM_THESIS_InstrumentHome/script/FetchFeatureSize.sh
 
 echo "Rewritter Done."

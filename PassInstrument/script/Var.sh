@@ -1,6 +1,5 @@
 #!/bin/bash
 <<LoadingVars
-Path of target passes are relative to llvm/lib/Transform/
 Get several var: $Database, $BackupDir, $TidiedDir, $RewrittenDir
 $PassesArr, $BaseNamePassArr, $AbsPathPasses
 $TidiedPassArr, $RewrittenPassArr
