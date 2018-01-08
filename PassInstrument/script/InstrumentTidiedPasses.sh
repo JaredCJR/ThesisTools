@@ -9,8 +9,8 @@ Headers=$SystemHeaders" -I"$LLVMHeaders" -I"$AdditionalHeaders
 echo "-------------------------------"
 echo "Assume \"TidyAllPasses.sh\" is already done."
 sleep 3
-# Clear previous database(rewritten log)
-rm -f $Database/database
+# Clear previous RewrittenLog
+rm -f $Database/RewrittenLog
 rm -f $Database/FeatureSize
 
 # Copy for instrumenting them.

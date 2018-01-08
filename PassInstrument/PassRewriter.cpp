@@ -60,27 +60,27 @@ namespace InsertHelpers {
     return false;
   }
 
-  // Record to database
+  // Record to RewrittenLog
   void RecordMatchedLoc(clang::SourceLocation loc, clang::SourceManager &sm) {
     std::string FilePath = sm.getFilename(loc).str();
     unsigned LineNum = sm.getSpellingLineNumber(loc);
     // Record to map to prevent rewriting multiple times
     RewriteMap[ConstructKey(loc, sm)] = true;
-    // Record to file as database
+    // Record to file as RewrittenLog
     const char* env_p = std::getenv("LLVM_THESIS_InstrumentHome");
     if (!env_p) {
       llvm::errs() << "$LLVM_THESIS_InstrumentHome is not defined.\n";
       exit(EXIT_FAILURE);
     }
-    std::string DatabaseLoc = std::string(env_p) + std::string("/Database/database");
-    std::ofstream database;
-    database.open(DatabaseLoc.c_str(), std::ios::app);
-    if (!database) {
-      llvm::errs() << "Open database failed\n";
+    std::string RewrittenLogLoc = std::string(env_p) + std::string("/Database/RewrittenLog");
+    std::ofstream RewrittenLog;
+    RewrittenLog.open(RewrittenLogLoc.c_str(), std::ios::app);
+    if (!RewrittenLog) {
+      llvm::errs() << "Open RewrittenLog failed\n";
       exit(EXIT_FAILURE);
     }
-    database << FilePath << ", " << LineNum << ", " << InsertIndexId << "\n";
-    database.close();
+    RewrittenLog << FilePath << ", " << LineNum << ", " << InsertIndexId << "\n";
+    RewrittenLog.close();
   }
 
   // Insert API after the starting brace of the matched statement.
