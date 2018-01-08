@@ -93,7 +93,8 @@ class ResponseActor:
     """
     def fooEcho(self, InputString, SenderIpString):
         Log = sv.LogService()
-        retString = "1 20"
+        print(InputString)
+        retString = "20"
         Mode = "fooSet"
         return retString
 
@@ -124,7 +125,7 @@ class tcpServer:
     def CreateTcpServer(self, HOST, PORT):
         # Make port reusable
         socketserver.TCPServer.allow_reuse_address = True
-        # Create the server, binding to localhost on port
+        # Create the server, binding to host on port
         server = socketserver.TCPServer((HOST, PORT), self.TCPHandler)
         # Activate the server; this will keep running until you
         # interrupt the program with Ctrl-C
@@ -184,26 +185,40 @@ class Daemon:
 
         signal.signal(signal.SIGTERM, sigterm_handler)
 
-    def main(self):
+    def main(self, Host="127.0.0.1", Port=7521):
         sys.stdout.write('Daemon started with pid {}\n'.format(os.getpid()))
-        Host = "127.0.0.1"
-        Port = 7521
         '''
         If the port is opened, close it!
         '''
-
         server = tcpServer()
         sys.stdout.write('TCP server started with ip:{} port:{}\n'.format(Host, Port))
         server.CreateTcpServer(Host, Port)
 
     def run(self, argv):
         DaemonName = "PredictionDaemon"
-        PidFile = '/tmp/' + DaemonName + '.pid'
-        LogFile = '/tmp/' + DaemonName + '.log'
+        InstrumentHome = os.getenv("LLVM_THESIS_InstrumentHome", "Error")
+        if InstrumentHome == "Error":
+            sys.exit(1)
+        ConnectionInfo = InstrumentHome + "/training/ConnectionInfo"
+        ConnectionDict = {}
+        with open(ConnectionInfo, "r") as file:
+            for line in file:
+                info = line.split(",")
+                ConnectionDict[info[0]] = [info[1], info[2]]
+            file.close()
 
-        if len(argv) != 2:
-            print('Usage: {} [start|stop]'.format(argv[0]), file=sys.stderr)
+        if len(argv) != 3:
+            print('Usage: {} [start|stop] [WorkerID]'.format(argv[0]), file=sys.stderr)
             raise SystemExit(1)
+        
+        WorkerID = argv[2]
+        Host = ConnectionDict[WorkerID][0]
+        Port = int(ConnectionDict[WorkerID][1])
+        PidFile = '/tmp/' + DaemonName + '-' + WorkerID + '.pid'
+        LogFile = '/tmp/' + DaemonName + '-' + WorkerID + '.log'
+
+        print("WorkerID={}, Host={}, Port={}".format(WorkerID,
+            Host, Port))
 
         if argv[1] == 'start':
             try:
@@ -215,7 +230,7 @@ class Daemon:
                 print(e, file=sys.stderr)
                 raise SystemExit(1)
 
-            self.main()
+            self.main(Host, Port)
 
         elif argv[1] == 'stop':
             if os.path.exists(PidFile):
