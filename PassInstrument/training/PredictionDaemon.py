@@ -93,8 +93,11 @@ class ResponseActor:
     """
     def fooEcho(self, InputString, SenderIpString):
         Log = sv.LogService()
-        print(InputString)
-        retString = "20"
+        Inputs = InputString.split('@')
+        FuncName = Inputs[0]
+        FuncFeatures = Inputs[1]
+        print(FuncName)
+        retString = ""
         Mode = "fooSet"
         return retString
 
