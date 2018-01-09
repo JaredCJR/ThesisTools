@@ -111,7 +111,7 @@ class ResponseActor:
 class tcpServer:
     class ClangTcpHandler(socketserver.StreamRequestHandler):
         def handle(self):
-            global DaemonInteractFileLoc
+            global DaemonIpcFileLoc
             '''
             self.rfile is a file-like object created by the handler;
             we can now use e.g. readline() instead of raw recv() calls
@@ -125,7 +125,10 @@ class tcpServer:
             except Exception as e:
                 Str = "DecodeFailed"
             #WriteContent = actor.RandomOrBestEcho(Str, self.client_address[0])
-            WriteContent = actor.fooClangEcho(Str, self.client_address[0])
+            #WriteContent = actor.fooClangEcho(Str, self.client_address[0])
+            with open(DaemonIpcFileLoc, 'r') as IpcFile:
+                WriteContent = IpcFile.read()
+                IpcFile.close()
             '''
             Likewise, self.wfile is a file-like object used to write back
             to the client
@@ -135,7 +138,7 @@ class tcpServer:
 
     class AgentTcpHandler(socketserver.StreamRequestHandler):
         def handle(self):
-            global DaemonInteractFileLoc
+            global DaemonIpcFileLoc
             '''
             self.rfile is a file-like object created by the handler;
             we can now use e.g. readline() instead of raw recv() calls
@@ -143,13 +146,16 @@ class tcpServer:
             '''
             self.data = self.rfile.readline().strip()
             #print("{} wrote: {}".format(self.client_address[0], self.data.decode('utf-8')))
-            actor = ResponseActor()
             try:
                 Str = self.data.decode('utf-8')
             except Exception as e:
                 Str = "DecodeFailed"
+            with open(DaemonIpcFileLoc, 'w') as IpcFile:
+                IpcFile.write(Str)
+                IpcFile.close()
+            actor = ResponseActor()
             WriteContent = actor.fooAgentEcho(Str, self.client_address[0])
-            print(DaemonInteractFileLoc)
+            print(DaemonIpcFileLoc)
             '''
             Likewise, self.wfile is a file-like object used to write back
             to the client
@@ -296,9 +302,9 @@ class Daemon:
             print('Usage: {} [start|stop] [WorkerID]'.format(argv[0]), file=sys.stderr)
             raise SystemExit(1)
         
-        global DaemonInteractFileLoc
+        global DaemonIpcFileLoc
         WorkerID = argv[2]
-        DaemonInteractFileLoc = "/tmp/PredictionDaemon-Interact-" + WorkerID
+        DaemonIpcFileLoc = "/tmp/PredictionDaemon-IPC-" + WorkerID
         ClangHost = ClangConnectDict[WorkerID][0]
         ClangPort = int(ClangConnectDict[WorkerID][1])
         AgentHost = AgentConnectDict[WorkerID][0]
