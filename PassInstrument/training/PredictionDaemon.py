@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
+"""
+Daemon
+"""
 import os
 import sys
 import atexit
 import signal
+from multiprocessing import Process
 """
 TCP server lib
 """
@@ -10,7 +14,7 @@ import time
 import socketserver
 import socket
 """
-Predictor
+Random Predictor
 """
 import ServiceLib as sv
 import re
@@ -91,19 +95,23 @@ class ResponseActor:
     """
     Input: "InputString" must be demangled function name
     """
-    def fooEcho(self, InputString, SenderIpString):
-        Log = sv.LogService()
-        Inputs = InputString.split('@')
-        FuncName = Inputs[0]
-        FuncFeatures = Inputs[1]
-        print(FuncName)
+    def fooClangEcho(self, InputString, SenderIpString):
+        #Inputs = InputString.split('@')
+        #FuncName = Inputs[0]
+        #FuncFeatures = Inputs[1]
         retString = ""
         Mode = "fooSet"
         return retString
 
+    def fooAgentEcho(self, InputString, SenderIpString):
+        #TODO
+        retString = ""
+        return retString
+
 class tcpServer:
-    class TCPHandler(socketserver.StreamRequestHandler):
+    class ClangTcpHandler(socketserver.StreamRequestHandler):
         def handle(self):
+            global DaemonInteractFileLoc
             '''
             self.rfile is a file-like object created by the handler;
             we can now use e.g. readline() instead of raw recv() calls
@@ -115,9 +123,9 @@ class tcpServer:
             try:
                 Str = self.data.decode('utf-8')
             except Exception as e:
-                Str = "DecodeFailed-GetBestSet"
+                Str = "DecodeFailed"
             #WriteContent = actor.RandomOrBestEcho(Str, self.client_address[0])
-            WriteContent = actor.fooEcho(Str, self.client_address[0])
+            WriteContent = actor.fooClangEcho(Str, self.client_address[0])
             '''
             Likewise, self.wfile is a file-like object used to write back
             to the client
@@ -125,11 +133,44 @@ class tcpServer:
             '''
             self.wfile.write(WriteContent.encode('utf-8'))
 
-    def CreateTcpServer(self, HOST, PORT):
+    class AgentTcpHandler(socketserver.StreamRequestHandler):
+        def handle(self):
+            global DaemonInteractFileLoc
+            '''
+            self.rfile is a file-like object created by the handler;
+            we can now use e.g. readline() instead of raw recv() calls
+            Get byte-object
+            '''
+            self.data = self.rfile.readline().strip()
+            #print("{} wrote: {}".format(self.client_address[0], self.data.decode('utf-8')))
+            actor = ResponseActor()
+            try:
+                Str = self.data.decode('utf-8')
+            except Exception as e:
+                Str = "DecodeFailed"
+            WriteContent = actor.fooAgentEcho(Str, self.client_address[0])
+            print(DaemonInteractFileLoc)
+            '''
+            Likewise, self.wfile is a file-like object used to write back
+            to the client
+            Only accept byte-object
+            '''
+            #self.wfile.write(WriteContent.encode('utf-8'))
+
+    def CreateClangTcpServer(self, HOST, PORT):
         # Make port reusable
         socketserver.TCPServer.allow_reuse_address = True
         # Create the server, binding to host on port
-        server = socketserver.TCPServer((HOST, PORT), self.TCPHandler)
+        server = socketserver.TCPServer((HOST, PORT), self.ClangTcpHandler)
+        # Activate the server; this will keep running until you
+        # interrupt the program with Ctrl-C
+        server.serve_forever()
+
+    def CreateAgentTcpServer(self, HOST, PORT):
+        # Make port reusable
+        socketserver.TCPServer.allow_reuse_address = True
+        # Create the server, binding to host on port
+        server = socketserver.TCPServer((HOST, PORT), self.AgentTcpHandler)
         # Activate the server; this will keep running until you
         # interrupt the program with Ctrl-C
         server.serve_forever()
@@ -139,7 +180,6 @@ class Daemon:
     def daemonize(self, PidFile, LogFile, *, stdin='/dev/null',
                                     stdout='/dev/null',
                                     stderr='/dev/null'):
-
         if os.path.exists(PidFile):
             raise RuntimeError('Already running')
         else:
@@ -188,63 +228,122 @@ class Daemon:
 
         signal.signal(signal.SIGTERM, sigterm_handler)
 
-    def main(self, Host="127.0.0.1", Port=7521):
-        sys.stdout.write('Daemon started with pid {}\n'.format(os.getpid()))
+    def SetupClangServer(self, ClangHost="127.0.0.1", ClangPort=7521):
+        sys.stdout.write('Daemon-Clang started with pid {}\n'.format(os.getpid()))
         '''
         If the port is opened, close it!
         '''
         server = tcpServer()
-        sys.stdout.write('TCP server started with ip:{} port:{}\n'.format(Host, Port))
-        server.CreateTcpServer(Host, Port)
+        sys.stdout.write('Clang-TCP server started with ip:{} port:{}\n'.format(ClangHost, ClangPort))
+        server.CreateClangTcpServer(ClangHost, ClangPort)
 
-    def run(self, argv):
-        DaemonName = "PredictionDaemon"
+    def SetupAgentServer(self, AgentHost="127.0.0.1", AgentPort=8521):
+        sys.stdout.write('Daemon-Agent started with pid {}\n'.format(os.getpid()))
+        '''
+        If the port is opened, close it!
+        '''
+        server = tcpServer()
+        sys.stdout.write('Clang-Agent server started with ip:{} port:{}\n'.format(AgentHost, AgentPort))
+        server.CreateAgentTcpServer(AgentHost, AgentPort)
+
+    def readConnectInfo(self):
+        """
+        return dict of connection info for clang and agent
+        """
+        ClangConnectDict = {}
+        AgentConnectDict = {}
         InstrumentHome = os.getenv("LLVM_THESIS_InstrumentHome", "Error")
         if InstrumentHome == "Error":
             sys.exit(1)
-        ConnectionInfo = InstrumentHome + "/training/ConnectionInfo"
-        ConnectionDict = {}
-        with open(ConnectionInfo, "r") as file:
+        ClangConnectInfo = InstrumentHome + "/training/ClangConnectInfo"
+        AgentConnectInfo = InstrumentHome + "/training/AgentConnectInfo"
+        with open(ClangConnectInfo, "r") as file:
             for line in file:
                 info = line.split(",")
-                ConnectionDict[info[0]] = [info[1], info[2]]
+                ClangConnectDict[info[0]] = [info[1], info[2]]
             file.close()
+        with open(AgentConnectInfo, "r") as file:
+            for line in file:
+                info = line.split(",")
+                AgentConnectDict[info[0]] = [info[1], info[2]]
+            file.close()
+        return ClangConnectDict, AgentConnectDict
+
+    def CreateDaemon(self, DaemonName, PidFile, LogFile,
+            Host, Port):
+        try:
+            self.daemonize(PidFile,
+                      LogFile,
+                      stdout=LogFile,
+                      stderr=LogFile)
+        except RuntimeError as e:
+            print("{} daemonize failed. {}".format(DaemonName, e), file=sys.stderr)
+            raise SystemExit(1)
+        if DaemonName == "PredictionDaemon-Clang":
+            self.SetupClangServer(Host, Port)
+        elif DaemonName == "PredictionDaemon-Agent":
+            self.SetupAgentServer(Host, Port)
+        else:
+            print("Setup TCP server error.", file=sys.stderr)
+            raise SystemExit(1)
+
+    def run(self, argv):
+        ClangDaemonName = "PredictionDaemon-Clang"
+        AgentDaemonName = "PredictionDaemon-Agent"
+        ClangConnectDict, AgentConnectDict = self.readConnectInfo()
 
         if len(argv) != 3:
             print('Usage: {} [start|stop] [WorkerID]'.format(argv[0]), file=sys.stderr)
             raise SystemExit(1)
         
+        global DaemonInteractFileLoc
         WorkerID = argv[2]
-        Host = ConnectionDict[WorkerID][0]
-        Port = int(ConnectionDict[WorkerID][1])
-        PidFile = '/tmp/' + DaemonName + '-' + WorkerID + '.pid'
-        LogFile = '/tmp/' + DaemonName + '-' + WorkerID + '.log'
+        DaemonInteractFileLoc = "/tmp/PredictionDaemon-Interact-" + WorkerID
+        ClangHost = ClangConnectDict[WorkerID][0]
+        ClangPort = int(ClangConnectDict[WorkerID][1])
+        AgentHost = AgentConnectDict[WorkerID][0]
+        AgentPort = int(AgentConnectDict[WorkerID][1])
+        ClangPidFile = '/tmp/' + ClangDaemonName + '-' + WorkerID + '.pid'
+        ClangLogFile = '/tmp/' + ClangDaemonName + '-' + WorkerID + '.log'
+        AgentPidFile = '/tmp/' + AgentDaemonName + '-' + WorkerID + '.pid'
+        AgentLogFile = '/tmp/' + AgentDaemonName + '-' + WorkerID + '.log'
 
-        print("WorkerID={}, Host={}, Port={}".format(WorkerID,
-            Host, Port))
+        print("WorkerID={}, Clang-Host={}, Clang-Port={}, Agent-Host={}, Agent-Port={}".format(WorkerID,
+            ClangHost, ClangPort, AgentHost, AgentPort))
 
         if argv[1] == 'start':
-            try:
-                self.daemonize(PidFile,
-                          LogFile,
-                          stdout=LogFile,
-                          stderr=LogFile)
-            except RuntimeError as e:
-                print(e, file=sys.stderr)
-                raise SystemExit(1)
-
-            self.main(Host, Port)
+            # tcp server will block the process, we need two processes.
+            if os.fork():
+                # Create daemon for agent
+                self.CreateDaemon(AgentDaemonName, AgentPidFile, AgentLogFile,
+                        AgentHost, AgentPort)
+            else:
+                # Create daemon for clang
+                self.CreateDaemon(ClangDaemonName, ClangPidFile, ClangLogFile, 
+                        ClangHost, ClangPort)
 
         elif argv[1] == 'stop':
-            if os.path.exists(PidFile):
-                with open(PidFile) as f:
+            ExitFlag = False
+            # Stop Daemon-Clang
+            if os.path.exists(ClangPidFile):
+                with open(ClangPidFile) as f:
                     os.kill(int(f.read()), signal.SIGTERM)
             else:
-                print(DaemonName + ':Not running', file=sys.stderr)
+                print(ClangDaemonName + ': Not running', file=sys.stderr)
+                ExitFlag = True
+            # Stop Daemon-Agent
+            if os.path.exists(AgentPidFile):
+                with open(AgentPidFile) as f:
+                    os.kill(int(f.read()), signal.SIGTERM)
+            else:
+                print(AgentDaemonName + ': Not running', file=sys.stderr)
+                ExitFlag = True
+
+            if(ExitFlag):
                 raise SystemExit(1)
 
         else:
-            print(DaemonName + ':Unknown command {!r}'.format(argv[1]), file=sys.stderr)
+            print('PredictionDaemon: Unknown command {!r}'.format(argv[1]), file=sys.stderr)
             raise SystemExit(1)
 
 if __name__ == '__main__':
