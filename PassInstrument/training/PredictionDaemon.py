@@ -96,9 +96,10 @@ class ResponseActor:
     Input: "InputString" must be demangled function name
     """
     def fooClangEcho(self, InputString, SenderIpString):
-        #Inputs = InputString.split('@')
-        #FuncName = Inputs[0]
+        Inputs = InputString.split('@')
+        FuncName = Inputs[0]
         #FuncFeatures = Inputs[1]
+        #print(FuncName)
         retString = ""
         Mode = "fooSet"
         return retString
@@ -117,6 +118,7 @@ class tcpServer:
             we can now use e.g. readline() instead of raw recv() calls
             Get byte-object
             '''
+            # This only read the first line.
             self.data = self.rfile.readline().strip()
             #print("{} wrote: {}".format(self.client_address[0], self.data.decode('utf-8')))
             actor = ResponseActor()
@@ -125,7 +127,7 @@ class tcpServer:
             except Exception as e:
                 Str = "DecodeFailed"
             #WriteContent = actor.RandomOrBestEcho(Str, self.client_address[0])
-            #WriteContent = actor.fooClangEcho(Str, self.client_address[0])
+            WriteContent = actor.fooClangEcho(Str, self.client_address[0])
             with open(DaemonIpcFileLoc, 'r') as IpcFile:
                 WriteContent = IpcFile.read()
                 IpcFile.close()
@@ -144,7 +146,7 @@ class tcpServer:
             we can now use e.g. readline() instead of raw recv() calls
             Get byte-object
             '''
-            self.data = self.rfile.readline().strip()
+            self.data = self.rfile.read()
             #print("{} wrote: {}".format(self.client_address[0], self.data.decode('utf-8')))
             try:
                 Str = self.data.decode('utf-8')
@@ -155,7 +157,7 @@ class tcpServer:
                 IpcFile.close()
             actor = ResponseActor()
             WriteContent = actor.fooAgentEcho(Str, self.client_address[0])
-            print(DaemonIpcFileLoc)
+            #print(DaemonIpcFileLoc)
             '''
             Likewise, self.wfile is a file-like object used to write back
             to the client
@@ -264,11 +266,13 @@ class Daemon:
         ClangConnectInfo = InstrumentHome + "/training/ClangConnectInfo"
         AgentConnectInfo = InstrumentHome + "/training/AgentConnectInfo"
         with open(ClangConnectInfo, "r") as file:
+            file.readline()
             for line in file:
                 info = line.split(",")
                 ClangConnectDict[info[0]] = [info[1], info[2]]
             file.close()
         with open(AgentConnectInfo, "r") as file:
+            file.readline()
             for line in file:
                 info = line.split(",")
                 AgentConnectDict[info[0]] = [info[1], info[2]]
