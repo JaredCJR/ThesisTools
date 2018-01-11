@@ -104,7 +104,7 @@ class ResponseActor:
         Mode = "fooSet"
         return retString
 
-    def fooAgentEcho(self, InputString, SenderIpString):
+    def fooEnvEcho(self, InputString, SenderIpString):
         #TODO
         retString = ""
         return retString
@@ -138,7 +138,7 @@ class tcpServer:
             '''
             self.wfile.write(WriteContent.encode('utf-8'))
 
-    class AgentTcpHandler(socketserver.StreamRequestHandler):
+    class EnvTcpHandler(socketserver.StreamRequestHandler):
         def handle(self):
             global DaemonIpcFileLoc
             '''
@@ -156,7 +156,7 @@ class tcpServer:
                 IpcFile.write(Str)
                 IpcFile.close()
             actor = ResponseActor()
-            WriteContent = actor.fooAgentEcho(Str, self.client_address[0])
+            WriteContent = actor.fooEnvEcho(Str, self.client_address[0])
             #print(DaemonIpcFileLoc)
             '''
             Likewise, self.wfile is a file-like object used to write back
@@ -174,11 +174,11 @@ class tcpServer:
         # interrupt the program with Ctrl-C
         server.serve_forever()
 
-    def CreateAgentTcpServer(self, HOST, PORT):
+    def CreateEnvTcpServer(self, HOST, PORT):
         # Make port reusable
         socketserver.TCPServer.allow_reuse_address = True
         # Create the server, binding to host on port
-        server = socketserver.TCPServer((HOST, PORT), self.AgentTcpHandler)
+        server = socketserver.TCPServer((HOST, PORT), self.EnvTcpHandler)
         # Activate the server; this will keep running until you
         # interrupt the program with Ctrl-C
         server.serve_forever()
@@ -245,39 +245,39 @@ class Daemon:
         sys.stdout.write('Clang-TCP server started with ip:{} port:{}\n'.format(ClangHost, ClangPort))
         server.CreateClangTcpServer(ClangHost, ClangPort)
 
-    def SetupAgentServer(self, AgentHost="127.0.0.1", AgentPort=8521):
-        sys.stdout.write('Daemon-Agent started with pid {}\n'.format(os.getpid()))
+    def SetupEnvServer(self, EnvHost="127.0.0.1", EnvPort=8521):
+        sys.stdout.write('Daemon-Env started with pid {}\n'.format(os.getpid()))
         '''
         If the port is opened, close it!
         '''
         server = tcpServer()
-        sys.stdout.write('Clang-Agent server started with ip:{} port:{}\n'.format(AgentHost, AgentPort))
-        server.CreateAgentTcpServer(AgentHost, AgentPort)
+        sys.stdout.write('Clang-Env server started with ip:{} port:{}\n'.format(EnvHost, EnvPort))
+        server.CreateEnvTcpServer(EnvHost, EnvPort)
 
     def readConnectInfo(self):
         """
-        return dict of connection info for clang and agent
+        return dict of connection info for clang and env
         """
         ClangConnectDict = {}
-        AgentConnectDict = {}
+        EnvConnectDict = {}
         InstrumentHome = os.getenv("LLVM_THESIS_InstrumentHome", "Error")
         if InstrumentHome == "Error":
             sys.exit(1)
         ClangConnectInfo = InstrumentHome + "/training/ClangConnectInfo"
-        AgentConnectInfo = InstrumentHome + "/training/AgentConnectInfo"
+        EnvConnectInfo = InstrumentHome + "/training/EnvConnectInfo"
         with open(ClangConnectInfo, "r") as file:
             file.readline()
             for line in file:
                 info = line.split(",")
                 ClangConnectDict[info[0]] = [info[1], info[2]]
             file.close()
-        with open(AgentConnectInfo, "r") as file:
+        with open(EnvConnectInfo, "r") as file:
             file.readline()
             for line in file:
                 info = line.split(",")
-                AgentConnectDict[info[0]] = [info[1], info[2]]
+                EnvConnectDict[info[0]] = [info[1], info[2]]
             file.close()
-        return ClangConnectDict, AgentConnectDict
+        return ClangConnectDict, EnvConnectDict
 
     def CreateDaemon(self, DaemonName, PidFile, LogFile,
             Host, Port):
@@ -291,16 +291,16 @@ class Daemon:
             raise SystemExit(1)
         if DaemonName == "PredictionDaemon-Clang":
             self.SetupClangServer(Host, Port)
-        elif DaemonName == "PredictionDaemon-Agent":
-            self.SetupAgentServer(Host, Port)
+        elif DaemonName == "PredictionDaemon-Env":
+            self.SetupEnvServer(Host, Port)
         else:
             print("Setup TCP server error.", file=sys.stderr)
             raise SystemExit(1)
 
     def run(self, argv):
         ClangDaemonName = "PredictionDaemon-Clang"
-        AgentDaemonName = "PredictionDaemon-Agent"
-        ClangConnectDict, AgentConnectDict = self.readConnectInfo()
+        EnvDaemonName = "PredictionDaemon-Env"
+        ClangConnectDict, EnvConnectDict = self.readConnectInfo()
 
         if len(argv) != 3:
             print('Usage: {} [start|stop] [WorkerID]'.format(argv[0]), file=sys.stderr)
@@ -311,22 +311,22 @@ class Daemon:
         DaemonIpcFileLoc = "/tmp/PredictionDaemon-IPC-" + WorkerID
         ClangHost = ClangConnectDict[WorkerID][0]
         ClangPort = int(ClangConnectDict[WorkerID][1])
-        AgentHost = AgentConnectDict[WorkerID][0]
-        AgentPort = int(AgentConnectDict[WorkerID][1])
+        EnvHost = EnvConnectDict[WorkerID][0]
+        EnvPort = int(EnvConnectDict[WorkerID][1])
         ClangPidFile = '/tmp/' + ClangDaemonName + '-' + WorkerID + '.pid'
         ClangLogFile = '/tmp/' + ClangDaemonName + '-' + WorkerID + '.log'
-        AgentPidFile = '/tmp/' + AgentDaemonName + '-' + WorkerID + '.pid'
-        AgentLogFile = '/tmp/' + AgentDaemonName + '-' + WorkerID + '.log'
+        EnvPidFile = '/tmp/' + EnvDaemonName + '-' + WorkerID + '.pid'
+        EnvLogFile = '/tmp/' + EnvDaemonName + '-' + WorkerID + '.log'
 
-        print("WorkerID={}, Clang-Host={}, Clang-Port={}, Agent-Host={}, Agent-Port={}".format(WorkerID,
-            ClangHost, ClangPort, AgentHost, AgentPort))
+        print("WorkerID={}, Clang-Host={}, Clang-Port={}, Env-Host={}, Env-Port={}".format(WorkerID,
+            ClangHost, ClangPort, EnvHost, EnvPort))
 
         if argv[1] == 'start':
             # tcp server will block the process, we need two processes.
             if os.fork():
                 # Create daemon for agent
-                self.CreateDaemon(AgentDaemonName, AgentPidFile, AgentLogFile,
-                        AgentHost, AgentPort)
+                self.CreateDaemon(EnvDaemonName, EnvPidFile, EnvLogFile,
+                        EnvHost, EnvPort)
             else:
                 # Create daemon for clang
                 self.CreateDaemon(ClangDaemonName, ClangPidFile, ClangLogFile, 
@@ -341,12 +341,12 @@ class Daemon:
             else:
                 print(ClangDaemonName + ': Not running', file=sys.stderr)
                 ExitFlag = True
-            # Stop Daemon-Agent
-            if os.path.exists(AgentPidFile):
-                with open(AgentPidFile) as f:
+            # Stop Daemon-Env
+            if os.path.exists(EnvPidFile):
+                with open(EnvPidFile) as f:
                     os.kill(int(f.read()), signal.SIGTERM)
             else:
-                print(AgentDaemonName + ': Not running', file=sys.stderr)
+                print(EnvDaemonName + ': Not running', file=sys.stderr)
                 ExitFlag = True
 
             if(ExitFlag):

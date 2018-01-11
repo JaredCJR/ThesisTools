@@ -53,24 +53,24 @@ class TcpClient():
     def DestroyTcpConnection(self, IP, Port):
         self.SOCKET.close()
 
-    def ReadAgentConnectInfo(self, WorkerID):
+    def ReadEnvConnectInfo(self, WorkerID):
         """
         return IP(string), Port(number)
         """
-        AgentConnectInfo = os.getenv("LLVM_THESIS_InstrumentHome", "Error")
-        if AgentConnectInfo == "Error":
+        EnvConnectInfo = os.getenv("LLVM_THESIS_InstrumentHome", "Error")
+        if EnvConnectInfo == "Error":
             print("$LLVM_THESIS_InstrumentHome is not defined.", file=sys.stderr)
             sys.exit(1)
-        AgentConnectInfo = AgentConnectInfo + "/training/AgentConnectInfo"
-        AgentConnectDict = {}
+        EnvConnectInfo = EnvConnectInfo + "/training/EnvConnectInfo"
+        EnvConnectDict = {}
         # FIXME: the first line need to skip
-        with open(AgentConnectInfo, "r") as file:
+        with open(EnvConnectInfo, "r") as file:
             file.readline()
             for line in file:                                                                                     
                 info = line.split(",")
-                AgentConnectDict[info[0]] = [info[1].strip(), info[2].strip()]                                                    
+                EnvConnectDict[info[0]] = [info[1].strip(), info[2].strip()]                                                    
             file.close()
-        return AgentConnectDict[str(WorkerID)][0], int(AgentConnectDict[str(WorkerID)][1])
+        return EnvConnectDict[str(WorkerID)][0], int(EnvConnectDict[str(WorkerID)][1])
 
     def Send(self, WorkerID, Msg):
         """
@@ -79,7 +79,7 @@ class TcpClient():
         Msg: string
         """
         if self.init == False:
-            IP, Port = self.ReadAgentConnectInfo(WorkerID)
+            IP, Port = self.ReadEnvConnectInfo(WorkerID)
             self.EstablishTcpConnect(IP, Port)
             self.init = True
         self.SOCKET.send(Msg.encode('utf-8'))
@@ -98,5 +98,5 @@ if __name__ == '__main__':
         print(passes)
     '''
     tcp = TcpClient()
-    tcp.Send(1, "fakeAgent test\nsecond line\nthird line =)\n")
+    tcp.Send(1, "fakeEnv test\nsecond line\nthird line =)\n")
 
