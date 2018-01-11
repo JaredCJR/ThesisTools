@@ -237,7 +237,7 @@ class Daemon:
         signal.signal(signal.SIGTERM, sigterm_handler)
 
     def SetupClangServer(self, ClangHost="127.0.0.1", ClangPort=7521):
-        sys.stdout.write('Daemon-Clang started with pid {}\n'.format(os.getpid()))
+        sys.stdout.write('Clang-Daemon started with pid {}\n'.format(os.getpid()))
         '''
         If the port is opened, close it!
         '''
@@ -246,12 +246,12 @@ class Daemon:
         server.CreateClangTcpServer(ClangHost, ClangPort)
 
     def SetupEnvServer(self, EnvHost="127.0.0.1", EnvPort=8521):
-        sys.stdout.write('Daemon-Env started with pid {}\n'.format(os.getpid()))
+        sys.stdout.write('Env-Daemon started with pid {}\n'.format(os.getpid()))
         '''
         If the port is opened, close it!
         '''
         server = tcpServer()
-        sys.stdout.write('Clang-Env server started with ip:{} port:{}\n'.format(EnvHost, EnvPort))
+        sys.stdout.write('Env-TCP server started with ip:{} port:{}\n'.format(EnvHost, EnvPort))
         server.CreateEnvTcpServer(EnvHost, EnvPort)
 
     def readConnectInfo(self):
@@ -324,7 +324,7 @@ class Daemon:
         if argv[1] == 'start':
             # tcp server will block the process, we need two processes.
             if os.fork():
-                # Create daemon for agent
+                # Create daemon for RL-env
                 self.CreateDaemon(EnvDaemonName, EnvPidFile, EnvLogFile,
                         EnvHost, EnvPort)
             else:
@@ -334,14 +334,14 @@ class Daemon:
 
         elif argv[1] == 'stop':
             ExitFlag = False
-            # Stop Daemon-Clang
+            # Stop Clang-Daemon
             if os.path.exists(ClangPidFile):
                 with open(ClangPidFile) as f:
                     os.kill(int(f.read()), signal.SIGTERM)
             else:
                 print(ClangDaemonName + ': Not running', file=sys.stderr)
                 ExitFlag = True
-            # Stop Daemon-Env
+            # Stop Env-Daemon
             if os.path.exists(EnvPidFile):
                 with open(EnvPidFile) as f:
                     os.kill(int(f.read()), signal.SIGTERM)
