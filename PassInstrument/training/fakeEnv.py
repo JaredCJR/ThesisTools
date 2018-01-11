@@ -47,11 +47,15 @@ class TcpClient():
     SOCKET = None
     init = False
     def EstablishTcpConnect(self, IP, Port):
-        self.SOCKET = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.SOCKET.connect((IP, Port))
+        if self.init == False:
+            self.SOCKET = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.SOCKET.connect((IP, Port))
+            self.init = True
 
-    def DestroyTcpConnection(self, IP, Port):
-        self.SOCKET.close()
+    def DestroyTcpConnection(self):
+        if self.init == True:
+            self.SOCKET.close()
+            self.init = False
 
     def ReadEnvConnectInfo(self, WorkerID):
         """
@@ -63,8 +67,8 @@ class TcpClient():
             sys.exit(1)
         EnvConnectInfo = EnvConnectInfo + "/training/EnvConnectInfo"
         EnvConnectDict = {}
-        # FIXME: the first line need to skip
         with open(EnvConnectInfo, "r") as file:
+            # skip first line
             file.readline()
             for line in file:                                                                                     
                 info = line.split(",")
@@ -82,12 +86,36 @@ class TcpClient():
             IP, Port = self.ReadEnvConnectInfo(WorkerID)
             self.EstablishTcpConnect(IP, Port)
             self.init = True
-        self.SOCKET.send(Msg.encode('utf-8'))
+        Msg = Msg + "\n"
+        self.SOCKET.sendall(Msg.encode('utf-8'))
+    def Receive(self, WorkerID):
+        """
+        return: string
+        """
+        if self.init == False:
+            IP, Port = self.ReadEnvConnectInfo(WorkerID)
+            self.EstablishTcpConnect(IP, Port)
+            self.init = True
+        # The buffer size may cause bugs?
+        return self.SOCKET.recv(1024).decode('utf-8')
 
 if __name__ == '__main__':
     prog = Programs()
     programDict = prog.getAvailablePrograms()
-    passes = prog.genRandomPasses(34, 9)
+    keys = list(programDict.keys())
+    tcp = TcpClient()
+    for i in range(5):
+        # random choose a build target
+        target = random.choice(keys)
+        # get random 9 passes from 34 of them.
+        passes = prog.genRandomPasses(34, 9)
+        # send to env-daemon
+        msg = "{} @ {}".format(target, passes)
+        tcp.Send(WorkerID=1, Msg=msg)
+        # get result
+        retStatus = tcp.Receive(WorkerID=1)
+        print(retStatus)
+        tcp.DestroyTcpConnection()
     '''
     for name, info in programDict.items():
         print("{}: {}, {}".format(name, info[0], info[1]))
@@ -97,6 +125,4 @@ if __name__ == '__main__':
         passes = prog.genRandomPasses(34, 9)
         print(passes)
     '''
-    tcp = TcpClient()
-    tcp.Send(1, "fakeEnv test\nsecond line\nthird line =)\n")
 

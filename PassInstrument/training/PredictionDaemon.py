@@ -19,79 +19,27 @@ Random Predictor
 import ServiceLib as sv
 import re
 
+class EnvBuilder:
+    def CheckTestSuiteCmake(self, WorkerID):
+        llvmSrc = os.getenv("LLVM_THESIS_HOME", "Error")
+        if llvmSrc == "Error":
+            print("$LLVM_THESIS_HOME or not defined.", file=sys.stderr)
+        TestSrc = llvmSrc + "/test-suite/build-worker-" + WorkerID
+        PrevWd = os.getcwd()
+        # if the cmake is not done, do it once.
+        if not os.path.isdir(TestSrc):
+            os.mkdir(TestSrc)
+            os.chdir(TestSrc)
+            '''
+            ex.
+            cmake -DCMAKE_C_COMPILER=/home/jrchang/workspace/llvm-thesis/build-release-gcc7-worker1/bin/clang -DCMAKE_CXX_COMPILER=/home/jrchang/workspace/llvm-thesis/build-release-gcc7-worker1/bin/clang++ ../
+            '''
+            cBinSrc = llvmSrc + "/build-release-gcc7-worker" + WorkerID + "/bin/clang"
+            cxxBinSrc = cBinSrc + "++"
+            cmd = "cmake -DCMAKE_C_COMPILER=" + cBinSrc + " -DCMAKE_CXX_COMPILER=" + cxxBinSrc + " ../"
+            os.system(cmd)
 
 class ResponseActor:
-    """
-    Input: "InputString" must be demangled function name
-    """
-    def RandomOrBestEcho(self, InputString, SenderIpString):
-        Log = sv.LogService()
-        retString = ""
-        '''
-        Gather Benchmark information
-        '''
-        msg = "Function:\"{}\"".format(InputString)
-        InfoFile = open("/tmp/PredictionDaemon.info", "r")
-        Info = InfoFile.read()
-        InfoFile.close()
-        lines = Info.splitlines()
-        BenchmarkName = lines[0]
-        BestSet = lines[1]
-        FunctionList = lines[2:]
-        '''
-        Use random passes or best passes?
-        '''
-        Mode = ""
-        UseRandomSet = False
-        Skip = False
-        InputString = InputString.strip()
-        OrigInputString = InputString
-        if InputString == "DecodeFailed-GetBestSet" or (not InputString):
-            UseRandomSet = False
-            Skip = True
-        # C-style matching
-        if InputString in FunctionList and not Skip:
-            UseRandomSet = True
-        # C++-style matching
-        # perf cannot get argument information, but clang can.
-        # We need to use regular exp. to match it.
-        # This may match the wrong one, but that is okay.
-        if UseRandomSet == False and (not Skip):
-            try:
-                # Replace all space in function name
-                InputString = InputString.replace(' ', '')
-                newFunctionList = []
-                for func in FunctionList:
-                    newFunctionList.append(func.replace(' ', ''))
-                FunctionList = newFunctionList
-                ReEscapedInput = re.escape(InputString)
-                SearchTarget = ".*{func}.*".format(func=ReEscapedInput)
-                r = re.compile(SearchTarget)
-                reRetList = list(filter(r.search, FunctionList))
-                if reRetList:
-                    UseRandomSet = True
-                else:
-                    for func in FunctionList:
-                        # In most cases, InputString has more information than perf profiled function.
-                        if re.search(re.escape(func), InputString):
-                            UseRandomSet = True
-                            break
-            except Exception as e:
-                print("Exception: {}\n SearchTarget:\"{}\"\n".format(e, SearchTarget))
-        # If the search result is not empty and not failed to decode, use random set.
-        if UseRandomSet and not Skip:
-            predictor = RG.FunctionLevelPredictor()
-            SetList = predictor.RandomPassSet()
-            for Pass in SetList:
-                retString = retString + str(Pass) + " "
-            Mode = "RandomSet"
-        else:
-            retString = BestSet
-            Mode = "BestSet"
-        # Convert list into string
-        Log.recordFuncInfo("{}; set | {}; func | {}; mode | {}\n".format(BenchmarkName,
-            retString, OrigInputString, Mode))
-        return retString
     """
     Input: "InputString" must be demangled function name
     """
@@ -104,9 +52,14 @@ class ResponseActor:
         Mode = "fooSet"
         return retString
 
-    def fooEnvEcho(self, InputString, SenderIpString):
+    def EnvEcho(self, BuildTarget):
+        """
+        return "Success" or "Failed"
+        """
+        global WorkerID
+        # build, assuming the proper cmake is already done.
         #TODO
-        retString = ""
+        retString = "Success"
         return retString
 
 class tcpServer:
@@ -119,15 +72,14 @@ class tcpServer:
             Get byte-object
             '''
             # This only read the first line.
-            self.data = self.rfile.readline().strip()
+            data = self.rfile.readline().strip()
             #print("{} wrote: {}".format(self.client_address[0], self.data.decode('utf-8')))
             actor = ResponseActor()
             try:
-                Str = self.data.decode('utf-8')
+                Str = data.decode('utf-8')
             except Exception as e:
                 Str = "DecodeFailed"
-            #WriteContent = actor.RandomOrBestEcho(Str, self.client_address[0])
-            WriteContent = actor.fooClangEcho(Str, self.client_address[0])
+            #WriteContent = actor.fooClangEcho(Str, self.client_address[0])
             with open(DaemonIpcFileLoc, 'r') as IpcFile:
                 WriteContent = IpcFile.read()
                 IpcFile.close()
@@ -146,24 +98,32 @@ class tcpServer:
             we can now use e.g. readline() instead of raw recv() calls
             Get byte-object
             '''
-            self.data = self.rfile.read()
-            #print("{} wrote: {}".format(self.client_address[0], self.data.decode('utf-8')))
+            data = self.rfile.readline()
             try:
-                Str = self.data.decode('utf-8')
+                Str = data.decode('utf-8')
             except Exception as e:
                 Str = "DecodeFailed"
+            # Parse the decoded tcp input
+            strList = Str.split('@')
+            '''
+            Expect something like 
+            "Shootout-C++-matrix @ 2 5 16 6 31 4 18 32 11"
+            '''
+            BuildTarget = strList[0].strip()
+            Passes = strList[1].strip()
             with open(DaemonIpcFileLoc, 'w') as IpcFile:
-                IpcFile.write(Str)
+                IpcFile.write(Passes)
                 IpcFile.close()
             actor = ResponseActor()
-            WriteContent = actor.fooEnvEcho(Str, self.client_address[0])
-            #print(DaemonIpcFileLoc)
+            # build, verify, run.
+            WriteContent = actor.EnvEcho(BuildTarget) + "\n"
             '''
             Likewise, self.wfile is a file-like object used to write back
             to the client
             Only accept byte-object
             '''
-            #self.wfile.write(WriteContent.encode('utf-8'))
+            #print("Try to write: \"{}\" to \"{}\"".format(WriteContent, self.client_address[0]))
+            self.wfile.write(WriteContent.encode('utf-8'))
 
     def CreateClangTcpServer(self, HOST, PORT):
         # Make port reusable
@@ -307,6 +267,7 @@ class Daemon:
             raise SystemExit(1)
         
         global DaemonIpcFileLoc
+        global WorkerID # WorkerID is a str
         WorkerID = argv[2]
         DaemonIpcFileLoc = "/tmp/PredictionDaemon-IPC-" + WorkerID
         ClangHost = ClangConnectDict[WorkerID][0]
@@ -322,9 +283,17 @@ class Daemon:
             ClangHost, ClangPort, EnvHost, EnvPort))
 
         if argv[1] == 'start':
+            with open(DaemonIpcFileLoc, 'w') as IpcFile:
+                # Write empty pass for the cmake check
+                IpcFile.write("")
+                IpcFile.close()
             # tcp server will block the process, we need two processes.
             if os.fork():
-                # Create daemon for RL-env
+                # Create daemon for RL-env, Clang-Daemon shoud start first
+                time.sleep(1)
+                # check cmake
+                builder = EnvBuilder()
+                builder.CheckTestSuiteCmake(WorkerID)
                 self.CreateDaemon(EnvDaemonName, EnvPidFile, EnvLogFile,
                         EnvHost, EnvPort)
             else:

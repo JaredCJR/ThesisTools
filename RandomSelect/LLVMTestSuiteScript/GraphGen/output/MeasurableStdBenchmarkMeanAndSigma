@@ -222,7 +222,7 @@ Ptrdist.bc.bc; cpu-cycles-mean | 1207601247; cpu-cycles-sigma | 13961056
 Shootout-C++.Shootout-C++-ackermann; cpu-cycles-mean | 2568919468; cpu-cycles-sigma | 25241211
 Shootout.Shootout-matrix; cpu-cycles-mean | 3498670314; cpu-cycles-sigma | 16686629
 oggenc.oggenc; cpu-cycles-mean | 245486436; cpu-cycles-sigma | 960345
-Fhourstones-3.1.fhourstones3.1; cpu-cycles-mean | 3028113503; cpu-cycles-sigma | 45220271
+Fhourstones-3.1.fhourstones; cpu-cycles-mean | 3028113503; cpu-cycles-sigma | 45220271
 PAQ8p.paq8p; cpu-cycles-mean | 153738028169; cpu-cycles-sigma | 465942344
 Stanford.Treesort; cpu-cycles-mean | 185603352; cpu-cycles-sigma | 1851303
 Trimaran.enc-rc4.enc-rc4; cpu-cycles-mean | 2272464976; cpu-cycles-sigma | 13746767
