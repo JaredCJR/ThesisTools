@@ -14,7 +14,7 @@ import subprocess
 
 def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
     """
-    return cmd's return code
+    return cmd's return code, STDOUT, STDERR
     """
     # Use taskset by default
     if Block:
@@ -26,10 +26,10 @@ def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
                 stdout=subprocess.PIPE)
         out, err = p.communicate()
         p.wait()
-        return p.returncode
+        return p.returncode, out, err
     else:
         #TODO
-        print("TODO non-blocking execute", file=sys.stderr)
+        print("TODO: non-blocking execute", file=sys.stderr)
 
 class EnvBuilder:
     def CheckTestSuiteCmake(self, WorkerID):
@@ -55,6 +55,16 @@ class EnvBuilder:
             if ret != 0:
                 print("cmake failed.", file=sys.stderr)
                 sys.exit(1)
+        # Build .test dict for verification and run
+        global LitTestDict # { target-name: .test-loc }
+        LitTestDict = {}
+        for root, dirs, files in os.walk(TestSrc):
+            for file in files:
+                if file.endswith(".test"):
+                    name = file[:-5]
+                    path = os.path.join(root, file)
+                    LitTestDict[name] = path
+
 
     def make(self, WorkerID, BuildTarget):
         """
@@ -66,8 +76,25 @@ class EnvBuilder:
         PrevWd = os.getcwd()
         os.chdir(TestSrc)
         cmd = "make " + BuildTarget
-        ret = ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
+        ret, _, _ = ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
         os.chdir(PrevWd)
+        return ret
+
+    def verify(self, WorkerID, TestLoc):
+        """
+        return 0 --> build success
+        others   --> build failed
+        """
+        Lit = os.getenv("LLVM_THESIS_lit", "Error")
+        if Lit == "Error":
+            print("$LLVM_THESIS_lit not defined.", file=sys.stderr)
+            sys.exit(1)
+        cmd = Lit + " -q " + TestLoc
+        _, out, err = ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
+        if not out:
+            ret = 0 # Success
+        else:
+            ret = -1 # Fail
         return ret
 
 class ResponseActor:
@@ -95,8 +122,13 @@ class ResponseActor:
         if ret != 0:
             print("build failed")
             retString = "BuildFailed"
-        #TODO
         # verify
+        global LitTestDict
+        testLoc = LitTestDict[BuildTarget]
+        ret = env.verify(WorkerID, testLoc)
+        if ret != 0:
+            retString = "VerifyFailed"
+        #TODO
         return retString
 
 class tcpServer:
