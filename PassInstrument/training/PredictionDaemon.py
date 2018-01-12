@@ -1,29 +1,42 @@
 #!/usr/bin/env python3
-"""
-Daemon
-"""
 import os
 import sys
 import atexit
 import signal
 from multiprocessing import Process
-"""
-TCP server lib
-"""
 import time
 import socketserver
 import socket
-"""
-Random Predictor
-"""
 import ServiceLib as sv
 import re
+import shlex
+import subprocess
+
+def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
+    """
+    return cmd's return code
+    """
+    # Use taskset by default
+    if Block:
+        TrainLoc = os.getenv("LLVM_THESIS_TrainingHome", "Error")
+        FullCmd = "taskset -c " + WorkerID + " " + Cmd
+        print(FullCmd)
+        p = subprocess.Popen(shlex.split(FullCmd), 
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE)
+        out, err = p.communicate()
+        p.wait()
+        return p.returncode
+    else:
+        #TODO
+        print("TODO non-blocking execute", file=sys.stderr)
 
 class EnvBuilder:
     def CheckTestSuiteCmake(self, WorkerID):
         llvmSrc = os.getenv("LLVM_THESIS_HOME", "Error")
         if llvmSrc == "Error":
             print("$LLVM_THESIS_HOME or not defined.", file=sys.stderr)
+            sys.exit(1)
         TestSrc = llvmSrc + "/test-suite/build-worker-" + WorkerID
         PrevWd = os.getcwd()
         # if the cmake is not done, do it once.
@@ -37,7 +50,25 @@ class EnvBuilder:
             cBinSrc = llvmSrc + "/build-release-gcc7-worker" + WorkerID + "/bin/clang"
             cxxBinSrc = cBinSrc + "++"
             cmd = "cmake -DCMAKE_C_COMPILER=" + cBinSrc + " -DCMAKE_CXX_COMPILER=" + cxxBinSrc + " ../"
-            os.system(cmd)
+            ret = ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
+            os.chdir(PrevWd)
+            if ret != 0:
+                print("cmake failed.", file=sys.stderr)
+                sys.exit(1)
+
+    def make(self, WorkerID, BuildTarget):
+        """
+        return 0 --> build success
+        others   --> build failed
+        """
+        llvmSrc = os.getenv("LLVM_THESIS_HOME", "Error")
+        TestSrc = llvmSrc + "/test-suite/build-worker-" + WorkerID
+        PrevWd = os.getcwd()
+        os.chdir(TestSrc)
+        cmd = "make " + BuildTarget
+        ret = ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
+        os.chdir(PrevWd)
+        return ret
 
 class ResponseActor:
     """
@@ -57,9 +88,15 @@ class ResponseActor:
         return "Success" or "Failed"
         """
         global WorkerID
-        # build, assuming the proper cmake is already done.
-        #TODO
         retString = "Success"
+        # build, assuming the proper cmake is already done.
+        env = EnvBuilder()
+        ret = env.make(WorkerID, BuildTarget)
+        if ret != 0:
+            print("build failed")
+            retString = "BuildFailed"
+        #TODO
+        # verify
         return retString
 
 class tcpServer:
@@ -302,6 +339,7 @@ class Daemon:
                         ClangHost, ClangPort)
 
         elif argv[1] == 'stop':
+            # TODO: kill all children
             ExitFlag = False
             # Stop Clang-Daemon
             if os.path.exists(ClangPidFile):

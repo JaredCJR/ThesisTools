@@ -15,6 +15,7 @@ Add below environment variables to your .bashrc:
 export LLVM_THESIS_HOME=$HOME/workspace/llvm-thesis
 export LLVM_THESIS_RandomHome=$LLVM_THESIS_HOME/ThesisTools/RandomSelect
 export LLVM_THESIS_InstrumentHome=$LLVM_THESIS_HOME/ThesisTools/PassInstrument
+export LLVM_THESIS_TrainingHome=$LLVM_THESIS_InstrumentHome/training
 export LLVM_THESIS_TestSuite=$LLVM_THESIS_HOME/test-suite/build
 export LLVM_THESIS_Random_LLVMTestSuiteScript=$LLVM_THESIS_RandomHome/LLVMTestSuiteScript
 export LLVM_THESIS_Random_LLVMTestSuite_Results=$LLVM_THESIS_Random_LLVMTestSuiteScript/results

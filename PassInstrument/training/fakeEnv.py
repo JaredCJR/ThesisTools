@@ -104,13 +104,15 @@ if __name__ == '__main__':
     programDict = prog.getAvailablePrograms()
     keys = list(programDict.keys())
     tcp = TcpClient()
-    for i in range(5):
+    for i in range(1):
         # random choose a build target
         target = random.choice(keys)
         # get random 9 passes from 34 of them.
         passes = prog.genRandomPasses(34, 9)
         # send to env-daemon
         msg = "{} @ {}".format(target, passes)
+        #msg = "{} @ {}".format(target, "100")
+        # NOTICE: WorkerID
         tcp.Send(WorkerID=1, Msg=msg)
         # get result
         retStatus = tcp.Receive(WorkerID=1)
