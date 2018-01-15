@@ -27,6 +27,10 @@ alias lit=$LLVM_THESIS_lit  #this lit is modified to read the above env
 export PATH=$LLVM_THESIS_HOME/build-release-gcc7/bin:$PATH
 ```
 
+* How does these environment variable be gotten in PyActor?
+    * You may want to take a look at `llvm/utils/lit/lit/TestingConfig.py`
+
+
 
 How to use "LLVMTestSuiteScript"
 ------------------------------------------------------

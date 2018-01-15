@@ -97,11 +97,15 @@ class EnvBuilder:
             ret = -1 # Fail
         return ret
 
+    def run(self, WorkerID, TestLoc):
+        ret = self.verify(WorkerID, TestLoc)
+        return ret
+
 class ResponseActor:
-    """
-    Input: "InputString" must be demangled function name
-    """
     def fooClangEcho(self, InputString, SenderIpString):
+        """
+        Input: "InputString" must be demangled function name
+        """
         Inputs = InputString.split('@')
         FuncName = Inputs[0]
         #FuncFeatures = Inputs[1]
@@ -115,20 +119,42 @@ class ResponseActor:
         return "Success" or "Failed"
         """
         global WorkerID
-        retString = "Success"
-        # build, assuming the proper cmake is already done.
-        env = EnvBuilder()
-        ret = env.make(WorkerID, BuildTarget)
-        if ret != 0:
-            print("build failed")
-            retString = "BuildFailed"
-        # verify
         global LitTestDict
         testLoc = LitTestDict[BuildTarget]
+        retString = "Success"
+        '''
+        remove previous build and build again
+        assuming the proper cmake is already done.
+        '''
+        env = EnvBuilder()
+        # ex. RUN: /llvm/test-suite/build-worker-1/SingleSource/Benchmarks/Dhrystone/dry
+        with open(testLoc, "r") as file:
+            fileCmd = file.readline()
+            file.close()
+        BuiltBin = fileCmd.split()[1]
+        if os.path.exists(BuiltBin):
+            os.remove(BuiltBin)
+        ret = env.make(WorkerID, BuildTarget)
+        if ret != 0:
+            retString = "BuildFailed"
+            return retString
+        '''
+        verify
+        '''
         ret = env.verify(WorkerID, testLoc)
         if ret != 0:
             retString = "VerifyFailed"
+            return retString
+        '''
+        distribute PyActor
+        '''
         #TODO
+
+
+        '''
+        run and extract performance
+        '''
+        ret = env.verify(WorkerID, testLoc)
         return retString
 
 class tcpServer:
