@@ -4,6 +4,7 @@ import sys
 import random
 import socket
 import signal
+import time
 
 class Programs():
     def getAvailablePrograms(self):
@@ -12,7 +13,7 @@ class Programs():
         {name:[cpu-cycles-mean, cpu-cycles-sigma]}
         """
         """
-        Unwanted programs: Because of the bug in clang 5.0.1, not all of the 
+        Unwanted programs: Because of the bug in clang 5.0.1, not all of the
         programs in test-suite can apply the target passes. Therefore, we
         need to avoid them manually. This may change with the LLVM progress!
         """
@@ -71,9 +72,9 @@ class TcpClient():
         with open(EnvConnectInfo, "r") as file:
             # skip first line
             file.readline()
-            for line in file:                                                                                     
+            for line in file:
                 info = line.split(",")
-                EnvConnectDict[info[0]] = [info[1].strip(), info[2].strip()]                                                    
+                EnvConnectDict[info[0]] = [info[1].strip(), info[2].strip()]
             file.close()
         return EnvConnectDict[str(WorkerID)][0], int(EnvConnectDict[str(WorkerID)][1])
 
@@ -89,6 +90,7 @@ class TcpClient():
             self.init = True
         Msg = Msg + "\n"
         self.SOCKET.sendall(Msg.encode('utf-8'))
+
     def Receive(self, WorkerID):
         """
         return: string
@@ -97,8 +99,13 @@ class TcpClient():
             IP, Port = self.ReadEnvConnectInfo(WorkerID)
             self.EstablishTcpConnect(IP, Port)
             self.init = True
-        # The buffer size may cause bugs?
-        return self.SOCKET.recv(1024).decode('utf-8')
+        fragments  = []
+        while True:
+            chunck = self.SOCKET.recv(1024)
+            if not chunck:
+                break
+            fragments.append(chunck)
+        return b"".join(fragments).decode('utf-8')
 
 def sigint_handler(signum, frame):
     tcp = TcpClient()
@@ -117,6 +124,8 @@ if __name__ == '__main__':
     #FIXME
     #for i in range(100):
     for key, value in programDict.items():
+        workerID = 1
+        start = time.time()
         # random choose a build target
         #target = random.choice(keys)
         target = key
@@ -128,10 +137,17 @@ if __name__ == '__main__':
         msg = "target @ {} @ {}".format(target, passes)
         #msg = "{} @ {}".format(target, "100")
         # FIXME: WorkerID
-        tcp.Send(WorkerID=1, Msg=msg)
+        tcp.Send(WorkerID=workerID, Msg=msg)
         # get result
-        retStatus = tcp.Receive(WorkerID=1)
-        print("{} : {}".format(target, retStatus.strip()))
+        retStr = tcp.Receive(WorkerID=workerID).strip()
+        end = time.time()
+        print("{} : {} : {}".format(target, retStr.strip(), end - start))
+        if retStr == "Success":
+            tcp.DestroyTcpConnection()
+            tcp.Send(WorkerID=workerID, Msg="profiled @ {}\n".format(target))
+            retStr = tcp.Receive(WorkerID=workerID)
+            print(retStr.strip())
+            print("----------------------------------------")
         tcp.DestroyTcpConnection()
     '''
     for name, info in programDict.items():

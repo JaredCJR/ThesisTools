@@ -142,7 +142,7 @@ class EnvBuilder:
         0 --> build success
         others   --> build failed
         """
-        isKilled, retList = self.LimitTimeExec(600, self.workerMake, WorkerID, BuildTarget)
+        isKilled, retList = self.LimitTimeExec(500, self.workerMake, WorkerID, BuildTarget)
         if isKilled or retList[0] != 0:
             return -1
         else:
@@ -179,7 +179,7 @@ class EnvBuilder:
         0 --> build success
         others   --> build failed
         """
-        isKilled, retList = self.LimitTimeExec(600, self.workerVerify, WorkerID, TestLoc)
+        isKilled, retList = self.LimitTimeExec(500, self.workerVerify, WorkerID, TestLoc)
         if isKilled or retList[0] != 0:
             return -1
         else:
@@ -259,15 +259,13 @@ class ResponseActor:
             os.remove(BuiltBin)
         ret = env.make(WorkerID, BuildTarget)
         if ret != 0:
-            retString = "BuildFailed"
-            return retString
+            return "Failed"
         '''
         verify
         '''
         ret = env.verify(WorkerID, testLoc)
         if ret != 0:
-            retString = "VerifyFailed"
-            return retString
+            return "Failed"
         '''
         distribute PyActor
         '''
@@ -309,6 +307,7 @@ class tcpServer:
     class EnvTcpHandler(socketserver.StreamRequestHandler):
         def handle(self):
             global DaemonIpcFileLoc
+            global WorkerID
             '''
             self.rfile is a file-like object created by the handler;
             we can now use e.g. readline() instead of raw recv() calls
@@ -321,14 +320,12 @@ class tcpServer:
                 Str = "DecodeFailed"
             # Parse the decoded tcp input
             strList = Str.split('@')
-            '''
-            Expect something like
-            "target @ Shootout-C++-matrix @ 2 5 16 6 31 4 18 32 11"
-            '''
             recvCmd = strList[0].strip()
             if recvCmd == "target":
                 '''
-                normal procedure
+                build, verify and run.
+                Expect something like
+                "target @ Shootout-C++-matrix @ 2 5 16 6 31 4 18 32 11"
                 '''
                 BuildTarget = strList[1].strip()
                 Passes = strList[2].strip()
@@ -343,7 +340,6 @@ class tcpServer:
                 to the client
                 Only accept byte-object
                 '''
-                #print("Try to write: \"{}\" to \"{}\"".format(WriteContent, self.client_address[0]))
                 self.wfile.write(WriteContent.encode('utf-8'))
             elif recvCmd == "kill":
                 '''
@@ -353,14 +349,28 @@ class tcpServer:
                 print("Received kill cmd.", file=sys.stderr)
                 with open(EnvPidFile) as f:
                     os.kill(int(f.read()), signal.SIGTERM)
+            elif recvCmd == "profiled":
+                '''
+                send profiled data
+                Cmd looks like: "profiled @ dry"
+                '''
+                target = strList[1].strip()
+                targetLoc = "/tmp/PredictionDaemon/worker-{}/{}.usage".format(WorkerID, target)
+                if not os.path.exists(targetLoc):
+                    WriteContent = "FileNotExists"
+                else:
+                    with open(targetLoc, 'r') as file:
+                        WriteContent = file.read().strip()
+                        file.close()
+                WriteContent += "\n"
+                self.wfile.write(WriteContent.encode('utf-8'))
 
     def CreateClangTcpServer(self, HOST, PORT):
         # Make port reusable
         socketserver.TCPServer.allow_reuse_address = True
         # Create the server, binding to host on port
         server = socketserver.TCPServer((HOST, PORT), self.ClangTcpHandler)
-        # Activate the server; this will keep running until you
-        # interrupt the program with Ctrl-C
+        # Activate the server; this will keep running
         server.serve_forever()
 
     def CreateEnvTcpServer(self, HOST, PORT):
@@ -368,8 +378,7 @@ class tcpServer:
         socketserver.TCPServer.allow_reuse_address = True
         # Create the server, binding to host on port
         server = socketserver.TCPServer((HOST, PORT), self.EnvTcpHandler)
-        # Activate the server; this will keep running until you
-        # interrupt the program with Ctrl-C
+        # Activate the server; this will keep running
         server.serve_forever()
 
 
