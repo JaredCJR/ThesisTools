@@ -10,7 +10,10 @@ import socket
 import ServiceLib as sv
 import re
 import shlex
+import shutil
+import psutil
 import subprocess
+import InstrumentServiceLib as sv
 
 def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
     """
@@ -21,7 +24,7 @@ def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
         TrainLoc = os.getenv("LLVM_THESIS_TrainingHome", "Error")
         FullCmd = "taskset -c " + WorkerID + " " + Cmd
         print(FullCmd)
-        p = subprocess.Popen(shlex.split(FullCmd), 
+        p = subprocess.Popen(shlex.split(FullCmd),
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE)
         out, err = p.communicate()
@@ -97,6 +100,41 @@ class EnvBuilder:
             ret = -1 # Fail
         return ret
 
+    def distributePyActor(self, TestFilePath):
+        Log = sv.LogService()
+        # Does this benchmark need stdin?
+        NeedStdin = False
+        with open(TestFilePath, "r") as TestFile:
+            for line in TestFile:
+                if line.startswith("RUN:"):
+                    if line.find("<") != -1:
+                        NeedStdin = True
+                    break
+            TestFile.close()
+        # Rename elf and copy actor
+        ElfPath = TestFilePath.replace(".test", '')
+        NewElfPath = ElfPath + ".OriElf"
+        #based on "stdin" for to copy the right ones
+        InstrumentSrc = os.getenv("LLVM_THESIS_InstrumentHome", "Error")
+        if NeedStdin == True:
+            PyCallerLoc = InstrumentSrc + '/PyActor/WithStdin/PyCaller'
+            PyActorLoc = InstrumentSrc + '/PyActor/WithStdin/MimicAndFeatureExtractor.py'
+            Log.err("NeedStdin = True\n")
+        else:
+            PyCallerLoc = InstrumentSrc + '/PyActor/WithoutStdin/PyCaller'
+            PyActorLoc = InstrumentSrc + '/PyActor/WithoutStdin/MimicAndFeatureExtractor.py'
+            Log.err("NeedStdin = False\n")
+        # Rename the real elf
+        shutil.move(ElfPath, NewElfPath)
+        # Copy the feature-extractor
+        shutil.copy2(PyActorLoc, ElfPath + ".py")
+        # Copy the PyCaller
+        if os.path.exists(PyCallerLoc) == True:
+            shutil.copy2(PyCallerLoc, ElfPath)
+        else:
+            Log.err("Please \"$ make\" to get PyCaller in {}\n".format(PyCallerLoc))
+            return
+
     def run(self, WorkerID, TestLoc):
         ret = self.verify(WorkerID, TestLoc)
         return ret
@@ -148,9 +186,7 @@ class ResponseActor:
         '''
         distribute PyActor
         '''
-        #TODO
-
-
+        env.distributePyActor(testLoc)
         '''
         run and extract performance
         '''
@@ -201,24 +237,37 @@ class tcpServer:
             # Parse the decoded tcp input
             strList = Str.split('@')
             '''
-            Expect something like 
-            "Shootout-C++-matrix @ 2 5 16 6 31 4 18 32 11"
+            Expect something like
+            "target @ Shootout-C++-matrix @ 2 5 16 6 31 4 18 32 11"
             '''
-            BuildTarget = strList[0].strip()
-            Passes = strList[1].strip()
-            with open(DaemonIpcFileLoc, 'w') as IpcFile:
-                IpcFile.write(Passes)
-                IpcFile.close()
-            actor = ResponseActor()
-            # build, verify, run.
-            WriteContent = actor.EnvEcho(BuildTarget) + "\n"
-            '''
-            Likewise, self.wfile is a file-like object used to write back
-            to the client
-            Only accept byte-object
-            '''
-            #print("Try to write: \"{}\" to \"{}\"".format(WriteContent, self.client_address[0]))
-            self.wfile.write(WriteContent.encode('utf-8'))
+            recvCmd = strList[0].strip()
+            if recvCmd == "target":
+                '''
+                normal procedure
+                '''
+                BuildTarget = strList[1].strip()
+                Passes = strList[2].strip()
+                with open(DaemonIpcFileLoc, 'w') as IpcFile:
+                    IpcFile.write(Passes)
+                    IpcFile.close()
+                actor = ResponseActor()
+                # build, verify, run.
+                WriteContent = actor.EnvEcho(BuildTarget) + "\n"
+                '''
+                Likewise, self.wfile is a file-like object used to write back
+                to the client
+                Only accept byte-object
+                '''
+                #print("Try to write: \"{}\" to \"{}\"".format(WriteContent, self.client_address[0]))
+                self.wfile.write(WriteContent.encode('utf-8'))
+            elif recvCmd == "kill":
+                '''
+                kill ourselves
+                '''
+                global EnvPidFile
+                print("Received kill cmd.", file=sys.stderr)
+                with open(EnvPidFile) as f:
+                    os.kill(int(f.read()), signal.SIGTERM)
 
     def CreateClangTcpServer(self, HOST, PORT):
         # Make port reusable
@@ -287,6 +336,12 @@ class Daemon:
 
         # Signal handler for termination (required)
         def sigterm_handler(signo, frame):
+            #kill all the children of pid and itself
+            parent_pid = os.getpid()
+            parent = psutil.Process(parent_pid)
+            for child in parent.children(recursive=True):
+                child.kill()
+            # kill itselt and remove pid file.("atexit.register")
             raise SystemExit(1)
 
         signal.signal(signal.SIGTERM, sigterm_handler)
@@ -360,9 +415,10 @@ class Daemon:
         if len(argv) != 3:
             print('Usage: {} [start|stop] [WorkerID]'.format(argv[0]), file=sys.stderr)
             raise SystemExit(1)
-        
+
         global DaemonIpcFileLoc
         global WorkerID # WorkerID is a str
+        global EnvPidFile
         WorkerID = argv[2]
         DaemonIpcFileLoc = "/tmp/PredictionDaemon-IPC-" + WorkerID
         ClangHost = ClangConnectDict[WorkerID][0]
@@ -393,11 +449,10 @@ class Daemon:
                         EnvHost, EnvPort)
             else:
                 # Create daemon for clang
-                self.CreateDaemon(ClangDaemonName, ClangPidFile, ClangLogFile, 
+                self.CreateDaemon(ClangDaemonName, ClangPidFile, ClangLogFile,
                         ClangHost, ClangPort)
 
         elif argv[1] == 'stop':
-            # TODO: kill all children
             ExitFlag = False
             # Stop Clang-Daemon
             if os.path.exists(ClangPidFile):

@@ -3,6 +3,7 @@ import os
 import sys
 import random
 import socket
+import signal
 
 class Programs():
     def getAvailablePrograms(self):
@@ -99,24 +100,38 @@ class TcpClient():
         # The buffer size may cause bugs?
         return self.SOCKET.recv(1024).decode('utf-8')
 
+def sigint_handler(signum, frame):
+    tcp = TcpClient()
+    msg = "kill"
+    for i in range(1,6): # from 1 to 5
+        tcp.Send(WorkerID=i, Msg=msg)
+    sys.exit(1)
+
 if __name__ == '__main__':
+    # register sigint handler
+    signal.signal(signal.SIGINT, sigint_handler)
     prog = Programs()
     programDict = prog.getAvailablePrograms()
     keys = list(programDict.keys())
     tcp = TcpClient()
-    for i in range(1):
+    #FIXME
+    #for i in range(100):
+    for key, value in programDict.items():
         # random choose a build target
-        target = random.choice(keys)
+        #target = random.choice(keys)
+        target = key
         # get random 9 passes from 34 of them.
-        passes = prog.genRandomPasses(34, 9)
+        #FIXME
+        #passes = prog.genRandomPasses(34, 9)
+        passes = ""
         # send to env-daemon
-        msg = "{} @ {}".format(target, passes)
+        msg = "target @ {} @ {}".format(target, passes)
         #msg = "{} @ {}".format(target, "100")
-        # NOTICE: WorkerID
+        # FIXME: WorkerID
         tcp.Send(WorkerID=1, Msg=msg)
         # get result
         retStatus = tcp.Receive(WorkerID=1)
-        print(retStatus)
+        print("{} : {}".format(target, retStatus.strip()))
         tcp.DestroyTcpConnection()
     '''
     for name, info in programDict.items():

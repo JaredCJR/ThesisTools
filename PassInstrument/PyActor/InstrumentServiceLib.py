@@ -42,7 +42,7 @@ class LogService():
         pass
 
     def outNotToFile(self, msg):
-        print(msg, end="")
+        print(msg, end="", file=sys.stdout)
 
     def FileWriter(self, path, msg):
         file = open(path, "a")
@@ -53,11 +53,9 @@ class LogService():
 
     def out(self, msg):
         self.outNotToFile(msg)
-        #save to same file for every instance
-        self.FileWriter(self.StdoutFilePath, msg)
 
     def err(self, msg):
-        print(msg, file=sys.stderr)
+        self.FileWriter("/tmp/PredictionDaemon.err", msg)
 
     def record(self, msg):
         #save to same file for every instance
@@ -228,7 +226,7 @@ class PyActorService:
             /tmp/PredictionDaemon/worker-1/dry
             '''
             TargetDir = '/tmp/PredictionDaemon/worker-' + WorkerID
-            RecordTargetFilePath = TargetDir + '/' + BenchmarkName
+            RecordTargetFilePath = TargetDir + '/' + BenchmarkName + '.usage'
             if not os.path.isdir(TargetDir):
                 os.makedirs(TargetDir)
             elif os.path.exists(RecordTargetFilePath):
