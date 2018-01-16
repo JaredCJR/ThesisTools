@@ -437,7 +437,7 @@ class CommonDriver:
                         WaitSecs += WaitUnit
                     else:
                         break
-                    #This time depends one machine
+                    #This time depends on machine
                     if WaitSecs > 2700:
                         self.KillProcess(self.PID)
                         Log = sv.LogService()

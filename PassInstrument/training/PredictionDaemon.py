@@ -68,37 +68,122 @@ class EnvBuilder:
                     path = os.path.join(root, file)
                     LitTestDict[name] = path
 
+    def KillProcesses(self, pid):
+        '''
+        kill all the children of pid and itself
+        '''
+        parent_pid = pid
+        parent = psutil.Process(parent_pid)
+        for child in parent.children(recursive=True):
+            child.kill()
+        parent.kill()
+    
+    def LimitTimeExec(self, LimitTime, Func, *args):
+        """
+        Input:
+        1. LimitTime: is in the unit of secs.
+        2. Func: must return a list that contains your return value
+        3. args: pass into Func
+        Return value:
+        1. isKilled: killed by timing
+        2. retList: from Func(args)
+        """
+        retList = []
+        PrevWd = os.getcwd()
+        isKilled = False
+        pid = os.fork()
+        if pid == 0:
+            retList = Func(args)
+        else:
+            WaitSecs = 0
+            WaitUnit = 1
+            while True:
+                rid, status = os.waitpid(pid, os.WNOHANG)
+                if rid == 0 and status == 0:
+                    time.sleep(WaitUnit)
+                    WaitSecs += WaitUnit
+                else:
+                    break
+                # The time depends on you =)
+                if WaitSecs > LimitTime:
+                    self.KillProcesses(pid)
+                    isKilled = True
+        os.chdir(PrevWd)
+        return isKilled, retList
 
-    def make(self, WorkerID, BuildTarget):
+    def workerMake(self, args):
         """
-        return 0 --> build success
-        others   --> build failed
+        Input(tuple):
+        [0]:WorkerID
+        [1]:BuildTarget
+        Return a list:
+        [0]: a number that indicate status.
+                0      --> build success
+                others --> build failed
         """
+        PrevWd = os.getcwd()
+        WorkerID = args[0]
+        BuildTarget = args[1]
+        retList = []
+        '''
+        build
+        '''
         llvmSrc = os.getenv("LLVM_THESIS_HOME", "Error")
         TestSrc = llvmSrc + "/test-suite/build-worker-" + WorkerID
-        PrevWd = os.getcwd()
         os.chdir(TestSrc)
         cmd = "make " + BuildTarget
         ret, _, _ = ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
-        os.chdir(PrevWd)
-        return ret
+        retList.append(ret)
+        return retList
 
-    def verify(self, WorkerID, TestLoc):
+    def make(self, WorkerID, BuildTarget):
         """
-        return 0 --> build success
+        return a number:
+        0 --> build success
         others   --> build failed
         """
+        isKilled, retList = self.LimitTimeExec(600, self.workerMake, WorkerID, BuildTarget)
+        if isKilled or retList[0] != 0:
+            return -1
+        else:
+            return 0
+
+    def workerVerify(self, args):
+        """
+        Input(tuple):
+        [0]:WorkerID
+        [1]:TestLoc
+        Return a list:
+        [0]: a number that indicate status.
+                0      --> build success
+                others --> build failed
+        """
+        retList = []
+        WorkerID = args[0]
+        TestLoc = args[1]
         Lit = os.getenv("LLVM_THESIS_lit", "Error")
         if Lit == "Error":
             print("$LLVM_THESIS_lit not defined.", file=sys.stderr)
             sys.exit(1)
         cmd = Lit + " -q " + TestLoc
         _, out, err = ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
-        if not out:
-            ret = 0 # Success
+        if out:
+            retList.append(-1)
         else:
-            ret = -1 # Fail
-        return ret
+            retList.append(0)
+        return retList
+
+    def verify(self, WorkerID, TestLoc):
+        """
+        return a number:
+        0 --> build success
+        others   --> build failed
+        """
+        isKilled, retList = self.LimitTimeExec(600, self.workerVerify, WorkerID, TestLoc)
+        if isKilled or retList[0] != 0:
+            return -1
+        else:
+            return 0
 
     def distributePyActor(self, TestFilePath):
         Log = sv.LogService()
