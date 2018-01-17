@@ -77,7 +77,7 @@ class EnvBuilder:
         for child in parent.children(recursive=True):
             child.kill()
         parent.kill()
-    
+
     def LimitTimeExec(self, LimitTime, Func, *args):
         """
         Input:
@@ -247,7 +247,6 @@ class ResponseActor:
         retString = "Success"
         '''
         remove previous build and build again
-        assuming the proper cmake is already done.
         '''
         env = EnvBuilder()
         # ex. RUN: /llvm/test-suite/build-worker-1/SingleSource/Benchmarks/Dhrystone/dry
@@ -257,6 +256,10 @@ class ResponseActor:
         BuiltBin = fileCmd.split()[1]
         if os.path.exists(BuiltBin):
             os.remove(BuiltBin)
+        '''
+        build
+        assuming the proper cmake is already done.
+        '''
         ret = env.make(WorkerID, BuildTarget)
         if ret != 0:
             return "Failed"
@@ -298,13 +301,22 @@ class tcpServer:
                 WriteContent = IpcFile.read()
                 IpcFile.close()
             '''
-            Likewise, self.wfile is a file-like object used to write back
+            self.wfile is a file-like object used to write back
             to the client
             Only accept byte-object
             '''
             self.wfile.write(WriteContent.encode('utf-8'))
 
     class EnvTcpHandler(socketserver.StreamRequestHandler):
+        def writeMsgBack(self, WriteContent):
+            '''
+            self.wfile is a file-like object used to write back
+            to the client
+            Only accept byte-object
+            '''
+            WriteContent = WriteContent + '\n'
+            self.wfile.write(WriteContent.encode('utf-8'))
+
         def handle(self):
             global DaemonIpcFileLoc
             global WorkerID
@@ -335,12 +347,7 @@ class tcpServer:
                 actor = ResponseActor()
                 # build, verify, run.
                 WriteContent = actor.EnvEcho(BuildTarget) + "\n"
-                '''
-                Likewise, self.wfile is a file-like object used to write back
-                to the client
-                Only accept byte-object
-                '''
-                self.wfile.write(WriteContent.encode('utf-8'))
+                self.writeMsgBack(WriteContent)
             elif recvCmd == "kill":
                 '''
                 kill ourselves
@@ -357,13 +364,25 @@ class tcpServer:
                 target = strList[1].strip()
                 targetLoc = "/tmp/PredictionDaemon/worker-{}/{}.usage".format(WorkerID, target)
                 if not os.path.exists(targetLoc):
-                    WriteContent = "FileNotExists"
+                    WriteContent = "ProfiledFileNotExists in {}".format(targetLoc)
                 else:
                     with open(targetLoc, 'r') as file:
                         WriteContent = file.read().strip()
                         file.close()
-                WriteContent += "\n"
-                self.wfile.write(WriteContent.encode('utf-8'))
+                self.writeMsgBack(WriteContent)
+            elif recvCmd == "features":
+                '''
+                send instrumented features from clang
+                Cmd looks like: "features"
+                '''
+                featureLoc = "/tmp/PredictionDaemon/worker-{}/features".format(WorkerID)
+                if not os.path.exists(featureLoc):
+                    WriteContent = "FeaturesFileNotExists in {}".format(featureLoc)
+                else:
+                    with open(featureLoc, 'r') as file:
+                        WriteContent = file.read().strip()
+                        file.close()
+                self.writeMsgBack(WriteContent)
 
     def CreateClangTcpServer(self, HOST, PORT):
         # Make port reusable

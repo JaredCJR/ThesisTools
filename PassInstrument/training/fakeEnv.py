@@ -135,16 +135,20 @@ if __name__ == '__main__':
         passes = ""
         # send to env-daemon
         msg = "target @ {} @ {}".format(target, passes)
-        #msg = "{} @ {}".format(target, "100")
-        # FIXME: WorkerID
         tcp.Send(WorkerID=workerID, Msg=msg)
         # get result
         retStr = tcp.Receive(WorkerID=workerID).strip()
         end = time.time()
         print("{} : {} : {}".format(target, retStr.strip(), end - start))
         if retStr == "Success":
+            # get profiled data
             tcp.DestroyTcpConnection()
-            tcp.Send(WorkerID=workerID, Msg="profiled @ {}\n".format(target))
+            tcp.Send(WorkerID=workerID, Msg="profiled @ {}".format(target))
+            retStr = tcp.Receive(WorkerID=workerID)
+            print(retStr.strip())
+            # get features
+            tcp.DestroyTcpConnection()
+            tcp.Send(WorkerID=workerID, Msg="features")
             retStr = tcp.Receive(WorkerID=workerID)
             print(retStr.strip())
             print("----------------------------------------")
