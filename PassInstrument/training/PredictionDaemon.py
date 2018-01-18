@@ -7,13 +7,12 @@ from multiprocessing import Process
 import time
 import socketserver
 import socket
-import ServiceLib as sv
 import re
 import shlex
 import shutil
 import psutil
 import subprocess
-import InstrumentServiceLib as sv
+import Lib as lib
 
 def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
     """
@@ -186,7 +185,7 @@ class EnvBuilder:
             return 0
 
     def distributePyActor(self, TestFilePath):
-        Log = sv.LogService()
+        Log = lib.LogService()
         # Does this benchmark need stdin?
         NeedStdin = False
         with open(TestFilePath, "r") as TestFile:
@@ -204,11 +203,9 @@ class EnvBuilder:
         if NeedStdin == True:
             PyCallerLoc = InstrumentSrc + '/PyActor/WithStdin/PyCaller'
             PyActorLoc = InstrumentSrc + '/PyActor/WithStdin/MimicAndFeatureExtractor.py'
-            Log.err("NeedStdin = True\n")
         else:
             PyCallerLoc = InstrumentSrc + '/PyActor/WithoutStdin/PyCaller'
             PyActorLoc = InstrumentSrc + '/PyActor/WithoutStdin/MimicAndFeatureExtractor.py'
-            Log.err("NeedStdin = False\n")
         # Rename the real elf
         shutil.move(ElfPath, NewElfPath)
         # Copy the feature-extractor
@@ -481,25 +478,14 @@ class Daemon:
         """
         return dict of connection info for clang and env
         """
-        ClangConnectDict = {}
-        EnvConnectDict = {}
         InstrumentHome = os.getenv("LLVM_THESIS_InstrumentHome", "Error")
         if InstrumentHome == "Error":
             sys.exit(1)
         ClangConnectInfo = InstrumentHome + "/training/ClangConnectInfo"
         EnvConnectInfo = InstrumentHome + "/training/EnvConnectInfo"
-        with open(ClangConnectInfo, "r") as file:
-            file.readline()
-            for line in file:
-                info = line.split(",")
-                ClangConnectDict[info[0]] = [info[1], info[2]]
-            file.close()
-        with open(EnvConnectInfo, "r") as file:
-            file.readline()
-            for line in file:
-                info = line.split(",")
-                EnvConnectDict[info[0]] = [info[1], info[2]]
-            file.close()
+        cis = lib.ConnectInfoService()
+        ClangConnectDict = cis.getConnectDict(ClangConnectInfo)
+        EnvConnectDict = cis.getConnectDict(EnvConnectInfo)
         return ClangConnectDict, EnvConnectDict
 
     def CreateDaemon(self, DaemonName, PidFile, LogFile,

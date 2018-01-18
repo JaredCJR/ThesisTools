@@ -5,6 +5,7 @@ import random
 import socket
 import signal
 import time
+import Lib as lib
 
 class Programs():
     def getAvailablePrograms(self):
@@ -68,14 +69,8 @@ class TcpClient():
             print("$LLVM_THESIS_InstrumentHome is not defined.", file=sys.stderr)
             sys.exit(1)
         EnvConnectInfo = EnvConnectInfo + "/training/EnvConnectInfo"
-        EnvConnectDict = {}
-        with open(EnvConnectInfo, "r") as file:
-            # skip first line
-            file.readline()
-            for line in file:
-                info = line.split(",")
-                EnvConnectDict[info[0]] = [info[1].strip(), info[2].strip()]
-            file.close()
+        cis = lib.ConnectInfoService()
+        EnvConnectDict = cis.getConnectDict(EnvConnectInfo)
         return EnvConnectDict[str(WorkerID)][0], int(EnvConnectDict[str(WorkerID)][1])
 
     def Send(self, WorkerID, Msg):
