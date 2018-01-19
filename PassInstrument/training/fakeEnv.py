@@ -6,6 +6,7 @@ import socket
 import signal
 import time
 import Lib as lib
+from multiprocessing import Process, Manager, Lock
 
 class Programs():
     def getAvailablePrograms(self):
@@ -22,6 +23,7 @@ class Programs():
         loc = os.getenv("LLVM_THESIS_Random_LLVMTestSuiteScript", "Error")
         if loc == "Error":
             sys.exit(1)
+        # FIXME: if we re-measure the std-cycles, we should use the newer record.
         loc = loc + "/GraphGen/output/MeasurableStdBenchmarkMeanAndSigma"
         retDict = {}
         with open(loc, "r") as stdFile:
@@ -88,73 +90,130 @@ class TcpClient():
 
     def Receive(self, WorkerID):
         """
+        Always disconnect after receiving.
         return: string
         """
-        if self.init == False:
-            IP, Port = self.ReadEnvConnectInfo(WorkerID)
-            self.EstablishTcpConnect(IP, Port)
-            self.init = True
         fragments  = []
         while True:
             chunck = self.SOCKET.recv(1024)
             if not chunck:
                 break
             fragments.append(chunck)
+        self.DestroyTcpConnection()
         return b"".join(fragments).decode('utf-8')
 
 def sigint_handler(signum, frame):
+    global maxWorkerNum
     tcp = TcpClient()
     msg = "kill"
-    for i in range(1,6): # from 1 to 5
+    for i in range(1,maxWorkerNum + 1): # from 1 to maxWorkerNum
         tcp.Send(WorkerID=i, Msg=msg)
     sys.exit(1)
 
-if __name__ == '__main__':
-    # register sigint handler
-    signal.signal(signal.SIGINT, sigint_handler)
-    prog = Programs()
-    programDict = prog.getAvailablePrograms()
-    keys = list(programDict.keys())
-    tcp = TcpClient()
-    #FIXME
-    #for i in range(100):
-    for key, value in programDict.items():
-        workerID = 1
+class Worker():
+    def freeRemoteWorker(self, SharedWorkerDict, WorkerLock, WorkerID):
+        '''
+        no return.
+        Free the worker in SharedWorkerDict for the WorkerID.
+        '''
+        WorkerLock.acquire()
+        # manipulate SharedWorkerDict inside the lock.
+        SharedWorkerDict[WorkerID] = True
+        WorkerLock.release()
+
+    def hireRemoteWorker(self, SharedWorkerDict, WorkerLock):
+        '''
+        return an available remote WorkerID
+        '''
+        retID = None
+        WorkerLock.acquire()
+        # manipulate SharedWorkerDict inside the lock.
+        while True:
+            for ID, free in SharedWorkerDict.items():
+                if free == True:
+                    retID = ID
+                    break
+            if retID is not None:
+                break
+        SharedWorkerDict[retID] = False
+        WorkerLock.release()
+        return retID
+
+    def EnvDoJob(self, SharedWorkerDict, WorkerLock, target, passes):
+        '''
+        return the build status
+        Possible values:
+        1. "Success"
+        2. "Failed"
+        3. empty string <-- This is caused by Python3 TCP library. 
+           (May be fixed in newer library version.)
+        '''
+        tcp = TcpClient()
+        # get remote-worker
+        workerID = self.hireRemoteWorker(SharedWorkerDict, WorkerLock)
         start = time.time()
-        # random choose a build target
-        #target = random.choice(keys)
-        target = key
-        # get random 9 passes from 34 of them.
-        #FIXME
-        #passes = prog.genRandomPasses(34, 9)
-        passes = ""
-        # send to env-daemon
+        # tell env-daemon to build, verify and run
         msg = "target @ {} @ {}".format(target, passes)
         tcp.Send(WorkerID=workerID, Msg=msg)
-        # get result
         retStr = tcp.Receive(WorkerID=workerID).strip()
         end = time.time()
-        print("{} : {} : {}".format(target, retStr.strip(), end - start))
+        print("{} : {} : {} : RemoteWorker={}".format(target, retStr.strip(), end - start, workerID))
         if retStr == "Success":
             # get profiled data
-            tcp.DestroyTcpConnection()
             tcp.Send(WorkerID=workerID, Msg="profiled @ {}".format(target))
             retStr = tcp.Receive(WorkerID=workerID)
             print(retStr.strip())
             # get features
-            tcp.DestroyTcpConnection()
             tcp.Send(WorkerID=workerID, Msg="features")
             retStr = tcp.Receive(WorkerID=workerID)
-            print(retStr.strip())
-            print("----------------------------------------")
-        tcp.DestroyTcpConnection()
-    '''
-    for name, info in programDict.items():
-        print("{}: {}, {}".format(name, info[0], info[1]))
-    '''
-    '''
-    for i in range(100):
-        passes = prog.genRandomPasses(34, 9)
-        print(passes)
-    '''
+            #print(retStr.strip())
+        self.freeRemoteWorker(SharedWorkerDict, WorkerLock, workerID)
+        print("----------------------------------------")
+        return retStr
 
+    def EnvWorker(self, SharedWorkerDict, WorkerLock):
+        prog = Programs()
+        programDict = prog.getAvailablePrograms()
+        keys = list(programDict.keys())
+        #for i in range(100):
+        for key, value in programDict.items():
+            # random choose a build target
+            #target = random.choice(keys)
+            target = key
+            # get random 9 passes from 34 of them.
+            #passes = prog.genRandomPasses(34, 9)
+            passes = ""
+            retStatus = self.EnvDoJob(SharedWorkerDict, WorkerLock, target, passes)
+            while not retStatus:
+                '''
+                Encounter Python3 TCP connection error.
+                (This may be fix by newer TCP library.)
+                Try again until get meaningful messages.
+                '''
+                retStatus = self.EnvDoJob(SharedWorkerDict, WorkerLock, target, passes)
+            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
+
+if __name__ == '__main__':
+    global maxWorkerNum
+    maxWorkerNum = 5
+    # register sigint handler
+    signal.signal(signal.SIGINT, sigint_handler)
+    # create shared var
+    manager = Manager()
+    WorkerLock = Lock()
+    '''
+    [ WorkerID : True] --> This worker is available
+    [ WorkerID : False] --> This worker is NOT available
+    '''
+    SharedWorkerDict = manager.dict()
+    # WorkerID is a str
+    for i in range(1, maxWorkerNum + 1):
+        SharedWorkerDict[str(i)] = True
+    procList = []
+    worker = Worker()
+    for i in range(1, maxWorkerNum + 1):
+        p = Process(target=worker.EnvWorker, args=(SharedWorkerDict, WorkerLock))
+        p.start()
+        procList.append(p)
+    for p in procList:
+        p.join()

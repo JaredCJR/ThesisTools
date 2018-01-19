@@ -273,7 +273,7 @@ class ResponseActor:
         '''
         run and extract performance
         '''
-        ret = env.verify(WorkerID, testLoc)
+        ret = env.run(WorkerID, testLoc)
         return retString
 
 class tcpServer:
@@ -343,8 +343,12 @@ class tcpServer:
                     IpcFile.close()
                 actor = ResponseActor()
                 # build, verify, run.
-                WriteContent = actor.EnvEcho(BuildTarget) + "\n"
-                self.writeMsgBack(WriteContent)
+                WriteContent = actor.EnvEcho(BuildTarget)
+                PossibleRet = ["Success", "Failed"]
+                if WriteContent not in PossibleRet:
+                    self.writeMsgBack("EnvEcho Error!")
+                else:
+                    self.writeMsgBack(WriteContent)
             elif recvCmd == "kill":
                 '''
                 kill ourselves

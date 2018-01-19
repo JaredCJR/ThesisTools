@@ -239,7 +239,8 @@ class PyActorService:
                 Record the fisrt run time to get function usage and repeat count
                 '''
                 # write to ram
-                perfRecordLoc = "/dev/shm/" + os.path.basename(elfPath) + ".perfRecord"
+                # Add WorkerID to avoid race-condition
+                perfRecordLoc = "/dev/shm/" + os.path.basename(elfPath) + ".perfRecord-" + WorkerID
                 perfRecordPrefix = "perf record -e cpu-cycles:ppp --quiet --output=" + perfRecordLoc + " "
                 out, err, _ = self.RunCmd(perfRecordPrefix + Cmd, BoolWithStdin, realStdin)
                 '''
@@ -254,7 +255,8 @@ class PyActorService:
                 '''
                 Run with perf stat, which will repeat several times
                 '''
-                perfStatLoc = "/dev/shm/" + os.path.basename(elfPath) + ".perfStat"
+                # Add WorkerID to avoid race-condition
+                perfStatLoc = "/dev/shm/" + os.path.basename(elfPath) + ".perfStat-" + WorkerID
                 perfStatPrefix = "perf stat --output " +  perfStatLoc + " -e cpu-cycles" + " "
                 cycleCount = 0
                 for i in range(LoopCount):
@@ -273,9 +275,9 @@ class PyActorService:
 
             except Exception as ex:
                 if err is not None:
-                    Log.err(err.decode('utf-8'))
+                    Log.err( "During profiling" + err.decode('utf-8') + "\n")
                 else:
-                    Log.err("Why exception happend, and err is None?\n")
+                    Log.err("Why exception happend during profiling, and err is None?\n")
                     Log.err(str(ex) + "\n")
                 return
 
