@@ -19,6 +19,8 @@ class ConnectInfoInit():
                     if line == initIptablesMsg:
                         isInitialized = True
                         print("Iptables are already initialized.")
+                        print("Your previous input in useless.")
+                        print("Remove \"{}\" and try again.".format(initFile))
                 file.close()
         if isInitialized == False:
             # check for permission to manipulate iptables
@@ -53,6 +55,7 @@ class ConnectInfoInit():
 
     def UserPrompt(self):
         print("Please input the Ip and Ports-range of RemoteEnv.")
+        print("All of the computers using this framework should using the same connection config.")
         print("Ex. \n\n127.0.0.1, 56021, 1\n140.111.192.1, 5566, 2\ndone\n\n")
         print("This will generate the following tables:")
         print("workerID, RemoteEnv-ip, RemoteEnv-port")

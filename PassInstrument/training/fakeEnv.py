@@ -56,7 +56,6 @@ class TcpClient():
             self.SOCKET = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.SOCKET.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.SOCKET.connect((IP, Port))
-            print("Connect end")
             self.init = True
 
     def DestroyTcpConnection(self):
