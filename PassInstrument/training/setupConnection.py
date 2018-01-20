@@ -19,8 +19,8 @@ class ConnectInfoInit():
                     if line == initIptablesMsg:
                         isInitialized = True
                         print("Iptables are already initialized.")
-                        print("Your previous input in useless.")
-                        print("Remove \"{}\" and try again.".format(initFile))
+                        print("Your previous input does not apply to iptables, but the EnvConnectionInfo is generated.")
+                        print("Remove \"{}\" and try again to apply to the iptables.".format(initFile))
                 file.close()
         if isInitialized == False:
             # check for permission to manipulate iptables
