@@ -54,6 +54,7 @@ class TcpClient():
     def EstablishTcpConnect(self, IP, Port):
         if self.init == False:
             self.SOCKET = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            self.SOCKET.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.SOCKET.connect((IP, Port))
             self.init = True
 
