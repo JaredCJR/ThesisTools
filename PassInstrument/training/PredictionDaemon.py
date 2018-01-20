@@ -288,11 +288,11 @@ class tcpServer:
             # This only read the first line.
             data = self.rfile.readline().strip()
             #print("{} wrote: {}".format(self.client_address[0], self.data.decode('utf-8')))
-            actor = ResponseActor()
             try:
                 Str = data.decode('utf-8')
             except Exception as e:
                 Str = "DecodeFailed"
+            #actor = ResponseActor()
             #WriteContent = actor.fooClangEcho(Str, self.client_address[0])
             with open(DaemonIpcFileLoc, 'r') as IpcFile:
                 WriteContent = IpcFile.read()
@@ -485,8 +485,8 @@ class Daemon:
         InstrumentHome = os.getenv("LLVM_THESIS_InstrumentHome", "Error")
         if InstrumentHome == "Error":
             sys.exit(1)
-        ClangConnectInfo = InstrumentHome + "/training/ClangConnectInfo"
-        EnvConnectInfo = InstrumentHome + "/training/EnvConnectInfo"
+        ClangConnectInfo = InstrumentHome + "/Connection/ClangConnectInfo"
+        EnvConnectInfo = InstrumentHome + "/Connection/EnvConnectInfo"
         cis = lib.ConnectInfoService()
         ClangConnectDict = cis.getConnectDict(ClangConnectInfo)
         EnvConnectDict = cis.getConnectDict(EnvConnectInfo)

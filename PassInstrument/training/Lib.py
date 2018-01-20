@@ -28,7 +28,7 @@ class LogService():
 class ConnectInfoService():
     def getConnectDict(self, path):
         '''
-        return Dict[WorkerID] = ["RL-ip", "RL-port", "RemoteEnv-ip", "RemoteEnv-port"]
+        return Dict[WorkerID] = ["RemoteEnv-ip", "RemoteEnv-port"]
         '''
         Dict = {}
         with open(path, "r") as file:
