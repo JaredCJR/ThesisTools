@@ -56,6 +56,7 @@ class TcpClient():
             self.SOCKET = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.SOCKET.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             self.SOCKET.connect((IP, Port))
+            print("Connect end")
             self.init = True
 
     def DestroyTcpConnection(self):
@@ -71,7 +72,7 @@ class TcpClient():
         if EnvConnectInfo == "Error":
             print("$LLVM_THESIS_InstrumentHome is not defined.", file=sys.stderr)
             sys.exit(1)
-        EnvConnectInfo = EnvConnectInfo + "/training/EnvConnectInfo"
+        EnvConnectInfo = EnvConnectInfo + "/Connection/EnvConnectInfo"
         cis = lib.ConnectInfoService()
         EnvConnectDict = cis.getConnectDict(EnvConnectInfo)
         return EnvConnectDict[str(WorkerID)][0], int(EnvConnectDict[str(WorkerID)][1])
