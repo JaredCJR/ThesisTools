@@ -353,7 +353,7 @@ How to test network connection with fakeEnv.py
 * On System B(This must be set first)
 ```
 cd llvm-thesis/ThesisTools/PassInstrument/training
-./DaemonStart.sh all
+taskset -c 0 ./DaemonStart.sh all
 # If you encounter failure, restart the daemon with same command "multiple times".
 # Sometimes, it just the previous workers need time to finish its previous work.
 ```
