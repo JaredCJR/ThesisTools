@@ -180,3 +180,100 @@ Use "RandomSelect/LLVMTestSuiteScript/GraphGen/genGraphAnalysis.ipynb" to genera
 * Install the latest stable Anaconda3 for Ubuntu 16.04
 * Run the genGraphAnalysis.ipynb as any other python3 projects.
   * You should prepare the data as the above instructions by using the "LitDriver.py"
+
+
+
+Training framework in "PassInstrument"
+=========================================
+*  __The passes in "PassPrediction-*" are already rewritten.__
+  * This tools may only be used when you modify the `Rewriter`.
+  * The rewritten passes are already committed with the llvm or clang branches for our project.
+
+[How to build] Rewriter to insert instrumentation code:
+---------------------------------------------------------
+* Build LLVM/Clang for Rewriter
+  * The clone procedure is really similar to the official guide.
+  * The prerequisite packages are as same as the above guide.
+     * Also, we use gcc 7.2 as out compiler to build LLVM/Clang
+```
+git clone https://github.com/llvm-mirror/llvm llvm-official
+cd llvm-official
+# The version we use is 5.0.1
+git checkout -b release_50 remotes/origin/release_50
+
+cd tools
+git clone https://github.com/llvm-mirror/clang
+cd clang
+# The version we use is 5.0.1
+git checkout -b release_50 remotes/origin/release_50
+
+cd tools
+git clone https://github.com/llvm-mirror/clang-tools-extra extra
+git checkout -b release_50 remotes/origin/release_50
+
+cd ../../../
+mkdir build-release-dump-gcc7
+cd build-release-dump-gcc7
+# time to cmake
+
+cmake -DCMAKE_BUILD_TYPE=Release \
+         -DCMAKE_C_COMPILER=gcc-7 \
+         -DCMAKE_CXX_COMPILER=g++-7 \
+         -DLLVM_ENABLE_ASSERTIONS=ON \
+         -DCMAKE_C_FLAGS=-DLLVM_ENABLE_DUMP \
+         -DCMAKE_CXX_FLAGS=-DLLVM_ENABLE_DUMP \
+         -DLLVM_TARGETS_TO_BUILD="X86" \
+         -G "Unix Makefiles" \
+         ../
+
+make -j12
+```
+
+* Build Rewriter
+  * Assuming the previous `build-release-dump-gcc7` is at `~/workspace/llvm-official/`
+  * If you really use this path, you don't have to modify the variables inside `ThesisTools/PassInstrument/Makefile`
+  * Otherwise, modify the variables: `LLVM_SRC_PATH` and `LLVM_BUILD_PATH`
+  * The following instructions assumes that you have the variables properly set.
+```
+make
+```
+
+[How to use] Rewriter to insert instrumentation code:
+---------------------------------------------------------
+* We use `libtooling` to release the burden to find the headers, but you need to pass them as arguments.
+* `Clang-tidy` is part of our `Passes Rewriter`, you must build your own `Clang-tidy` as the above guide.
+* __The `Rewritter` assume the passes inside `llvm-thesis` are not instrumented.__
+* The proper environment variables must be set properly.
+  * Refer to `llvm-thesis/ThesisTools/PassInstrument/script/Var.sh`
+* `llvm-thesis/ThesisTools/PassInstrument/script/SystemHeaders` may different from operating systems and your packages.
+  * `llvm-thesis/ThesisTools/PassInstrument/script/README.md` has some tricks for you to check.
+```
+cd /path/to/llvm-thesis/ThesisTools/PassInstrument/
+./ScriptDriver.sh
+# You will see options, read them!
+# In my cases, Clang-tidy 5.0.1 has bugs, and I already reported to the community.
+# I am not sure when will it be fixed, and we may need to fix it manually.
+# Normally, choose the options with the order: "1" --> "2" --> "3"
+# However, after option "1", it is our turn to fix the bug!
+# "Database/TidiedPasses/NewGVN.cpp line 2099 and 2100"
+# The "semicolon" is misplaced.
+
+# If you want to debug your "Rewritter", option "1" doesn't need to be executed multiple times.
+```
+
+How to build LLVM/Clang for training framework:
+---------------------------------------------------------
+
+
+How to prepare "PyActor" for training framework:
+---------------------------------------------------------
+
+
+How to setup network connection for training framework:
+---------------------------------------------------------
+
+
+How to test network connection with fakeEnv.py
+---------------------------------------------------------
+
+
