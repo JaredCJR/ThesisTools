@@ -3,12 +3,12 @@ This ThesisTools must cooperate with the corresponding branch of LLVM and Clang
 
 ThesisTools directory tree
 -----------------------------------------------------
-* The following directories are the `active` for out projects.
+* The following directories are the `active` for our projects.
   * PassInstrument
-    * training
-    * inference
+    * `training`
+    * `inference`
   * RandomSelect
-    * LLVMTestSuiteScrip
+    * `LLVMTestSuiteScript`
 * The following directories are legacy, you can ignore or remove them. They are no longer maintained.
   * RandomSelect
     * ExternalBenchmarkScript
