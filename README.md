@@ -1,6 +1,19 @@
 This ThesisTools must cooperate with the corresponding branch of LLVM and Clang
 ==================================================================================
 
+ThesisTools directory tree
+-----------------------------------------------------
+* The following directories are the `active` for out projects.
+  * PassInstrument
+    * training
+    * inference
+  * RandomSelect
+    * LLVMTestSuiteScrip
+* The following directories are legacy, you can ignore or remove them. They are no longer maintained.
+  * RandomSelect
+    * ExternalBenchmarkScript
+  * benchmark
+
 Prerequisite packages
 -----------------------------------------------------
 * OS: Ubuntu 16.04 64 bit
@@ -263,17 +276,91 @@ cd /path/to/llvm-thesis/ThesisTools/PassInstrument/
 
 How to build LLVM/Clang for training framework:
 ---------------------------------------------------------
+ * Our framework based on LLVM/Clang 5.0.1
+```
+git clone https://github.com/JaredCJR/llvm llvm-thesis
+cd llvm-thesis
+git checkout -b PassPrediction-training remotes/origin/PassPrediction-training
 
+git submodule update --init --recursive --remote
+cd ThesisTools
+git checkout master
+git pull
+cd ../
+
+cd tools
+git clone https://github.com/JaredCJR/clang
+cd clang
+git checkout -b PassPrediction-training remotes/origin/PassPrediction-training
+
+# We use multiple clang with cmake-defined var, the following procedure only show for "one" worker.
+# In my cases, Intel i7-8700K has 6 cores with 12 threads, I apply core 0 as the TCP server and core 1~5 as the "workers".
+# Therefore, I need to build 5 clang with different "WorkerID"
+# The following example is for "worker1"
+# Notice the  variable in cmake command "DAEMON_WORKER_ID"
+
+mkdir build-release-gcc7-worker1
+cd build-release-gcc7-worker1
+
+cmake -DCMAKE_BUILD_TYPE=Release \
+         -DCMAKE_C_COMPILER=gcc-7 \
+         -DCMAKE_CXX_COMPILER=g++-7 \
+         -DLLVM_ENABLE_ASSERTIONS=ON \
+         -DCMAKE_C_FLAGS=-DLLVM_ENABLE_DUMP \
+         -DCMAKE_CXX_FLAGS=-DLLVM_ENABLE_DUMP \
+         -DLLVM_TARGETS_TO_BUILD="X86" \
+         -DDAEMON_WORKER_ID="1" \
+         -G "Unix Makefiles" \
+         ../
+
+make -j12
+# Repeat the above for all your workers with different WorkerID
+```
 
 How to prepare "PyActor" for training framework:
 ---------------------------------------------------------
-
+```
+cd llvm-thesis/ThesisTools/PassInstrument/PyActor
+cd WithStdin
+make
+cd ../WithoutStdin
+make
+```
 
 How to setup network connection for training framework:
 ---------------------------------------------------------
-
+```
+cd llvm-thesis/ThesisTools/PassInstrument/training
+# Every boot should execute "once" to setup the Iptables properly.
+# Execute it multiple times may cause the rules self-conflict to drop the packets.
+sudo ./setupConnection.py
+# There are examples show on the shell, read it !
+# The format is :
+# [ip], [port start number], [how many workers for this IP with the starting port number]
+```
 
 How to test network connection with fakeEnv.py
 ---------------------------------------------------------
+* Assuming there are two computers
+  * System A
+    * Serve the fakeEnv.py to hire "workers"
+  * System B
+    * Serve the clang workers
+    * In my cases,
+      * i7-8700k: core 0 as the server, core 1~5 as the workers
+* All computers/systems must setup with the `setupConnection.py` with the same configuration.
 
+* On System B(This must be set first)
+```
+cd llvm-thesis/ThesisTools/PassInstrument/training
+./DaemonStart.sh all
+# If you encounter failure, restart the daemon with same command "multiple times".
+# Sometimes, it just the previous workers need time to finish its previous work.
+```
 
+* On System A
+```
+cd llvm-thesis/ThesisTools/PassInstrument/training
+./fakeEnv.py
+# Then, you should see results from different remote workers.
+```
