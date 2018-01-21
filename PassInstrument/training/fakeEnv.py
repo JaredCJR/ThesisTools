@@ -152,25 +152,28 @@ class Worker():
         tcp = TcpClient()
         # get remote-worker
         workerID = self.hireRemoteWorker(SharedWorkerDict, WorkerLock)
-        start = time.time()
+        runStart = time.perf_counter()
         # tell env-daemon to build, verify and run
         msg = "target @ {} @ {}".format(target, passes)
         tcp.Send(WorkerID=workerID, Msg=msg)
-        retStr = tcp.Receive(WorkerID=workerID).strip()
-        end = time.time()
-        print("{} : {} : {} : RemoteWorker={}".format(target, retStr.strip(), end - start, workerID))
-        if retStr == "Success":
+        retStatus = tcp.Receive(WorkerID=workerID).strip()
+        runEnd = time.perf_counter()
+        runTime = runEnd - runStart
+        if retStatus == "Success":
+            sendStart = time.perf_counter()
             # get profiled data
             tcp.Send(WorkerID=workerID, Msg="profiled @ {}".format(target))
-            retStr = tcp.Receive(WorkerID=workerID)
-            print(retStr.strip())
+            retProfiled = tcp.Receive(WorkerID=workerID).strip()
             # get features
             tcp.Send(WorkerID=workerID, Msg="features")
-            retStr = tcp.Receive(WorkerID=workerID)
-            #print(retStr.strip())
+            retFeatures = tcp.Receive(WorkerID=workerID).strip()
+            sendEnd = time.perf_counter()
+            sendTime = sendEnd - sendStart
         self.freeRemoteWorker(SharedWorkerDict, WorkerLock, workerID)
-        print("----------------------------------------")
-        return retStr
+        printMsg = "WorkerID: {}; Target: {}; Status: {}; \nProfileSize: {}; FeatureSize: {}; \nRun-Time: {}; Send-Time: {};".format(workerID, target, retStatus, len(retProfiled), len(retFeatures), runTime, sendTime)
+        printMsg = printMsg + "\n--------------------------------------\n"
+        print(printMsg)
+        return retStatus
 
     def EnvWorker(self, SharedWorkerDict, WorkerLock):
         prog = Programs()
@@ -192,7 +195,6 @@ class Worker():
                 Try again until get meaningful messages.
                 '''
                 retStatus = self.EnvDoJob(SharedWorkerDict, WorkerLock, target, passes)
-            print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 
 if __name__ == '__main__':
     global maxWorkerNum
