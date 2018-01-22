@@ -62,6 +62,8 @@ class ConnectInfoInit():
         print("1, 127.0.0.1, 56021")
         print("2, 140.111.192.1, 5566")
         print("3, 140.111.192.1, 5567")
+        print("The format is :")
+        print("[ip], [port start number], [how many workers for this IP with the starting port number]")
         print("\nNow, it is your turn:")
 
         inputList = []

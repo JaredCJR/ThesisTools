@@ -25,7 +25,7 @@ using namespace clang;
 using namespace clang::ast_matchers;
 using namespace clang::driver;
 using namespace clang::tooling;
-#define PassPeeper_pre  "PassPrediction::PassPeeper(__FILE__, "
+#define PassPeeper_pre  "PassPrediction::PassPeeper("
 #define PassPeeper_post ");"
 
 static llvm::cl::OptionCategory MatcherSampleCategory("Pass Rewriter For Instrumentation");
