@@ -29,7 +29,12 @@ class Programs():
         with open(loc, "r") as stdFile:
             for line in stdFile:
                 LineList = line.split(";")
-                name = LineList[0].strip().split(".")[-1]
+                '''
+                In the newer version of LitDriver, we change the benchmakr naming strategies
+                From "." to "/"
+                '''
+                #name = LineList[0].strip().split(".")[-1]
+                name = LineList[0].strip().split("/")[-1]
                 if name not in UnwantedTargets:
                     retDict[name] = [LineList[1].split("|")[1].strip(),
                             LineList[2].split("|")[1].strip()]

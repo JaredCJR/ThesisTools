@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+"""
+This daemon is for "random benchmark-level".
+Based on the function usage(from std cycles) to decide whether this function need to apply random set or best set from the "random function-level".
+"""
 import os
 import sys
 import atexit

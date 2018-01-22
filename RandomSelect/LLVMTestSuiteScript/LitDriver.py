@@ -409,7 +409,7 @@ class CommonDriver:
         self.KillProcess(self.PID)
         sys.exit()
 
-    def run(self, Mode, round=100):
+    def run(self, Mode, round=200):
         self.CleanAllResults()
         mail = sv.EmailService()
         ts = sv.TimeService()

@@ -153,7 +153,12 @@ class BenchmarkNameService:
                 break
         if ret.startswith("./"):
             ret = ret[len("./"):]
-        return self.ReplaceAWithB(ret, '/', '.')
+        '''
+        In the newer version, we change the naming strategies
+        Therefore, the following line in comment out.
+        '''
+        #return self.ReplaceAWithB(ret, '/', '.')
+        return ret
 
 
 
