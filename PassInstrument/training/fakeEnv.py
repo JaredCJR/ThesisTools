@@ -23,14 +23,15 @@ class Programs():
         loc = os.getenv("LLVM_THESIS_Random_LLVMTestSuiteScript", "Error")
         if loc == "Error":
             sys.exit(1)
-        # FIXME: if we re-measure the std-cycles, we should use the newer record.
-        loc = loc + "/GraphGen/output/MeasurableStdBenchmarkMeanAndSigma"
+        # Due to Intel Meltdown
+        # we re-measure the std-cycles, we should use the newer record.
+        loc = loc + "/GraphGen/output/newMeasurableStdBenchmarkMeanAndSigma"
         retDict = {}
         with open(loc, "r") as stdFile:
             for line in stdFile:
                 LineList = line.split(";")
                 '''
-                In the newer version of LitDriver, we change the benchmakr naming strategies
+                In the newer version of LitDriver, we change the benchmark naming strategies
                 From "." to "/"
                 '''
                 #name = LineList[0].strip().split(".")[-1]
@@ -164,18 +165,33 @@ class Worker():
         retStatus = tcp.Receive(WorkerID=workerID).strip()
         runEnd = time.perf_counter()
         runTime = runEnd - runStart
+        retProfiled = None
+        retFeatures = None
         if retStatus == "Success":
             sendStart = time.perf_counter()
             # get profiled data
-            tcp.Send(WorkerID=workerID, Msg="profiled @ {}".format(target))
-            retProfiled = tcp.Receive(WorkerID=workerID).strip()
+            gotProfiled = False
+            while retProfiled is None:
+                if gotProfiled:
+                    print("Retry to get retProfiled")
+                tcp.Send(WorkerID=workerID, Msg="profiled @ {}".format(target))
+                retProfiled = tcp.Receive(WorkerID=workerID).strip()
+                gotProfiled = True
             # get features
-            tcp.Send(WorkerID=workerID, Msg="features")
-            retFeatures = tcp.Receive(WorkerID=workerID).strip()
+            gotFeatures = False
+            while retFeatures is None:
+                if gotFeatures:
+                    print("Retry to get retFeatures")
+                tcp.Send(WorkerID=workerID, Msg="features")
+                retFeatures = tcp.Receive(WorkerID=workerID).strip()
+                gotFeatures = True
             sendEnd = time.perf_counter()
             sendTime = sendEnd - sendStart
+            printMsg = "WorkerID: {}; Target: {}; Status: {}; \nProfileSize: {}; FeatureSize: {}; \nRun-Time: {}; Send-Time: {};".format(workerID, target, retStatus, len(retProfiled), len(retFeatures), runTime, sendTime)
+        else:
+            printMsg = "RunCmd may failed.\nWorkerID: {}; Target: {}; Status: {}; \nRun-Time: {};".format(workerID, target, retStatus, runTime)
+
         self.freeRemoteWorker(SharedWorkerDict, WorkerLock, workerID)
-        printMsg = "WorkerID: {}; Target: {}; Status: {}; \nProfileSize: {}; FeatureSize: {}; \nRun-Time: {}; Send-Time: {};".format(workerID, target, retStatus, len(retProfiled), len(retFeatures), runTime, sendTime)
         printMsg = printMsg + "\n--------------------------------------\n"
         print(printMsg)
         return retStatus
