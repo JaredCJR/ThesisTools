@@ -1,270 +1,270 @@
-Misc.ffbench; norm-best-speedup-cpu-cycles | 897.6567649284649; norm-worst-speedup-cpu-cycles | 0.9534317230090513; best-PassSet | 33 9 27 30 6 23 25 32 29 21 14 2 16 31 34 28 8 19 1
-SIBsim4.SIBsim4; norm-best-speedup-cpu-cycles | 2.970158421936062; norm-worst-speedup-cpu-cycles | 0.92205941263574; best-PassSet | 27 28 23 17 32 7 10 3 18 20 29
-Misc.flops-6; norm-best-speedup-cpu-cycles | 1.3501525902910276; norm-worst-speedup-cpu-cycles | 0.9951456088777787; best-PassSet | 2 29 32 9 16 11 21 4 30 27 5 3 23 10 7 22 26 13 14
-Stanford.Puzzle; norm-best-speedup-cpu-cycles | 1.2741143664306407; norm-worst-speedup-cpu-cycles | 0.9618996288936961; best-PassSet | 15 33 29 7 6 21 27 17 22 14 18
-Misc.flops-8; norm-best-speedup-cpu-cycles | 1.2458414939587907; norm-worst-speedup-cpu-cycles | 1.0018927050843456; best-PassSet | 22 4 34 25 29 14 28 18 15 31 12 21 8 24 30 7 5 32 10
-Ptrdist.ks.ks; norm-best-speedup-cpu-cycles | 1.2100101205784564; norm-worst-speedup-cpu-cycles | 0.9877613623681333; best-PassSet | 33 30 27 19
-Shootout-C++.Shootout-C++-ackermann; norm-best-speedup-cpu-cycles | 1.2012336806938075; norm-worst-speedup-cpu-cycles | 0.9504115631206067; best-PassSet | 7 5 29 2 27 23 1 15 14 3 19 20 32 10 6 30 25 4 17
-Misc.himenobmtxpa; norm-best-speedup-cpu-cycles | 1.1633190424286812; norm-worst-speedup-cpu-cycles | 0.6484258515745166; best-PassSet | 34 2 13 9 23 3 21 33 17 14 25 11 12 7 31 1 15 19 16
-Misc.perlin; norm-best-speedup-cpu-cycles | 1.1487177513205145; norm-worst-speedup-cpu-cycles | 0.9611614314947529; best-PassSet | 12 28 3 19 10 4 5 15 11 18 16 21 2 14 22 30 33 7 8
-Polybench.linear-algebra.solvers.dynprog.dynprog; norm-best-speedup-cpu-cycles | 1.1374712752031442; norm-worst-speedup-cpu-cycles | 0.9938874332024623; best-PassSet | 34 2 13 9 23 3 21 33 17 14 25 11 12 7 31 1 15 19 16
-Prolangs-C++.family.family; norm-best-speedup-cpu-cycles | 1.128695866136398; norm-worst-speedup-cpu-cycles | 0.9043948217534992; best-PassSet | 26 34 13 28 8 30
-Prolangs-C++.deriv1.deriv1; norm-best-speedup-cpu-cycles | 1.1253878837773548; norm-worst-speedup-cpu-cycles | 0.9746635409940307; best-PassSet | 25 27 24 16
-FreeBench.pifft.pifft; norm-best-speedup-cpu-cycles | 1.123308929850491; norm-worst-speedup-cpu-cycles | 0.9808163402363451; best-PassSet | 8 17 28 26
-Ptrdist.anagram.anagram; norm-best-speedup-cpu-cycles | 1.1169928703258718; norm-worst-speedup-cpu-cycles | 0.9813375449338212; best-PassSet | 33 30 27 19
-mediabench.adpcm.rawdaudio.rawdaudio; norm-best-speedup-cpu-cycles | 1.1147656779663815; norm-worst-speedup-cpu-cycles | 1.0287635581180565; best-PassSet | 8 17 28 26
-ASCI_Purple.SMG2000.smg2000; norm-best-speedup-cpu-cycles | 1.1147614988208254; norm-worst-speedup-cpu-cycles | 0.6994057751783049; best-PassSet | 25 29 5 15 14 31
-Misc-C++.mandel-text; norm-best-speedup-cpu-cycles | 1.1107615797483548; norm-worst-speedup-cpu-cycles | 0.9943505716259678; best-PassSet | 4 25 30 1 17 15 2 12 29 16 5 14 3 18 10 9 22 23 32
-MiBench.security-sha.security-sha; norm-best-speedup-cpu-cycles | 1.0964712757013286; norm-worst-speedup-cpu-cycles | 0.9827962386408939; best-PassSet | 26 31 27 11 28 24
-Olden.tsp.tsp; norm-best-speedup-cpu-cycles | 1.0960089936866197; norm-worst-speedup-cpu-cycles | 0.9695217147253826; best-PassSet | 2 8 16 29
-Olden.bisort.bisort; norm-best-speedup-cpu-cycles | 1.0954339905163952; norm-worst-speedup-cpu-cycles | 0.8092727863284445; best-PassSet | 26 34 13 28 8 30
-Prolangs-C.archie-client.archie; norm-best-speedup-cpu-cycles | 1.0931102838250273; norm-worst-speedup-cpu-cycles | 0.974845648402646; best-PassSet | 18 28 3 19
-BitBench.drop3.drop3; norm-best-speedup-cpu-cycles | 1.0913378710993464; norm-worst-speedup-cpu-cycles | 0.9764942955395581; best-PassSet | 2 4 21 17
-Prolangs-C.fixoutput.fixoutput; norm-best-speedup-cpu-cycles | 1.0898565756639984; norm-worst-speedup-cpu-cycles | 0.9872789837829923; best-PassSet | 26 10 16 17
-Prolangs-C.football.football; norm-best-speedup-cpu-cycles | 1.0895409700108754; norm-worst-speedup-cpu-cycles | 0.9393518315531018; best-PassSet | 31 20 19 17 25 28
-Misc.pi; norm-best-speedup-cpu-cycles | 1.0889062065526172; norm-worst-speedup-cpu-cycles | 0.9927560546857143; best-PassSet | 12 28 3 19 10 4 5 15 11 18 16 21 2 14 22 30 33 7 8
-Prolangs-C.unix-smail.unix-smail; norm-best-speedup-cpu-cycles | 1.0873164160492463; norm-worst-speedup-cpu-cycles | 1.0000009589180336; best-PassSet | 26 34 13 28 8 30
-Burg.burg; norm-best-speedup-cpu-cycles | 1.0853428177154745; norm-worst-speedup-cpu-cycles | 0.9715949295767197; best-PassSet | 11 27 9 26 32 21 23 29 2 13 4
-hexxagon.hexxagon; norm-best-speedup-cpu-cycles | 1.08487968617845; norm-worst-speedup-cpu-cycles | 0.9643245959859665; best-PassSet | 8 18 25 11 22 5 16 32 3 6 31
-Prolangs-C++.objects.objects; norm-best-speedup-cpu-cycles | 1.0844098939185403; norm-worst-speedup-cpu-cycles | 0.9652861849379505; best-PassSet | 19 1 30 18
-Adobe-C++.functionobjects; norm-best-speedup-cpu-cycles | 1.0839545757561313; norm-worst-speedup-cpu-cycles | 1.0043060627383162; best-PassSet | 34 19 16 26 12 3 9 24 14 7 20 2 21 28 22 13 33 29 8
-Prolangs-C++.fsm.fsm; norm-best-speedup-cpu-cycles | 1.0817942063201968; norm-worst-speedup-cpu-cycles | 0.9511553757305391; best-PassSet | 24 30 31 32
-TSVC.StatementReordering-dbl.StatementReordering-dbl; norm-best-speedup-cpu-cycles | 1.0808567953493375; norm-worst-speedup-cpu-cycles | 0.9817404150114987; best-PassSet | 11 16 5 4
-Prolangs-C.allroots.allroots; norm-best-speedup-cpu-cycles | 1.0797307966467282; norm-worst-speedup-cpu-cycles | 0.9614703402405189; best-PassSet | 13 12 29 30 23 4
-TSVC.LoopRestructuring-dbl.LoopRestructuring-dbl; norm-best-speedup-cpu-cycles | 1.074791197508235; norm-worst-speedup-cpu-cycles | 1.0126399222680298; best-PassSet | 25 29 7 16
-Polybench.linear-algebra.solvers.gramschmidt.gramschmidt; norm-best-speedup-cpu-cycles | 1.0730481454431202; norm-worst-speedup-cpu-cycles | 1.0019361830002482; best-PassSet | 8 23 32 25 34 28 3 15 18 31 13
-Prolangs-C.loader.loader; norm-best-speedup-cpu-cycles | 1.0701299673713645; norm-worst-speedup-cpu-cycles | 0.9532266277433679; best-PassSet | 26 34 13 28 8 30
-Prolangs-C++.deriv2.deriv2; norm-best-speedup-cpu-cycles | 1.0668509631070957; norm-worst-speedup-cpu-cycles | 0.9430201245907881; best-PassSet | 26 16 15 4
-mediabench.g721.g721encode.encode; norm-best-speedup-cpu-cycles | 1.0648977698933657; norm-worst-speedup-cpu-cycles | 0.973038668418783; best-PassSet | 23 13 9 11
-Prolangs-C.compiler.compiler; norm-best-speedup-cpu-cycles | 1.0647516389487466; norm-worst-speedup-cpu-cycles | 0.9689738084646534; best-PassSet | 14 22 19 23 29 4
-Ptrdist.yacr2.yacr2; norm-best-speedup-cpu-cycles | 1.0647200441924656; norm-worst-speedup-cpu-cycles | 0.9959686944203733; best-PassSet | 25 29 7 16
-TSVC.ControlFlow-dbl.ControlFlow-dbl; norm-best-speedup-cpu-cycles | 1.0639086721484678; norm-worst-speedup-cpu-cycles | 1.0068640765797794; best-PassSet | 27 17 25 23
-Shootout-C++.Shootout-C++-hash2; norm-best-speedup-cpu-cycles | 1.0627467469659966; norm-worst-speedup-cpu-cycles | 0.9296554401140974; best-PassSet | 2 6 4 3 8 25 22 28 30 21 18 31 32 12 24 9 16 20 11
-DOE-ProxyApps-C.XSBench.XSBench; norm-best-speedup-cpu-cycles | 1.062725026240749; norm-worst-speedup-cpu-cycles | 0.8882576304291502; best-PassSet | 24 34 1 12 23 14
-Olden.power.power; norm-best-speedup-cpu-cycles | 1.0623951134780245; norm-worst-speedup-cpu-cycles | 0.9634834922066762; best-PassSet | 26 31 27 11 28 24
-McCat.15-trie.trie; norm-best-speedup-cpu-cycles | 1.0620899020331496; norm-worst-speedup-cpu-cycles | 0.9043907034438501; best-PassSet | 13 30 11 14
-Misc.mandel-2; norm-best-speedup-cpu-cycles | 1.0618881638296624; norm-worst-speedup-cpu-cycles | 0.9547499870553705; best-PassSet | 7 11 4 30 16 24 13 5 27 20 14 3 6 31 9 33 25 10 26
-PAQ8p.paq8p; norm-best-speedup-cpu-cycles | 1.0601806463387862; norm-worst-speedup-cpu-cycles | 0.9748590941426314; best-PassSet | 29 26 17 19
-Bullet.bullet; norm-best-speedup-cpu-cycles | 1.0600236797670632; norm-worst-speedup-cpu-cycles | 0.8754910336191711; best-PassSet | 8 17 28 26
-7zip.7zip-benchmark; norm-best-speedup-cpu-cycles | 1.0595164089372295; norm-worst-speedup-cpu-cycles | 0.9874449863710821; best-PassSet | 33 8 17 32
-Prolangs-C.TimberWolfMC.timberwolfmc; norm-best-speedup-cpu-cycles | 1.0593431905421191; norm-worst-speedup-cpu-cycles | 0.9829774689087205; best-PassSet | 25 13 12 27 5 33
-lemon.lemon; norm-best-speedup-cpu-cycles | 1.0589256331577654; norm-worst-speedup-cpu-cycles | 0.9579356036048947; best-PassSet | 12 21 4 28 3 15 9 20 33 30 18
-lua.lua; norm-best-speedup-cpu-cycles | 1.0577528395293105; norm-worst-speedup-cpu-cycles | 0.9425705844057701; best-PassSet | 27 28 23 17 32 7 10 3 18 20 29
-Prolangs-C.cdecl.cdecl; norm-best-speedup-cpu-cycles | 1.0573411333760945; norm-worst-speedup-cpu-cycles | 0.9388592384757316; best-PassSet | 29 26 17 19
-FreeBench.analyzer.analyzer; norm-best-speedup-cpu-cycles | 1.0564873332274254; norm-worst-speedup-cpu-cycles | 0.9562734307922888; best-PassSet | 33 8 17 32
-TSVC.Expansion-flt.Expansion-flt; norm-best-speedup-cpu-cycles | 1.0563501425996709; norm-worst-speedup-cpu-cycles | 0.9995522947537925; best-PassSet | 25 6 14 11
-MiBench.security-blowfish.security-blowfish; norm-best-speedup-cpu-cycles | 1.056233899900592; norm-worst-speedup-cpu-cycles | 1.0058548216260148; best-PassSet | 26 10 16 17
-NPB-serial.is.is; norm-best-speedup-cpu-cycles | 1.0561550247286284; norm-worst-speedup-cpu-cycles | 0.9514693588305013; best-PassSet | 2 11 10 1
-Shootout-C++.Shootout-C++-strcat; norm-best-speedup-cpu-cycles | 1.0560122298130274; norm-worst-speedup-cpu-cycles | 0.9744985629857513; best-PassSet | 11 10 29 9 31 2 13 16 23 7 22 15 6 28 14 4 5 34 19
-Prolangs-C++.ocean.ocean; norm-best-speedup-cpu-cycles | 1.0559122775659049; norm-worst-speedup-cpu-cycles | 0.9444245592617905; best-PassSet | 24 30 31 32
-BenchmarkGame.partialsums; norm-best-speedup-cpu-cycles | 1.0556977221550354; norm-worst-speedup-cpu-cycles | 0.9838478959787484; best-PassSet | 3 15 2 10 4 33 24 27 25 9 26 21 20 12 6 19 29 18 23
-TSVC.ControlFlow-flt.ControlFlow-flt; norm-best-speedup-cpu-cycles | 1.0545831120028522; norm-worst-speedup-cpu-cycles | 1.0115550513542508; best-PassSet | 2 16 27 10
-Prolangs-C++.garage.garage; norm-best-speedup-cpu-cycles | 1.0543658756407757; norm-worst-speedup-cpu-cycles | 0.9023877780884709; best-PassSet | 25 14 3 6
-Prolangs-C.simulator.simulator; norm-best-speedup-cpu-cycles | 1.0543260773889287; norm-worst-speedup-cpu-cycles | 0.965736593055874; best-PassSet | 34 16 4 3
-aha.aha; norm-best-speedup-cpu-cycles | 1.0535792840088833; norm-worst-speedup-cpu-cycles | 0.9695571401279279; best-PassSet | 32 33 9 14 24 12 34 27 10 21 15
-MiBench.telecomm-gsm.telecomm-gsm; norm-best-speedup-cpu-cycles | 1.052656014824321; norm-worst-speedup-cpu-cycles | 0.9673461761097877; best-PassSet | 25 14 3 6
-Prolangs-C++.office.office; norm-best-speedup-cpu-cycles | 1.052162240179311; norm-worst-speedup-cpu-cycles | 0.9262413726954062; best-PassSet | 8 17 28 26
-Misc.salsa20; norm-best-speedup-cpu-cycles | 1.052066223553988; norm-worst-speedup-cpu-cycles | 0.9549233301679484; best-PassSet | 15 30 21 29 1 28 20 19 17 11 33 6 10 24 23 34 14 25 8
-Misc-C++.Large.ray; norm-best-speedup-cpu-cycles | 1.0516531567541398; norm-worst-speedup-cpu-cycles | 0.9249103935924223; best-PassSet | 22 32 15 23 30 12 27 16 17 34 29 4 2 13 10 11 1 18 8
-Polybench.stencils.jacobi-1d-imper.jacobi-1d-imper; norm-best-speedup-cpu-cycles | 1.0516046562549932; norm-worst-speedup-cpu-cycles | 1.0316969523179353; best-PassSet | 31 2 33 10 12 11 4 6 29 27 34
-ASC_Sequoia.AMGmk.AMGmk; norm-best-speedup-cpu-cycles | 1.051312062181804; norm-worst-speedup-cpu-cycles | 0.6792454815937761; best-PassSet | 26 34 13 28 8 30
-Misc.oourafft; norm-best-speedup-cpu-cycles | 1.0508463407845985; norm-worst-speedup-cpu-cycles | 0.988725168832774; best-PassSet | 2 29 32 9 16 11 21 4 30 27 5 3 23 10 7 22 26 13 14
-Prolangs-C++.vcirc.vcirc; norm-best-speedup-cpu-cycles | 1.0501686402733592; norm-worst-speedup-cpu-cycles | 0.9244574818080158; best-PassSet | 30 14 9 4
-Misc.flops-1; norm-best-speedup-cpu-cycles | 1.0497169673220865; norm-worst-speedup-cpu-cycles | 1.0009913972787943; best-PassSet | 31 15 30 9 18 22 29 27 10 21 13 32 23 11 1 34 12 20 24
-d.make_dparser; norm-best-speedup-cpu-cycles | 1.0487332306699686; norm-worst-speedup-cpu-cycles | 0.918844636225812; best-PassSet | 18 2 11 4 29 30 31
-Linpack.linpack-pc; norm-best-speedup-cpu-cycles | 1.0476796895521863; norm-worst-speedup-cpu-cycles | 0.9439364251155149; best-PassSet | 30 24 26 18 14 32 13 19 31 28 20 9 3 34 12 4 10 8 22
-sim.sim; norm-best-speedup-cpu-cycles | 1.0475561527725692; norm-worst-speedup-cpu-cycles | 0.9239206105703954; best-PassSet | 13 10 14 17
-Shootout-C++.Shootout-C++-sieve; norm-best-speedup-cpu-cycles | 1.0473496072125448; norm-worst-speedup-cpu-cycles | 0.9951560854136732; best-PassSet | 11 3 9 24 20 4 19 16 12 6 33 7 10 15 25 13 17 26 34
-JM.ldecod.ldecod; norm-best-speedup-cpu-cycles | 1.0470584300486967; norm-worst-speedup-cpu-cycles | 0.9889408128635422; best-PassSet | 13 16 24 9 3 20 18
-mediabench.gsm.toast.toast; norm-best-speedup-cpu-cycles | 1.046508975355129; norm-worst-speedup-cpu-cycles | 0.9352019649219352; best-PassSet | 18 11 1 5
-siod.siod; norm-best-speedup-cpu-cycles | 1.0463622672877146; norm-worst-speedup-cpu-cycles | 0.9016324627201145; best-PassSet | 18 34 15 2 9 12 25 30 8 17 33
-Shootout-C++.Shootout-C++-hash; norm-best-speedup-cpu-cycles | 1.0458349883966622; norm-worst-speedup-cpu-cycles | 0.9571762516255696; best-PassSet | 12 26 33 25 8 29 11 24 6 31 10
-Polybench.linear-algebra.kernels.gesummv.gesummv; norm-best-speedup-cpu-cycles | 1.0453474939540792; norm-worst-speedup-cpu-cycles | 0.998420771049234; best-PassSet | 33 9 27 30 6 23 25 32 29 21 14 2 16 31 34 28 8 19 1
-BenchmarkGame.nsieve-bits; norm-best-speedup-cpu-cycles | 1.044819397086185; norm-worst-speedup-cpu-cycles | 0.9844287699023617; best-PassSet | 4 10 34 23 11 26 13 5 14 1 2
-Prolangs-C++.shapes.shapes; norm-best-speedup-cpu-cycles | 1.0443129978569003; norm-worst-speedup-cpu-cycles | 0.9153926535855836; best-PassSet | 8 29 31 16
-FreeBench.pcompress2.pcompress2; norm-best-speedup-cpu-cycles | 1.0439814171093158; norm-worst-speedup-cpu-cycles | 1.012926799250767; best-PassSet | 34 22 1 27
-mediabench.mpeg2.mpeg2dec.mpeg2decode; norm-best-speedup-cpu-cycles | 1.0435005327371567; norm-worst-speedup-cpu-cycles | 1.023974917742291; best-PassSet | 16 7 26 21 1 20
-MiBench.consumer-jpeg.consumer-jpeg; norm-best-speedup-cpu-cycles | 1.0430707211597383; norm-worst-speedup-cpu-cycles | 0.9658227677093817; best-PassSet | 30 28 17 9
-MiBench.consumer-typeset.consumer-typeset; norm-best-speedup-cpu-cycles | 1.0428801614874768; norm-worst-speedup-cpu-cycles | 0.9074956224444213; best-PassSet | 25 13 12 27 5 33
-VersaBench.beamformer.beamformer; norm-best-speedup-cpu-cycles | 1.0427457595709426; norm-worst-speedup-cpu-cycles | 0.9817651214543486; best-PassSet | 25 14 3 6
-Stanford.IntMM; norm-best-speedup-cpu-cycles | 1.0411784121402872; norm-worst-speedup-cpu-cycles | 1.0232566510819645; best-PassSet | 14 31 16 10 28 19 13 30 24 12 11 15 4 17 26 6 34 32 27
-treecc.treecc; norm-best-speedup-cpu-cycles | 1.0411628102011965; norm-worst-speedup-cpu-cycles | 0.9613429931294255; best-PassSet | 12 21 5 2 3 15 27 14 11 9 16
-Misc-C++.bigfib; norm-best-speedup-cpu-cycles | 1.0408842335555122; norm-worst-speedup-cpu-cycles | 1.0209606860069045; best-PassSet | 31 15 30 9 18 22 29 27 10 21 13 32 23 11 1 34 12 20 24
-MiBench.office-ispell.office-ispell; norm-best-speedup-cpu-cycles | 1.0398687279453758; norm-worst-speedup-cpu-cycles | 0.9835890467792691; best-PassSet | 32 18 20 1
-SmallPT.smallpt; norm-best-speedup-cpu-cycles | 1.039557943107467; norm-worst-speedup-cpu-cycles | 0.9532697319332831; best-PassSet | 12 16 14 30 34 22 2 19 23 9 29 13 6 3 28 15 20 8 31
-Stanford.Treesort; norm-best-speedup-cpu-cycles | 1.0392681091003284; norm-worst-speedup-cpu-cycles | 1.0034210796785583; best-PassSet | 12 28 3 19 10 4 5 15 11 18 16 21 2 14 22 30 33 7 8
-TSVC.LoopRestructuring-flt.LoopRestructuring-flt; norm-best-speedup-cpu-cycles | 1.038645481461745; norm-worst-speedup-cpu-cycles | 0.9603390046678102; best-PassSet | 16 7 26 21 1 20
-JM.lencod.lencod; norm-best-speedup-cpu-cycles | 1.0386236175092696; norm-worst-speedup-cpu-cycles | 0.900915477046647; best-PassSet | 19 10 21 1 27 4 9
-Polybench.stencils.fdtd-apml.fdtd-apml; norm-best-speedup-cpu-cycles | 1.03737531873285; norm-worst-speedup-cpu-cycles | 0.9718161769515065; best-PassSet | 18 10 4 27 3 19 16 23 2 8 14 29 24 1 17 34 28 25 30
-BitBench.uudecode.uudecode; norm-best-speedup-cpu-cycles | 1.0373198215065509; norm-worst-speedup-cpu-cycles | 1.0056952961875245; best-PassSet | 32 31 20 24
-Ptrdist.bc.bc; norm-best-speedup-cpu-cycles | 1.0364224450296642; norm-worst-speedup-cpu-cycles | 0.9479481293398465; best-PassSet | 4 19 32 10
-Shootout.Shootout-matrix; norm-best-speedup-cpu-cycles | 1.0363769678256527; norm-worst-speedup-cpu-cycles | 0.9455653779089757; best-PassSet | 11 16 18 28 34 14 25 32 33 20 15 5 26 10 24 21 29 4 7
-hbd.hbd; norm-best-speedup-cpu-cycles | 1.036041462995363; norm-worst-speedup-cpu-cycles | 0.9359936263640778; best-PassSet | 28 13 3 12 1 19 23 29 26 17 8
-Misc.richards_benchmark; norm-best-speedup-cpu-cycles | 1.03483269412696; norm-worst-speedup-cpu-cycles | 0.8723167662870444; best-PassSet | 30 21 12 5 24 22 2 20 3 15 9 13 6 27 31 17 4 11 29
-Shootout.Shootout-hash; norm-best-speedup-cpu-cycles | 1.0326781363848105; norm-worst-speedup-cpu-cycles | 0.9296168402271051; best-PassSet | 2 10 25 16 12 13 24 5 7 26 21 34 3 17 27 29 22 11 33
-obsequi.Obsequi; norm-best-speedup-cpu-cycles | 1.0325535425514751; norm-worst-speedup-cpu-cycles | 0.9923116629887111; best-PassSet | 27 28 23 17 32 7 10 3 18 20 29
-Polybench.linear-algebra.kernels.doitgen.doitgen; norm-best-speedup-cpu-cycles | 1.0323871916276508; norm-worst-speedup-cpu-cycles | 0.9898941525340689; best-PassSet | 29 7 27 9 15 3 33 30 16 14 24 2 22 32 4 12 11 18 25
-TSVC.InductionVariable-dbl.InductionVariable-dbl; norm-best-speedup-cpu-cycles | 1.0315195691650092; norm-worst-speedup-cpu-cycles | 0.9814821020557454; best-PassSet | 7 11 33 29
-Shootout.Shootout-lists; norm-best-speedup-cpu-cycles | 1.0310498516549018; norm-worst-speedup-cpu-cycles | 0.9525197223089914; best-PassSet | 23 8 16 15 34 12 20 11 31 30 13 21 6 10 28 17 33 2 5
-ClamAV.clamscan; norm-best-speedup-cpu-cycles | 1.0297913868722297; norm-worst-speedup-cpu-cycles | 0.9231372221790426; best-PassSet | 18 2 11 4 29 30 31
-Prolangs-C.gnugo.gnugo; norm-best-speedup-cpu-cycles | 1.0296579112485666; norm-worst-speedup-cpu-cycles | 0.9612243200467986; best-PassSet | 25 29 5 15 14 31
-TSVC.StatementReordering-flt.StatementReordering-flt; norm-best-speedup-cpu-cycles | 1.0296474325888867; norm-worst-speedup-cpu-cycles | 0.9766574253927967; best-PassSet | 25 6 14 11
-Olden.health.health; norm-best-speedup-cpu-cycles | 1.0293462190319604; norm-worst-speedup-cpu-cycles | 0.9427525909329557; best-PassSet | 24 34 1 12 23 14
-TSVC.Packing-dbl.Packing-dbl; norm-best-speedup-cpu-cycles | 1.0291824861895114; norm-worst-speedup-cpu-cycles | 0.8668798300730817; best-PassSet | 26 34 13 28 8 30
-TSVC.GlobalDataFlow-dbl.GlobalDataFlow-dbl; norm-best-speedup-cpu-cycles | 1.0277697488760387; norm-worst-speedup-cpu-cycles | 0.9638418404379412; best-PassSet | 13 30 11 14
-kimwitu++.kc; norm-best-speedup-cpu-cycles | 1.027541649256575; norm-worst-speedup-cpu-cycles | 0.9636985311877213; best-PassSet | 7 20 12 33 5 2 13 31 8 24 34
-Prolangs-C++.primes.primes; norm-best-speedup-cpu-cycles | 1.0274200739154988; norm-worst-speedup-cpu-cycles | 0.8863820475335181; best-PassSet | 24 34 1 12 23 14
-Olden.voronoi.voronoi; norm-best-speedup-cpu-cycles | 1.0270628280171243; norm-worst-speedup-cpu-cycles | 0.9606534629704064; best-PassSet | 25 29 5 15 14 31
-Prolangs-C.agrep.agrep; norm-best-speedup-cpu-cycles | 1.0270089586282645; norm-worst-speedup-cpu-cycles | 0.9922115441085511; best-PassSet | 16 18 17 26
-TSVC.Packing-flt.Packing-flt; norm-best-speedup-cpu-cycles | 1.0266334220381976; norm-worst-speedup-cpu-cycles | 0.9716054876465904; best-PassSet | 18 11 1 5
-TSVC.IndirectAddressing-dbl.IndirectAddressing-dbl; norm-best-speedup-cpu-cycles | 1.0262748066893395; norm-worst-speedup-cpu-cycles | 0.948578185528986; best-PassSet | 16 18 17 26
-Prolangs-C.assembler.assembler; norm-best-speedup-cpu-cycles | 1.0254082816268666; norm-worst-speedup-cpu-cycles | 0.9376897373465265; best-PassSet | 26 4 5 10
-nbench.nbench; norm-best-speedup-cpu-cycles | 1.0253541166489302; norm-worst-speedup-cpu-cycles | 0.9909919081138117; best-PassSet | 25 29 7 16
-Polybench.linear-algebra.kernels.syr2k.syr2k; norm-best-speedup-cpu-cycles | 1.024999865990305; norm-worst-speedup-cpu-cycles | 1.0021597487096112; best-PassSet | 33 14 27 17 5 15 19 21 4 2 34 1 29 20 30 3 32 18 12
-Polybench.linear-algebra.kernels.syrk.syrk; norm-best-speedup-cpu-cycles | 1.024731250441253; norm-worst-speedup-cpu-cycles | 0.9874552777670274; best-PassSet | 33 14 27 17 5 15 19 21 4 2 34 1 29 20 30 3 32 18 12
-TSVC.Expansion-dbl.Expansion-dbl; norm-best-speedup-cpu-cycles | 1.024584925813252; norm-worst-speedup-cpu-cycles | 0.9411891857739547; best-PassSet | 25 18 33 26
-Olden.bh.bh; norm-best-speedup-cpu-cycles | 1.0240733565274796; norm-worst-speedup-cpu-cycles | 0.9253727001364006; best-PassSet | 24 30 31 32
-Trimaran.netbench-url.netbench-url; norm-best-speedup-cpu-cycles | 1.0238754508714452; norm-worst-speedup-cpu-cycles | 0.8469470734509383; best-PassSet | 26 17 12 27
-Shootout-C++.Shootout-C++-matrix; norm-best-speedup-cpu-cycles | 1.0233183355098086; norm-worst-speedup-cpu-cycles | 0.9364547290928292; best-PassSet | 26 1 17 4 24 10 29 33 18 5 31 19 11 25 15 28 7 13 14
-TSVC.Symbolics-dbl.Symbolics-dbl; norm-best-speedup-cpu-cycles | 1.0232496466977887; norm-worst-speedup-cpu-cycles | 0.9855721023483257; best-PassSet | 34 16 4 3
-Polybench.stencils.seidel-2d.seidel-2d; norm-best-speedup-cpu-cycles | 1.0230891117462952; norm-worst-speedup-cpu-cycles | 1.0025545167960237; best-PassSet | 2 29 32 9 16 11 21 4 30 27 5 3 23 10 7 22 26 13 14
-Misc-C++-EH.spirit; norm-best-speedup-cpu-cycles | 1.0230762446426802; norm-worst-speedup-cpu-cycles | 0.9992134876360028; best-PassSet | 33 14 27 17 5 15 19 21 4 2 34 1 29 20 30 3 32 18 12
-TSVC.NodeSplitting-dbl.NodeSplitting-dbl; norm-best-speedup-cpu-cycles | 1.0228174959721166; norm-worst-speedup-cpu-cycles | 0.9762364554854056; best-PassSet | 13 12 29 30 23 4
-Shootout-C++.Shootout-C++-lists; norm-best-speedup-cpu-cycles | 1.0226586302912233; norm-worst-speedup-cpu-cycles | 0.9400914259681245; best-PassSet | 6 4 8 18 10 32 13 27 16 22 21 30 5 33 24 19 15 14 11
-Prolangs-C++.simul.simul; norm-best-speedup-cpu-cycles | 1.022639750524354; norm-worst-speedup-cpu-cycles | 0.9318862260730403; best-PassSet | 16 18 17 26
-CoyoteBench.almabench; norm-best-speedup-cpu-cycles | 1.0222913306079093; norm-worst-speedup-cpu-cycles | 0.9948316421619813; best-PassSet | 18 13 7 11 34 27 31 24 1 30 3 4 20 9 28 32 33 12 2
-Prolangs-C++.trees.trees; norm-best-speedup-cpu-cycles | 1.0221655332814463; norm-worst-speedup-cpu-cycles | 0.9292711484271666; best-PassSet | 10 12 15 26
-Polybench.linear-algebra.kernels.bicg.bicg; norm-best-speedup-cpu-cycles | 1.0217267071474758; norm-worst-speedup-cpu-cycles | 1.0057724483708175; best-PassSet | 14 25 18 30 27 26 28 13 19 29 6 12 32 10 34 7 4 1 11
-Polybench.medley.reg_detect.reg_detect; norm-best-speedup-cpu-cycles | 1.021315419910623; norm-worst-speedup-cpu-cycles | 0.9571967284024299; best-PassSet | 15 33 29 7 6 21 27 17 22 14 18
-oggenc.oggenc; norm-best-speedup-cpu-cycles | 1.02130370018265; norm-worst-speedup-cpu-cycles | 0.9248430904760356; best-PassSet | 31 28 34 29 6 15 25 17 8 3 19
-CoyoteBench.huffbench; norm-best-speedup-cpu-cycles | 1.0206629709671526; norm-worst-speedup-cpu-cycles | 0.9562550952900968; best-PassSet | 2 29 32 9 16 11 21 4 30 27 5 3 23 10 7 22 26 13 14
-spiff.spiff; norm-best-speedup-cpu-cycles | 1.0203994255089266; norm-worst-speedup-cpu-cycles | 0.931680594666262; best-PassSet | 13 30 18 15 19 26 8 28 11 29 21
-ASC_Sequoia.IRSmk.IRSmk; norm-best-speedup-cpu-cycles | 1.0203064936257051; norm-worst-speedup-cpu-cycles | 0.9263978268143872; best-PassSet | 33 8 17 32
-Shootout.Shootout-strcat; norm-best-speedup-cpu-cycles | 1.0202950632584125; norm-worst-speedup-cpu-cycles | 0.9897439604177999; best-PassSet | 19 34 18 31 3 32 16 12 13 27 23 9 11 7 8 24 30 33 6
-BenchmarkGame.puzzle; norm-best-speedup-cpu-cycles | 1.020223164261253; norm-worst-speedup-cpu-cycles | 0.9879150432342849; best-PassSet | 14 25 18 30 27 26 28 13 19 29 6 12 32 10 34 7 4 1 11
-Adobe-C++.stepanov_vector; norm-best-speedup-cpu-cycles | 1.0201532079024944; norm-worst-speedup-cpu-cycles | 0.991372560505164; best-PassSet | 26 14 33 25 34 28 21 16 8 9 10 6 15 5 11 1 19 22 4
-Olden.perimeter.perimeter; norm-best-speedup-cpu-cycles | 1.0200223336182601; norm-worst-speedup-cpu-cycles | 0.9057487738039967; best-PassSet | 25 13 12 27 5 33
-Shootout.Shootout-ackermann; norm-best-speedup-cpu-cycles | 1.0200134865270272; norm-worst-speedup-cpu-cycles | 0.9990240380684893; best-PassSet | 24 31 18 4 21 29 34 20 8 9 32 22 30 27 3 5 28 13 15
-MallocBench.gs.gs; norm-best-speedup-cpu-cycles | 1.0195690775782076; norm-worst-speedup-cpu-cycles | 0.9102693415361711; best-PassSet | 13 5 16 34
-TSVC.Searching-dbl.Searching-dbl; norm-best-speedup-cpu-cycles | 1.0190779551769649; norm-worst-speedup-cpu-cycles | 0.954905748040405; best-PassSet | 32 18 20 1
-TSVC.GlobalDataFlow-flt.GlobalDataFlow-flt; norm-best-speedup-cpu-cycles | 1.019032570796534; norm-worst-speedup-cpu-cycles | 0.9753154373665376; best-PassSet | 19 1 30 18
-Misc.evalloop; norm-best-speedup-cpu-cycles | 1.019021661884252; norm-worst-speedup-cpu-cycles | 0.67625310678265; best-PassSet | 25 8 21 18 13 20 34 14 10 33 7 29 22 32 9 24 3 11 12
-mediabench.adpcm.rawcaudio.rawcaudio; norm-best-speedup-cpu-cycles | 1.018328200045491; norm-worst-speedup-cpu-cycles | 0.9906202700507093; best-PassSet | 11 24 9 17
-BenchmarkGame.fannkuch; norm-best-speedup-cpu-cycles | 1.0182936926856572; norm-worst-speedup-cpu-cycles | 0.902610952511732; best-PassSet | 14 17 1 15 22 3 20 11 18 16 8 26 19 5 4 21 25 10 28
-MiBench.office-stringsearch.office-stringsearch; norm-best-speedup-cpu-cycles | 1.0181982931068587; norm-worst-speedup-cpu-cycles | 0.9911022274742314; best-PassSet | 13 12 29 30 23 4
-Misc.ReedSolomon; norm-best-speedup-cpu-cycles | 1.0179955575695607; norm-worst-speedup-cpu-cycles | 0.9526974165462502; best-PassSet | 24 32 30 16 8 20 27 4 5 21 26 31 17 33 34 3 29 28 9
-Stanford.Oscar; norm-best-speedup-cpu-cycles | 1.0179525643292253; norm-worst-speedup-cpu-cycles | 1.0092939708721942; best-PassSet | 12 4 18 25 20 9 2 32 5 3 17 33 10 31 28 22 29 34 21
-Trimaran.enc-rc4.enc-rc4; norm-best-speedup-cpu-cycles | 1.0178014346852748; norm-worst-speedup-cpu-cycles | 0.975019717948522; best-PassSet | 7 11 33 29
-Polybench.medley.floyd-warshall.floyd-warshall; norm-best-speedup-cpu-cycles | 1.0177533904922857; norm-worst-speedup-cpu-cycles | 0.9618430540640308; best-PassSet | 31 8 24 7 15 32 9 12 26 2 16
-mediabench.jpeg.jpeg-6a.cjpeg; norm-best-speedup-cpu-cycles | 1.017407382198054; norm-worst-speedup-cpu-cycles | 0.9516551323923805; best-PassSet | 25 14 3 6
-TSVC.IndirectAddressing-flt.IndirectAddressing-flt; norm-best-speedup-cpu-cycles | 1.0171220129583778; norm-worst-speedup-cpu-cycles | 0.9745179488272776; best-PassSet | 26 34 13 28 8 30
-Adobe-C++.stepanov_abstraction; norm-best-speedup-cpu-cycles | 1.017117244955251; norm-worst-speedup-cpu-cycles | 0.9879626815512558; best-PassSet | 2 10 25 16 12 13 24 5 7 26 21 34 3 17 27 29 22 11 33
-BitBench.uuencode.uuencode; norm-best-speedup-cpu-cycles | 1.016532758234924; norm-worst-speedup-cpu-cycles | 0.9809135878864802; best-PassSet | 2 4 21 17
-Olden.treeadd.treeadd; norm-best-speedup-cpu-cycles | 1.0164320502264976; norm-worst-speedup-cpu-cycles | 0.9631881352847991; best-PassSet | 13 12 29 30 23 4
-sgefa.sgefa; norm-best-speedup-cpu-cycles | 1.0164069582310666; norm-worst-speedup-cpu-cycles | 0.17421380836130393; best-PassSet | 31 11 1 30 34 24 12 4 23 20 14
-Stanford.Queens; norm-best-speedup-cpu-cycles | 1.0161052838310176; norm-worst-speedup-cpu-cycles | 0.8238922953321441; best-PassSet | 4 10 34 23 11 26 13 5 14 1 2
-McGill.misr; norm-best-speedup-cpu-cycles | 1.0159119163110375; norm-worst-speedup-cpu-cycles | 0.8316429569961353; best-PassSet | 20 24 31 30 19 27 26 9 11 7 1 33 16 28 3 12 8 10 23
-McCat.03-testtrie.testtrie; norm-best-speedup-cpu-cycles | 1.0156242179117905; norm-worst-speedup-cpu-cycles | 0.9096727842276976; best-PassSet | 16 18 17 26
-TSVC.LoopRerolling-flt.LoopRerolling-flt; norm-best-speedup-cpu-cycles | 1.0155519014580603; norm-worst-speedup-cpu-cycles | 0.98944209584221; best-PassSet | 25 13 12 27 5 33
-Stanford.RealMM; norm-best-speedup-cpu-cycles | 1.0152007680075912; norm-worst-speedup-cpu-cycles | 0.9899102940103789; best-PassSet | 25 8 21 18 13 20 34 14 10 33 7 29 22 32 9 24 3 11 12
-FreeBench.mason.mason; norm-best-speedup-cpu-cycles | 1.0150129940761043; norm-worst-speedup-cpu-cycles | 0.9840308654009006; best-PassSet | 26 31 27 11 28 24
-tramp3d-v4.tramp3d-v4; norm-best-speedup-cpu-cycles | 1.0146080708644005; norm-worst-speedup-cpu-cycles | 0.9793096470369442; best-PassSet | 24 34 1 12 23 14
-MiBench.security-rijndael.security-rijndael; norm-best-speedup-cpu-cycles | 1.0145124378682615; norm-worst-speedup-cpu-cycles | 0.9802237498269418; best-PassSet | 16 7 26 21 1 20
-Stanford.Perm; norm-best-speedup-cpu-cycles | 1.0142919974667841; norm-worst-speedup-cpu-cycles | 0.9371635367757435; best-PassSet | 33 31 5 28 25 34 8 9 18 29 10 15 27 24 30 19 11 4 26
-Misc-C++.oopack_v1p8; norm-best-speedup-cpu-cycles | 1.0142022637977441; norm-worst-speedup-cpu-cycles | 0.7868917841159471; best-PassSet | 3 25 34 21 7 1 8 30 6 31 9 23 13 10 28 5 26 2 27
-viterbi.viterbi; norm-best-speedup-cpu-cycles | 1.0137517248838326; norm-worst-speedup-cpu-cycles | 0.9516586896499173; best-PassSet | 9 32 31 13 16 14 17 24 5 25 18
-McCat.12-IOtest.iotest; norm-best-speedup-cpu-cycles | 1.0134327646521626; norm-worst-speedup-cpu-cycles | 0.8221889081680938; best-PassSet | 34 16 4 3
-Shootout.Shootout-sieve; norm-best-speedup-cpu-cycles | 1.0130624208249748; norm-worst-speedup-cpu-cycles | 0.9637352628468967; best-PassSet | 23 27 3 5 28 29 32 20 13 9 15 30 25 33 4 1 7 21 24
-MiBench.network-patricia.network-patricia; norm-best-speedup-cpu-cycles | 1.0129272144258623; norm-worst-speedup-cpu-cycles | 0.963977081638775; best-PassSet | 32 31 20 24
-MallocBench.cfrac.cfrac; norm-best-speedup-cpu-cycles | 1.012687262254261; norm-worst-speedup-cpu-cycles | 0.9697130284975445; best-PassSet | 19 26 2 16
-Prolangs-C++.employ.employ; norm-best-speedup-cpu-cycles | 1.0125701300819814; norm-worst-speedup-cpu-cycles | 0.9724090725389014; best-PassSet | 26 34 13 28 8 30
-MiBench.automotive-bitcount.automotive-bitcount; norm-best-speedup-cpu-cycles | 1.0125442311131008; norm-worst-speedup-cpu-cycles | 0.9903487729266716; best-PassSet | 31 20 19 17 25 28
-MallocBench.espresso.espresso; norm-best-speedup-cpu-cycles | 1.0125197527813072; norm-worst-speedup-cpu-cycles | 0.9461833016747231; best-PassSet | 2 4 21 17
-Prolangs-C.bison.mybison; norm-best-speedup-cpu-cycles | 1.0123947865657352; norm-worst-speedup-cpu-cycles | 0.9137593215638223; best-PassSet | 2 8 28 21
-TSVC.Searching-flt.Searching-flt; norm-best-speedup-cpu-cycles | 1.0123926985144724; norm-worst-speedup-cpu-cycles | 0.9772902266882058; best-PassSet | 8 1 10 12
-Dhrystone.fldry; norm-best-speedup-cpu-cycles | 1.0121465939917373; norm-worst-speedup-cpu-cycles | 0.9528077054694369; best-PassSet | 15 33 29 7 6 21 27 17 22 14 18
-TSVC.LoopRerolling-dbl.LoopRerolling-dbl; norm-best-speedup-cpu-cycles | 1.0120430670064362; norm-worst-speedup-cpu-cycles | 0.9894919260683889; best-PassSet | 13 12 29 30 23 4
-TSVC.LinearDependence-dbl.LinearDependence-dbl; norm-best-speedup-cpu-cycles | 1.0113128309209156; norm-worst-speedup-cpu-cycles | 0.9869645716948819; best-PassSet | 23 15 20 3
-MiBench.telecomm-FFT.telecomm-fft; norm-best-speedup-cpu-cycles | 1.0112245136606262; norm-worst-speedup-cpu-cycles | 0.9815751725742257; best-PassSet | 29 33 27 30
-Prolangs-C++.city.city; norm-best-speedup-cpu-cycles | 1.0111803133347745; norm-worst-speedup-cpu-cycles | 0.863936253665056; best-PassSet | 13 12 29 30 23 4
-Prolangs-C++.life.life; norm-best-speedup-cpu-cycles | 1.0108241320147533; norm-worst-speedup-cpu-cycles | 0.9667136593084956; best-PassSet | 24 33 9 20
-McCat.08-main.main; norm-best-speedup-cpu-cycles | 1.010697536988478; norm-worst-speedup-cpu-cycles | 0.9828614701745704; best-PassSet | 25 14 3 6
-SciMark2-C.scimark2; norm-best-speedup-cpu-cycles | 1.0104360104393175; norm-worst-speedup-cpu-cycles | 0.988259039549942; best-PassSet | 2 16 27 10
-TSVC.Reductions-dbl.Reductions-dbl; norm-best-speedup-cpu-cycles | 1.0102262905129185; norm-worst-speedup-cpu-cycles | 0.7012793091219942; best-PassSet | 24 3 18 19
-MiBench.telecomm-CRC32.telecomm-CRC32; norm-best-speedup-cpu-cycles | 1.009649604829339; norm-worst-speedup-cpu-cycles | 0.9450969461007864; best-PassSet | 6 31 3 13
-MiBench.automotive-susan.automotive-susan; norm-best-speedup-cpu-cycles | 1.0096341865280984; norm-worst-speedup-cpu-cycles | 0.889081585300077; best-PassSet | 26 31 27 11 28 24
-BenchmarkGame.n-body; norm-best-speedup-cpu-cycles | 1.0092819743513102; norm-worst-speedup-cpu-cycles | 0.99906862877394; best-PassSet | 31 8 24 7 15 32 9 12 26 2 16
-Misc.whetstone; norm-best-speedup-cpu-cycles | 1.0090231614651926; norm-worst-speedup-cpu-cycles | 0.9911779319331497; best-PassSet | 8 29 27 21 17 28 23 4 18 2 14 16 12 32 9 30 5 7 20
-TSVC.Equivalencing-flt.Equivalencing-flt; norm-best-speedup-cpu-cycles | 1.009010266387775; norm-worst-speedup-cpu-cycles | 0.9647354927089344; best-PassSet | 24 34 1 12 23 14
-Polybench.linear-algebra.solvers.lu.lu; norm-best-speedup-cpu-cycles | 1.0090098665935594; norm-worst-speedup-cpu-cycles | 0.3677345011071617; best-PassSet | 33 3 11 6 18 28 27 26 10 25 8 20 16 34 7 31 14 5 32
-Olden.em3d.em3d; norm-best-speedup-cpu-cycles | 1.0089340555226372; norm-worst-speedup-cpu-cycles | 0.9410139936608517; best-PassSet | 6 26 22 5
-BenchmarkGame.recursive; norm-best-speedup-cpu-cycles | 1.008688119121665; norm-worst-speedup-cpu-cycles | 0.9775341084958349; best-PassSet | 14 30 12 26 24 17 34 13 23 10 32 6 5 21 3 9 2 1 11
-Shootout.Shootout-fib2; norm-best-speedup-cpu-cycles | 1.0084192725249295; norm-worst-speedup-cpu-cycles | 0.973419526420713; best-PassSet | 15 33 29 7 6 21 27 17 22 14 18
-sqlite3.sqlite3; norm-best-speedup-cpu-cycles | 1.0083760814810994; norm-worst-speedup-cpu-cycles | 0.9293788725690147; best-PassSet | 32 2 33 29 6 30 13 20 3 1 28
-Polybench.linear-algebra.solvers.durbin.durbin; norm-best-speedup-cpu-cycles | 1.0077560899107365; norm-worst-speedup-cpu-cycles | 0.9753468715968853; best-PassSet | 4 25 30 1 17 15 2 12 29 16 5 14 3 18 10 9 22 23 32
-TSVC.Equivalencing-dbl.Equivalencing-dbl; norm-best-speedup-cpu-cycles | 1.0076287727719304; norm-worst-speedup-cpu-cycles | 0.9809373245325237; best-PassSet | 14 22 19 23 29 4
-Misc-C++.stepanov_v1p2; norm-best-speedup-cpu-cycles | 1.0075816947765195; norm-worst-speedup-cpu-cycles | 1.003709328122695; best-PassSet | 2 29 32 9 16 11 21 4 30 27 5 3 23 10 7 22 26 13 14
-Shootout-C++.Shootout-C++-lists1; norm-best-speedup-cpu-cycles | 1.007262653558158; norm-worst-speedup-cpu-cycles | 0.9438264787661058; best-PassSet | 7 11 32 16 28 2 12 10 14 31 24
-FreeBench.neural.neural; norm-best-speedup-cpu-cycles | 1.0071179130875099; norm-worst-speedup-cpu-cycles | 0.9618430090801068; best-PassSet | 26 34 13 28 8 30
-Misc.dt; norm-best-speedup-cpu-cycles | 1.0070805917834917; norm-worst-speedup-cpu-cycles | 0.995952585777607; best-PassSet | 21 18 31 34 33 3 25 4 6 22 5 11 24 7 1 30 28 29 2
-Stanford.Towers; norm-best-speedup-cpu-cycles | 1.0070628218487059; norm-worst-speedup-cpu-cycles | 0.9491441236564637; best-PassSet | 31 15 30 9 18 22 29 27 10 21 13 32 23 11 1 34 12 20 24
-BitBench.five11.five11; norm-best-speedup-cpu-cycles | 1.007038289731772; norm-worst-speedup-cpu-cycles | 0.9348503874025578; best-PassSet | 14 4 17 13
-TSVC.ControlLoops-dbl.ControlLoops-dbl; norm-best-speedup-cpu-cycles | 1.0069233180717023; norm-worst-speedup-cpu-cycles | 0.9454285457379922; best-PassSet | 26 34 13 28 8 30
-MiBench.consumer-lame.consumer-lame; norm-best-speedup-cpu-cycles | 1.0065089043052073; norm-worst-speedup-cpu-cycles | 0.9681266265905751; best-PassSet | 14 27 22 32
-Stanford.Quicksort; norm-best-speedup-cpu-cycles | 1.00625975503458; norm-worst-speedup-cpu-cycles | 0.9406101259246591; best-PassSet | 26 14 33 25 34 28 21 16 8 9 10 6 15 5 11 1 19 22 4
-Misc.fbench; norm-best-speedup-cpu-cycles | 1.006068806664625; norm-worst-speedup-cpu-cycles | 0.971514303758266; best-PassSet | 31 16 22 8 25 1 28 21 32 5 29 6 14 20 7 9 30 24 26
-FreeBench.fourinarow.fourinarow; norm-best-speedup-cpu-cycles | 1.0059747904401473; norm-worst-speedup-cpu-cycles | 0.9662560477958563; best-PassSet | 25 14 3 6
-Shootout-C++.Shootout-C++-random; norm-best-speedup-cpu-cycles | 1.0057059070309933; norm-worst-speedup-cpu-cycles | 1.0030375455817133; best-PassSet | 8 23 32 25 34 28 3 15 18 31 13
-Shootout-C++.Shootout-C++-methcall; norm-best-speedup-cpu-cycles | 1.0056835173745695; norm-worst-speedup-cpu-cycles | 0.9618048318878509; best-PassSet | 12 26 33 25 8 29 11 24 6 31 10
-Misc.fp-convert; norm-best-speedup-cpu-cycles | 1.005622980569459; norm-worst-speedup-cpu-cycles | 0.9941443901702967; best-PassSet | 11 10 29 9 31 2 13 16 23 7 22 15 6 28 14 4 5 34 19
-Shootout-C++.Shootout-C++-fibo; norm-best-speedup-cpu-cycles | 1.0054923844602623; norm-worst-speedup-cpu-cycles | 0.9439385416036637; best-PassSet | 33 24 3 8 34 7 22 11 5 9 26 30 12 15 14 4 19 13 17
-Stanford.Bubblesort; norm-best-speedup-cpu-cycles | 1.00501119840467; norm-worst-speedup-cpu-cycles | 0.9894623205512045; best-PassSet | 17 27 18 24 28 9 34 3 1 15 16 13 4 33 26 7 31 10 21
-Misc.mandel; norm-best-speedup-cpu-cycles | 1.0049702823464204; norm-worst-speedup-cpu-cycles | 0.9991863529955952; best-PassSet | 21 5 14 22 33 8 9 10 29 19 20 18 15 1 11 6 34 32 13
-Misc.matmul_f64_4x4; norm-best-speedup-cpu-cycles | 1.0049077846418082; norm-worst-speedup-cpu-cycles | 0.9974367072994882; best-PassSet | 29 19 26 8 32 23 27 5 9 15 21 11 14 34 33 30 17 10 28
-McCat.05-eks.eks; norm-best-speedup-cpu-cycles | 1.004760497142094; norm-worst-speedup-cpu-cycles | 0.9847261160377275; best-PassSet | 10 12 4 23
-Misc.flops-2; norm-best-speedup-cpu-cycles | 1.0047311383047721; norm-worst-speedup-cpu-cycles | 0.9995921948096226; best-PassSet | 12 28 3 19 10 4 5 15 11 18 16 21 2 14 22 30 33 7 8
-Shootout-C++.EH.Shootout-C++-except; norm-best-speedup-cpu-cycles | 1.0046463970782433; norm-worst-speedup-cpu-cycles | 0.9886339033527249; best-PassSet | 5 10 14 32 31 9 19 12 23 7 13 15 16 18 22 20 25 33 28
-VersaBench.bmm.bmm; norm-best-speedup-cpu-cycles | 1.0046089567144114; norm-worst-speedup-cpu-cycles | 0.9785846999979958; best-PassSet | 8 23 16 15
-Trimaran.enc-md5.enc-md5; norm-best-speedup-cpu-cycles | 1.0046063352468961; norm-worst-speedup-cpu-cycles | 0.9943025287594229; best-PassSet | 14 27 22 32
-McCat.18-imp.imp; norm-best-speedup-cpu-cycles | 1.0045336050261742; norm-worst-speedup-cpu-cycles | 0.9486091704665; best-PassSet | 34 22 1 27
-VersaBench.8b10b.8b10b; norm-best-speedup-cpu-cycles | 1.0044362199475192; norm-worst-speedup-cpu-cycles | 0.9659866740867181; best-PassSet | 26 31 27 11 28 24
-Shootout.Shootout-random; norm-best-speedup-cpu-cycles | 1.0044079554100516; norm-worst-speedup-cpu-cycles | 0.9982153174778412; best-PassSet | 17 27 18 24 28 9 34 3 1 15 16 13 4 33 26 7 31 10 21
-Misc.flops-7; norm-best-speedup-cpu-cycles | 1.004195814605521; norm-worst-speedup-cpu-cycles | 1.0006522078510276; best-PassSet | 30 21 12 5 24 22 2 20 3 15 9 13 6 27 31 17 4 11 29
-Misc.flops-5; norm-best-speedup-cpu-cycles | 1.0041357529907877; norm-worst-speedup-cpu-cycles | 0.9904351763501171; best-PassSet | 8 11 22 31 7 12 9 29 28 33 18 3 25 19 15 1 16 20 14
-McGill.queens; norm-best-speedup-cpu-cycles | 1.0039812322877195; norm-worst-speedup-cpu-cycles | 0.976882305523988; best-PassSet | 8 23 32 25 34 28 3 15 18 31 13
-TSVC.LinearDependence-flt.LinearDependence-flt; norm-best-speedup-cpu-cycles | 1.0038364046280723; norm-worst-speedup-cpu-cycles | 0.9886211512101047; best-PassSet | 13 12 29 30 23 4
-Shootout.Shootout-methcall; norm-best-speedup-cpu-cycles | 1.003818531201601; norm-worst-speedup-cpu-cycles | 0.9536016635008331; best-PassSet | 3 25 34 21 7 1 8 30 6 31 9 23 13 10 28 5 26 2 27
-TSVC.Recurrences-dbl.Recurrences-dbl; norm-best-speedup-cpu-cycles | 1.0038165634480933; norm-worst-speedup-cpu-cycles | 0.9966331015427939; best-PassSet | 34 16 4 3
-TSVC.Reductions-flt.Reductions-flt; norm-best-speedup-cpu-cycles | 1.0037502158124136; norm-worst-speedup-cpu-cycles | 0.7933577805176356; best-PassSet | 24 34 1 12 23 14
-TSVC.Symbolics-flt.Symbolics-flt; norm-best-speedup-cpu-cycles | 1.0037273461063891; norm-worst-speedup-cpu-cycles | 0.9813136051583863; best-PassSet | 25 29 5 15 14 31
-BenchmarkGame.spectral-norm; norm-best-speedup-cpu-cycles | 1.0036509699970186; norm-worst-speedup-cpu-cycles | 0.9956883144608693; best-PassSet | 2 6 4 3 8 25 22 28 30 21 18 31 32 12 24 9 16 20 11
-Misc.flops; norm-best-speedup-cpu-cycles | 1.0036097081234203; norm-worst-speedup-cpu-cycles | 1.0018595679285107; best-PassSet | 31 8 24 7 15 32 9 12 26 2 16
-TSVC.CrossingThresholds-dbl.CrossingThresholds-dbl; norm-best-speedup-cpu-cycles | 1.0035729312476704; norm-worst-speedup-cpu-cycles | 0.9507486094678751; best-PassSet | 34 16 4 3
-Stanford.FloatMM; norm-best-speedup-cpu-cycles | 1.0035176753109842; norm-worst-speedup-cpu-cycles | 0.993177728105272; best-PassSet | 28 33 27 11 2 3 10 18 6 13 8 22 34 17 23 1 20 14 21
-Adobe-C++.simple_types_loop_invariant; norm-best-speedup-cpu-cycles | 1.0034065775394976; norm-worst-speedup-cpu-cycles | 0.9535792203681978; best-PassSet | 26 14 33 25 34 28 21 16 8 9 10 6 15 5 11 1 19 22 4
-Misc.flops-4; norm-best-speedup-cpu-cycles | 1.003320532326411; norm-worst-speedup-cpu-cycles | 1.000895385951914; best-PassSet | 32 31 15 27 34 25 26 14 10 9 21 1 12 17 8 7 28 4 30
-Trimaran.netbench-crc.netbench-crc; norm-best-speedup-cpu-cycles | 1.003313449478284; norm-worst-speedup-cpu-cycles | 0.9959369839063793; best-PassSet | 13 12 29 30 23 4
-Misc.flops-3; norm-best-speedup-cpu-cycles | 1.0033127428973982; norm-worst-speedup-cpu-cycles | 1.001707294746652; best-PassSet | 29 7 27 9 15 3 33 30 16 14 24 2 22 32 4 12 11 18 25
-Misc-C++.Large.sphereflake; norm-best-speedup-cpu-cycles | 1.0033098675607746; norm-worst-speedup-cpu-cycles | 0.9094910710305061; best-PassSet | 12 28 3 19 10 4 5 15 11 18 16 21 2 14 22 30 33 7 8
-TSVC.NodeSplitting-flt.NodeSplitting-flt; norm-best-speedup-cpu-cycles | 1.003213133480413; norm-worst-speedup-cpu-cycles | 0.9839173382554808; best-PassSet | 4 19 32 10
-ASC_Sequoia.CrystalMk.CrystalMk; norm-best-speedup-cpu-cycles | 1.0032097356891059; norm-worst-speedup-cpu-cycles | 0.9935528950091189; best-PassSet | 26 34 13 28 8 30
-McCat.04-bisect.bisect; norm-best-speedup-cpu-cycles | 1.0031051499863002; norm-worst-speedup-cpu-cycles | 0.9867087383164692; best-PassSet | 8 17 28 26
-Trimaran.enc-pc1.enc-pc1; norm-best-speedup-cpu-cycles | 1.002757621252542; norm-worst-speedup-cpu-cycles | 0.9844777302607334; best-PassSet | 25 29 5 15 14 31
-MiBench.network-dijkstra.network-dijkstra; norm-best-speedup-cpu-cycles | 1.0023720865881598; norm-worst-speedup-cpu-cycles | 0.9146895895113509; best-PassSet | 25 14 3 6
-Adobe-C++.loop_unroll; norm-best-speedup-cpu-cycles | 1.0023479620963924; norm-worst-speedup-cpu-cycles | 0.9872389990082765; best-PassSet | 9 23 33 25 3 29 8 24 32 2 15 4 28 12 5 19 11 31 18
-Dhrystone.dry; norm-best-speedup-cpu-cycles | 1.0022300670748654; norm-worst-speedup-cpu-cycles | 0.9131010688408233; best-PassSet | 31 8 24 7 15 32 9 12 26 2 16
-TSVC.InductionVariable-flt.InductionVariable-flt; norm-best-speedup-cpu-cycles | 1.0021280400226724; norm-worst-speedup-cpu-cycles | 0.9522897207288014; best-PassSet | 25 29 7 16
-McCat.17-bintr.bintr; norm-best-speedup-cpu-cycles | 1.0018757274257462; norm-worst-speedup-cpu-cycles | 0.956190529501877; best-PassSet | 33 30 27 19
-TSVC.ControlLoops-flt.ControlLoops-flt; norm-best-speedup-cpu-cycles | 1.0018235134025661; norm-worst-speedup-cpu-cycles | 0.9829154727710075; best-PassSet | 24 8 7 18
-Adobe-C++.simple_types_constant_folding; norm-best-speedup-cpu-cycles | 1.0015821775343527; norm-worst-speedup-cpu-cycles | 0.7730028698060339; best-PassSet | 7 13 19 3 30 31 10 32 14 8 23 28 22 4 1 16 9 6 17
-BenchmarkGame.Large.fasta; norm-best-speedup-cpu-cycles | 1.0013074944730405; norm-worst-speedup-cpu-cycles | 0.9924582778542564; best-PassSet | 23 26 32 10 18 33 7 14 13 29 34 28 12 2 16 22 1 8 31
-VersaBench.ecbdes.ecbdes; norm-best-speedup-cpu-cycles | 1.0012804610746382; norm-worst-speedup-cpu-cycles | 0.9921991867252914; best-PassSet | 28 7 18 11
-MiBench.automotive-basicmath.automotive-basicmath; norm-best-speedup-cpu-cycles | 1.00125880882769; norm-worst-speedup-cpu-cycles | 0.9522776825365464; best-PassSet | 6 33 26 17
-Trimaran.enc-3des.enc-3des; norm-best-speedup-cpu-cycles | 1.0003246328632476; norm-worst-speedup-cpu-cycles | 0.9539769334875198; best-PassSet | 9 18 19 2
-TSVC.Recurrences-flt.Recurrences-flt; norm-best-speedup-cpu-cycles | 1.0002670814146932; norm-worst-speedup-cpu-cycles | 0.9937410711369772; best-PassSet | 13 5 16 34
-TSVC.CrossingThresholds-flt.CrossingThresholds-flt; norm-best-speedup-cpu-cycles | 0.9996705974205989; norm-worst-speedup-cpu-cycles | 0.9523205189111581; best-PassSet | 26 34 13 28 8 30
-McCat.01-qbsort.qbsort; norm-best-speedup-cpu-cycles | 0.9973201264334294; norm-worst-speedup-cpu-cycles | 0.9104485738473617; best-PassSet | 26 31 27 11 28 24
-MiBench.telecomm-adpcm.telecomm-adpcm; norm-best-speedup-cpu-cycles | 0.9965503463387787; norm-worst-speedup-cpu-cycles | 0.8575299050109594; best-PassSet | 9 12 29 24
-Prolangs-C.plot2fig.plot2fig; norm-best-speedup-cpu-cycles | 0.9954036200398362; norm-worst-speedup-cpu-cycles | 0.89937073719255; best-PassSet | 13 30 11 14
-FreeBench.distray.distray; norm-best-speedup-cpu-cycles | 0.991723139709437; norm-worst-speedup-cpu-cycles | 0.9337676614284934; best-PassSet | 25 29 5 15 14 31
-SPASS.SPASS; norm-best-speedup-cpu-cycles | 0.9791250219367431; norm-worst-speedup-cpu-cycles | 0.9401274799483914; best-PassSet | 32 33 15 21 14 23 8 20 18 12 27
+Misc/ffbench; norm-best-speedup-cpu-cycles | 897.6567649284649; norm-worst-speedup-cpu-cycles | 0.9534317230090513; best-PassSet | 33 9 27 30 6 23 25 32 29 21 14 2 16 31 34 28 8 19 1
+SIBsim4/SIBsim4; norm-best-speedup-cpu-cycles | 2.970158421936062; norm-worst-speedup-cpu-cycles | 0.92205941263574; best-PassSet | 27 28 23 17 32 7 10 3 18 20 29
+Misc/flops-6; norm-best-speedup-cpu-cycles | 1.3501525902910276; norm-worst-speedup-cpu-cycles | 0.9951456088777787; best-PassSet | 2 29 32 9 16 11 21 4 30 27 5 3 23 10 7 22 26 13 14
+Stanford/Puzzle; norm-best-speedup-cpu-cycles | 1.2741143664306407; norm-worst-speedup-cpu-cycles | 0.9618996288936961; best-PassSet | 15 33 29 7 6 21 27 17 22 14 18
+Misc/flops-8; norm-best-speedup-cpu-cycles | 1.2458414939587907; norm-worst-speedup-cpu-cycles | 1.0018927050843456; best-PassSet | 22 4 34 25 29 14 28 18 15 31 12 21 8 24 30 7 5 32 10
+Ptrdist/ks/ks; norm-best-speedup-cpu-cycles | 1.2100101205784564; norm-worst-speedup-cpu-cycles | 0.9877613623681333; best-PassSet | 33 30 27 19
+Shootout-C++/Shootout-C++-ackermann; norm-best-speedup-cpu-cycles | 1.2012336806938075; norm-worst-speedup-cpu-cycles | 0.9504115631206067; best-PassSet | 7 5 29 2 27 23 1 15 14 3 19 20 32 10 6 30 25 4 17
+Misc/himenobmtxpa; norm-best-speedup-cpu-cycles | 1.1633190424286812; norm-worst-speedup-cpu-cycles | 0.6484258515745166; best-PassSet | 34 2 13 9 23 3 21 33 17 14 25 11 12 7 31 1 15 19 16
+Misc/perlin; norm-best-speedup-cpu-cycles | 1.1487177513205145; norm-worst-speedup-cpu-cycles | 0.9611614314947529; best-PassSet | 12 28 3 19 10 4 5 15 11 18 16 21 2 14 22 30 33 7 8
+Polybench/linear-algebra/solvers/dynprog/dynprog; norm-best-speedup-cpu-cycles | 1.1374712752031442; norm-worst-speedup-cpu-cycles | 0.9938874332024623; best-PassSet | 34 2 13 9 23 3 21 33 17 14 25 11 12 7 31 1 15 19 16
+Prolangs-C++/family/family; norm-best-speedup-cpu-cycles | 1.128695866136398; norm-worst-speedup-cpu-cycles | 0.9043948217534992; best-PassSet | 26 34 13 28 8 30
+Prolangs-C++/deriv1/deriv1; norm-best-speedup-cpu-cycles | 1.1253878837773548; norm-worst-speedup-cpu-cycles | 0.9746635409940307; best-PassSet | 25 27 24 16
+FreeBench/pifft/pifft; norm-best-speedup-cpu-cycles | 1.123308929850491; norm-worst-speedup-cpu-cycles | 0.9808163402363451; best-PassSet | 8 17 28 26
+Ptrdist/anagram/anagram; norm-best-speedup-cpu-cycles | 1.1169928703258718; norm-worst-speedup-cpu-cycles | 0.9813375449338212; best-PassSet | 33 30 27 19
+mediabench/adpcm/rawdaudio/rawdaudio; norm-best-speedup-cpu-cycles | 1.1147656779663815; norm-worst-speedup-cpu-cycles | 1.0287635581180565; best-PassSet | 8 17 28 26
+ASCI_Purple/SMG2000/smg2000; norm-best-speedup-cpu-cycles | 1.1147614988208254; norm-worst-speedup-cpu-cycles | 0.6994057751783049; best-PassSet | 25 29 5 15 14 31
+Misc-C++/mandel-text; norm-best-speedup-cpu-cycles | 1.1107615797483548; norm-worst-speedup-cpu-cycles | 0.9943505716259678; best-PassSet | 4 25 30 1 17 15 2 12 29 16 5 14 3 18 10 9 22 23 32
+MiBench/security-sha/security-sha; norm-best-speedup-cpu-cycles | 1.0964712757013286; norm-worst-speedup-cpu-cycles | 0.9827962386408939; best-PassSet | 26 31 27 11 28 24
+Olden/tsp/tsp; norm-best-speedup-cpu-cycles | 1.0960089936866197; norm-worst-speedup-cpu-cycles | 0.9695217147253826; best-PassSet | 2 8 16 29
+Olden/bisort/bisort; norm-best-speedup-cpu-cycles | 1.0954339905163952; norm-worst-speedup-cpu-cycles | 0.8092727863284445; best-PassSet | 26 34 13 28 8 30
+Prolangs-C/archie-client/archie; norm-best-speedup-cpu-cycles | 1.0931102838250273; norm-worst-speedup-cpu-cycles | 0.974845648402646; best-PassSet | 18 28 3 19
+BitBench/drop3/drop3; norm-best-speedup-cpu-cycles | 1.0913378710993464; norm-worst-speedup-cpu-cycles | 0.9764942955395581; best-PassSet | 2 4 21 17
+Prolangs-C/fixoutput/fixoutput; norm-best-speedup-cpu-cycles | 1.0898565756639984; norm-worst-speedup-cpu-cycles | 0.9872789837829923; best-PassSet | 26 10 16 17
+Prolangs-C/football/football; norm-best-speedup-cpu-cycles | 1.0895409700108754; norm-worst-speedup-cpu-cycles | 0.9393518315531018; best-PassSet | 31 20 19 17 25 28
+Misc/pi; norm-best-speedup-cpu-cycles | 1.0889062065526172; norm-worst-speedup-cpu-cycles | 0.9927560546857143; best-PassSet | 12 28 3 19 10 4 5 15 11 18 16 21 2 14 22 30 33 7 8
+Prolangs-C/unix-smail/unix-smail; norm-best-speedup-cpu-cycles | 1.0873164160492463; norm-worst-speedup-cpu-cycles | 1.0000009589180336; best-PassSet | 26 34 13 28 8 30
+Burg/burg; norm-best-speedup-cpu-cycles | 1.0853428177154745; norm-worst-speedup-cpu-cycles | 0.9715949295767197; best-PassSet | 11 27 9 26 32 21 23 29 2 13 4
+hexxagon/hexxagon; norm-best-speedup-cpu-cycles | 1.08487968617845; norm-worst-speedup-cpu-cycles | 0.9643245959859665; best-PassSet | 8 18 25 11 22 5 16 32 3 6 31
+Prolangs-C++/objects/objects; norm-best-speedup-cpu-cycles | 1.0844098939185403; norm-worst-speedup-cpu-cycles | 0.9652861849379505; best-PassSet | 19 1 30 18
+Adobe-C++/functionobjects; norm-best-speedup-cpu-cycles | 1.0839545757561313; norm-worst-speedup-cpu-cycles | 1.0043060627383162; best-PassSet | 34 19 16 26 12 3 9 24 14 7 20 2 21 28 22 13 33 29 8
+Prolangs-C++/fsm/fsm; norm-best-speedup-cpu-cycles | 1.0817942063201968; norm-worst-speedup-cpu-cycles | 0.9511553757305391; best-PassSet | 24 30 31 32
+TSVC/StatementReordering-dbl/StatementReordering-dbl; norm-best-speedup-cpu-cycles | 1.0808567953493375; norm-worst-speedup-cpu-cycles | 0.9817404150114987; best-PassSet | 11 16 5 4
+Prolangs-C/allroots/allroots; norm-best-speedup-cpu-cycles | 1.0797307966467282; norm-worst-speedup-cpu-cycles | 0.9614703402405189; best-PassSet | 13 12 29 30 23 4
+TSVC/LoopRestructuring-dbl/LoopRestructuring-dbl; norm-best-speedup-cpu-cycles | 1.074791197508235; norm-worst-speedup-cpu-cycles | 1.0126399222680298; best-PassSet | 25 29 7 16
+Polybench/linear-algebra/solvers/gramschmidt/gramschmidt; norm-best-speedup-cpu-cycles | 1.0730481454431202; norm-worst-speedup-cpu-cycles | 1.0019361830002482; best-PassSet | 8 23 32 25 34 28 3 15 18 31 13
+Prolangs-C/loader/loader; norm-best-speedup-cpu-cycles | 1.0701299673713645; norm-worst-speedup-cpu-cycles | 0.9532266277433679; best-PassSet | 26 34 13 28 8 30
+Prolangs-C++/deriv2/deriv2; norm-best-speedup-cpu-cycles | 1.0668509631070957; norm-worst-speedup-cpu-cycles | 0.9430201245907881; best-PassSet | 26 16 15 4
+mediabench/g721/g721encode/encode; norm-best-speedup-cpu-cycles | 1.0648977698933657; norm-worst-speedup-cpu-cycles | 0.973038668418783; best-PassSet | 23 13 9 11
+Prolangs-C/compiler/compiler; norm-best-speedup-cpu-cycles | 1.0647516389487466; norm-worst-speedup-cpu-cycles | 0.9689738084646534; best-PassSet | 14 22 19 23 29 4
+Ptrdist/yacr2/yacr2; norm-best-speedup-cpu-cycles | 1.0647200441924656; norm-worst-speedup-cpu-cycles | 0.9959686944203733; best-PassSet | 25 29 7 16
+TSVC/ControlFlow-dbl/ControlFlow-dbl; norm-best-speedup-cpu-cycles | 1.0639086721484678; norm-worst-speedup-cpu-cycles | 1.0068640765797794; best-PassSet | 27 17 25 23
+Shootout-C++/Shootout-C++-hash2; norm-best-speedup-cpu-cycles | 1.0627467469659966; norm-worst-speedup-cpu-cycles | 0.9296554401140974; best-PassSet | 2 6 4 3 8 25 22 28 30 21 18 31 32 12 24 9 16 20 11
+DOE-ProxyApps-C/XSBench/XSBench; norm-best-speedup-cpu-cycles | 1.062725026240749; norm-worst-speedup-cpu-cycles | 0.8882576304291502; best-PassSet | 24 34 1 12 23 14
+Olden/power/power; norm-best-speedup-cpu-cycles | 1.0623951134780245; norm-worst-speedup-cpu-cycles | 0.9634834922066762; best-PassSet | 26 31 27 11 28 24
+McCat/15-trie/trie; norm-best-speedup-cpu-cycles | 1.0620899020331496; norm-worst-speedup-cpu-cycles | 0.9043907034438501; best-PassSet | 13 30 11 14
+Misc/mandel-2; norm-best-speedup-cpu-cycles | 1.0618881638296624; norm-worst-speedup-cpu-cycles | 0.9547499870553705; best-PassSet | 7 11 4 30 16 24 13 5 27 20 14 3 6 31 9 33 25 10 26
+PAQ8p/paq8p; norm-best-speedup-cpu-cycles | 1.0601806463387862; norm-worst-speedup-cpu-cycles | 0.9748590941426314; best-PassSet | 29 26 17 19
+Bullet/bullet; norm-best-speedup-cpu-cycles | 1.0600236797670632; norm-worst-speedup-cpu-cycles | 0.8754910336191711; best-PassSet | 8 17 28 26
+7zip/7zip-benchmark; norm-best-speedup-cpu-cycles | 1.0595164089372295; norm-worst-speedup-cpu-cycles | 0.9874449863710821; best-PassSet | 33 8 17 32
+Prolangs-C/TimberWolfMC/timberwolfmc; norm-best-speedup-cpu-cycles | 1.0593431905421191; norm-worst-speedup-cpu-cycles | 0.9829774689087205; best-PassSet | 25 13 12 27 5 33
+lemon/lemon; norm-best-speedup-cpu-cycles | 1.0589256331577654; norm-worst-speedup-cpu-cycles | 0.9579356036048947; best-PassSet | 12 21 4 28 3 15 9 20 33 30 18
+lua/lua; norm-best-speedup-cpu-cycles | 1.0577528395293105; norm-worst-speedup-cpu-cycles | 0.9425705844057701; best-PassSet | 27 28 23 17 32 7 10 3 18 20 29
+Prolangs-C/cdecl/cdecl; norm-best-speedup-cpu-cycles | 1.0573411333760945; norm-worst-speedup-cpu-cycles | 0.9388592384757316; best-PassSet | 29 26 17 19
+FreeBench/analyzer/analyzer; norm-best-speedup-cpu-cycles | 1.0564873332274254; norm-worst-speedup-cpu-cycles | 0.9562734307922888; best-PassSet | 33 8 17 32
+TSVC/Expansion-flt/Expansion-flt; norm-best-speedup-cpu-cycles | 1.0563501425996709; norm-worst-speedup-cpu-cycles | 0.9995522947537925; best-PassSet | 25 6 14 11
+MiBench/security-blowfish/security-blowfish; norm-best-speedup-cpu-cycles | 1.056233899900592; norm-worst-speedup-cpu-cycles | 1.0058548216260148; best-PassSet | 26 10 16 17
+NPB-serial/is/is; norm-best-speedup-cpu-cycles | 1.0561550247286284; norm-worst-speedup-cpu-cycles | 0.9514693588305013; best-PassSet | 2 11 10 1
+Shootout-C++/Shootout-C++-strcat; norm-best-speedup-cpu-cycles | 1.0560122298130274; norm-worst-speedup-cpu-cycles | 0.9744985629857513; best-PassSet | 11 10 29 9 31 2 13 16 23 7 22 15 6 28 14 4 5 34 19
+Prolangs-C++/ocean/ocean; norm-best-speedup-cpu-cycles | 1.0559122775659049; norm-worst-speedup-cpu-cycles | 0.9444245592617905; best-PassSet | 24 30 31 32
+BenchmarkGame/partialsums; norm-best-speedup-cpu-cycles | 1.0556977221550354; norm-worst-speedup-cpu-cycles | 0.9838478959787484; best-PassSet | 3 15 2 10 4 33 24 27 25 9 26 21 20 12 6 19 29 18 23
+TSVC/ControlFlow-flt/ControlFlow-flt; norm-best-speedup-cpu-cycles | 1.0545831120028522; norm-worst-speedup-cpu-cycles | 1.0115550513542508; best-PassSet | 2 16 27 10
+Prolangs-C++/garage/garage; norm-best-speedup-cpu-cycles | 1.0543658756407757; norm-worst-speedup-cpu-cycles | 0.9023877780884709; best-PassSet | 25 14 3 6
+Prolangs-C/simulator/simulator; norm-best-speedup-cpu-cycles | 1.0543260773889287; norm-worst-speedup-cpu-cycles | 0.965736593055874; best-PassSet | 34 16 4 3
+aha/aha; norm-best-speedup-cpu-cycles | 1.0535792840088833; norm-worst-speedup-cpu-cycles | 0.9695571401279279; best-PassSet | 32 33 9 14 24 12 34 27 10 21 15
+MiBench/telecomm-gsm/telecomm-gsm; norm-best-speedup-cpu-cycles | 1.052656014824321; norm-worst-speedup-cpu-cycles | 0.9673461761097877; best-PassSet | 25 14 3 6
+Prolangs-C++/office/office; norm-best-speedup-cpu-cycles | 1.052162240179311; norm-worst-speedup-cpu-cycles | 0.9262413726954062; best-PassSet | 8 17 28 26
+Misc/salsa20; norm-best-speedup-cpu-cycles | 1.052066223553988; norm-worst-speedup-cpu-cycles | 0.9549233301679484; best-PassSet | 15 30 21 29 1 28 20 19 17 11 33 6 10 24 23 34 14 25 8
+Misc-C++/Large/ray; norm-best-speedup-cpu-cycles | 1.0516531567541398; norm-worst-speedup-cpu-cycles | 0.9249103935924223; best-PassSet | 22 32 15 23 30 12 27 16 17 34 29 4 2 13 10 11 1 18 8
+Polybench/stencils/jacobi-1d-imper/jacobi-1d-imper; norm-best-speedup-cpu-cycles | 1.0516046562549932; norm-worst-speedup-cpu-cycles | 1.0316969523179353; best-PassSet | 31 2 33 10 12 11 4 6 29 27 34
+ASC_Sequoia/AMGmk/AMGmk; norm-best-speedup-cpu-cycles | 1.051312062181804; norm-worst-speedup-cpu-cycles | 0.6792454815937761; best-PassSet | 26 34 13 28 8 30
+Misc/oourafft; norm-best-speedup-cpu-cycles | 1.0508463407845985; norm-worst-speedup-cpu-cycles | 0.988725168832774; best-PassSet | 2 29 32 9 16 11 21 4 30 27 5 3 23 10 7 22 26 13 14
+Prolangs-C++/vcirc/vcirc; norm-best-speedup-cpu-cycles | 1.0501686402733592; norm-worst-speedup-cpu-cycles | 0.9244574818080158; best-PassSet | 30 14 9 4
+Misc/flops-1; norm-best-speedup-cpu-cycles | 1.0497169673220865; norm-worst-speedup-cpu-cycles | 1.0009913972787943; best-PassSet | 31 15 30 9 18 22 29 27 10 21 13 32 23 11 1 34 12 20 24
+d/make_dparser; norm-best-speedup-cpu-cycles | 1.0487332306699686; norm-worst-speedup-cpu-cycles | 0.918844636225812; best-PassSet | 18 2 11 4 29 30 31
+Linpack/linpack-pc; norm-best-speedup-cpu-cycles | 1.0476796895521863; norm-worst-speedup-cpu-cycles | 0.9439364251155149; best-PassSet | 30 24 26 18 14 32 13 19 31 28 20 9 3 34 12 4 10 8 22
+sim/sim; norm-best-speedup-cpu-cycles | 1.0475561527725692; norm-worst-speedup-cpu-cycles | 0.9239206105703954; best-PassSet | 13 10 14 17
+Shootout-C++/Shootout-C++-sieve; norm-best-speedup-cpu-cycles | 1.0473496072125448; norm-worst-speedup-cpu-cycles | 0.9951560854136732; best-PassSet | 11 3 9 24 20 4 19 16 12 6 33 7 10 15 25 13 17 26 34
+JM/ldecod/ldecod; norm-best-speedup-cpu-cycles | 1.0470584300486967; norm-worst-speedup-cpu-cycles | 0.9889408128635422; best-PassSet | 13 16 24 9 3 20 18
+mediabench/gsm/toast/toast; norm-best-speedup-cpu-cycles | 1.046508975355129; norm-worst-speedup-cpu-cycles | 0.9352019649219352; best-PassSet | 18 11 1 5
+siod/siod; norm-best-speedup-cpu-cycles | 1.0463622672877146; norm-worst-speedup-cpu-cycles | 0.9016324627201145; best-PassSet | 18 34 15 2 9 12 25 30 8 17 33
+Shootout-C++/Shootout-C++-hash; norm-best-speedup-cpu-cycles | 1.0458349883966622; norm-worst-speedup-cpu-cycles | 0.9571762516255696; best-PassSet | 12 26 33 25 8 29 11 24 6 31 10
+Polybench/linear-algebra/kernels/gesummv/gesummv; norm-best-speedup-cpu-cycles | 1.0453474939540792; norm-worst-speedup-cpu-cycles | 0.998420771049234; best-PassSet | 33 9 27 30 6 23 25 32 29 21 14 2 16 31 34 28 8 19 1
+BenchmarkGame/nsieve-bits; norm-best-speedup-cpu-cycles | 1.044819397086185; norm-worst-speedup-cpu-cycles | 0.9844287699023617; best-PassSet | 4 10 34 23 11 26 13 5 14 1 2
+Prolangs-C++/shapes/shapes; norm-best-speedup-cpu-cycles | 1.0443129978569003; norm-worst-speedup-cpu-cycles | 0.9153926535855836; best-PassSet | 8 29 31 16
+FreeBench/pcompress2/pcompress2; norm-best-speedup-cpu-cycles | 1.0439814171093158; norm-worst-speedup-cpu-cycles | 1.012926799250767; best-PassSet | 34 22 1 27
+mediabench/mpeg2/mpeg2dec/mpeg2decode; norm-best-speedup-cpu-cycles | 1.0435005327371567; norm-worst-speedup-cpu-cycles | 1.023974917742291; best-PassSet | 16 7 26 21 1 20
+MiBench/consumer-jpeg/consumer-jpeg; norm-best-speedup-cpu-cycles | 1.0430707211597383; norm-worst-speedup-cpu-cycles | 0.9658227677093817; best-PassSet | 30 28 17 9
+MiBench/consumer-typeset/consumer-typeset; norm-best-speedup-cpu-cycles | 1.0428801614874768; norm-worst-speedup-cpu-cycles | 0.9074956224444213; best-PassSet | 25 13 12 27 5 33
+VersaBench/beamformer/beamformer; norm-best-speedup-cpu-cycles | 1.0427457595709426; norm-worst-speedup-cpu-cycles | 0.9817651214543486; best-PassSet | 25 14 3 6
+Stanford/IntMM; norm-best-speedup-cpu-cycles | 1.0411784121402872; norm-worst-speedup-cpu-cycles | 1.0232566510819645; best-PassSet | 14 31 16 10 28 19 13 30 24 12 11 15 4 17 26 6 34 32 27
+treecc/treecc; norm-best-speedup-cpu-cycles | 1.0411628102011965; norm-worst-speedup-cpu-cycles | 0.9613429931294255; best-PassSet | 12 21 5 2 3 15 27 14 11 9 16
+Misc-C++/bigfib; norm-best-speedup-cpu-cycles | 1.0408842335555122; norm-worst-speedup-cpu-cycles | 1.0209606860069045; best-PassSet | 31 15 30 9 18 22 29 27 10 21 13 32 23 11 1 34 12 20 24
+MiBench/office-ispell/office-ispell; norm-best-speedup-cpu-cycles | 1.0398687279453758; norm-worst-speedup-cpu-cycles | 0.9835890467792691; best-PassSet | 32 18 20 1
+SmallPT/smallpt; norm-best-speedup-cpu-cycles | 1.039557943107467; norm-worst-speedup-cpu-cycles | 0.9532697319332831; best-PassSet | 12 16 14 30 34 22 2 19 23 9 29 13 6 3 28 15 20 8 31
+Stanford/Treesort; norm-best-speedup-cpu-cycles | 1.0392681091003284; norm-worst-speedup-cpu-cycles | 1.0034210796785583; best-PassSet | 12 28 3 19 10 4 5 15 11 18 16 21 2 14 22 30 33 7 8
+TSVC/LoopRestructuring-flt/LoopRestructuring-flt; norm-best-speedup-cpu-cycles | 1.038645481461745; norm-worst-speedup-cpu-cycles | 0.9603390046678102; best-PassSet | 16 7 26 21 1 20
+JM/lencod/lencod; norm-best-speedup-cpu-cycles | 1.0386236175092696; norm-worst-speedup-cpu-cycles | 0.900915477046647; best-PassSet | 19 10 21 1 27 4 9
+Polybench/stencils/fdtd-apml/fdtd-apml; norm-best-speedup-cpu-cycles | 1.03737531873285; norm-worst-speedup-cpu-cycles | 0.9718161769515065; best-PassSet | 18 10 4 27 3 19 16 23 2 8 14 29 24 1 17 34 28 25 30
+BitBench/uudecode/uudecode; norm-best-speedup-cpu-cycles | 1.0373198215065509; norm-worst-speedup-cpu-cycles | 1.0056952961875245; best-PassSet | 32 31 20 24
+Ptrdist/bc/bc; norm-best-speedup-cpu-cycles | 1.0364224450296642; norm-worst-speedup-cpu-cycles | 0.9479481293398465; best-PassSet | 4 19 32 10
+Shootout/Shootout-matrix; norm-best-speedup-cpu-cycles | 1.0363769678256527; norm-worst-speedup-cpu-cycles | 0.9455653779089757; best-PassSet | 11 16 18 28 34 14 25 32 33 20 15 5 26 10 24 21 29 4 7
+hbd/hbd; norm-best-speedup-cpu-cycles | 1.036041462995363; norm-worst-speedup-cpu-cycles | 0.9359936263640778; best-PassSet | 28 13 3 12 1 19 23 29 26 17 8
+Misc/richards_benchmark; norm-best-speedup-cpu-cycles | 1.03483269412696; norm-worst-speedup-cpu-cycles | 0.8723167662870444; best-PassSet | 30 21 12 5 24 22 2 20 3 15 9 13 6 27 31 17 4 11 29
+Shootout/Shootout-hash; norm-best-speedup-cpu-cycles | 1.0326781363848105; norm-worst-speedup-cpu-cycles | 0.9296168402271051; best-PassSet | 2 10 25 16 12 13 24 5 7 26 21 34 3 17 27 29 22 11 33
+obsequi/Obsequi; norm-best-speedup-cpu-cycles | 1.0325535425514751; norm-worst-speedup-cpu-cycles | 0.9923116629887111; best-PassSet | 27 28 23 17 32 7 10 3 18 20 29
+Polybench/linear-algebra/kernels/doitgen/doitgen; norm-best-speedup-cpu-cycles | 1.0323871916276508; norm-worst-speedup-cpu-cycles | 0.9898941525340689; best-PassSet | 29 7 27 9 15 3 33 30 16 14 24 2 22 32 4 12 11 18 25
+TSVC/InductionVariable-dbl/InductionVariable-dbl; norm-best-speedup-cpu-cycles | 1.0315195691650092; norm-worst-speedup-cpu-cycles | 0.9814821020557454; best-PassSet | 7 11 33 29
+Shootout/Shootout-lists; norm-best-speedup-cpu-cycles | 1.0310498516549018; norm-worst-speedup-cpu-cycles | 0.9525197223089914; best-PassSet | 23 8 16 15 34 12 20 11 31 30 13 21 6 10 28 17 33 2 5
+ClamAV/clamscan; norm-best-speedup-cpu-cycles | 1.0297913868722297; norm-worst-speedup-cpu-cycles | 0.9231372221790426; best-PassSet | 18 2 11 4 29 30 31
+Prolangs-C/gnugo/gnugo; norm-best-speedup-cpu-cycles | 1.0296579112485666; norm-worst-speedup-cpu-cycles | 0.9612243200467986; best-PassSet | 25 29 5 15 14 31
+TSVC/StatementReordering-flt/StatementReordering-flt; norm-best-speedup-cpu-cycles | 1.0296474325888867; norm-worst-speedup-cpu-cycles | 0.9766574253927967; best-PassSet | 25 6 14 11
+Olden/health/health; norm-best-speedup-cpu-cycles | 1.0293462190319604; norm-worst-speedup-cpu-cycles | 0.9427525909329557; best-PassSet | 24 34 1 12 23 14
+TSVC/Packing-dbl/Packing-dbl; norm-best-speedup-cpu-cycles | 1.0291824861895114; norm-worst-speedup-cpu-cycles | 0.8668798300730817; best-PassSet | 26 34 13 28 8 30
+TSVC/GlobalDataFlow-dbl/GlobalDataFlow-dbl; norm-best-speedup-cpu-cycles | 1.0277697488760387; norm-worst-speedup-cpu-cycles | 0.9638418404379412; best-PassSet | 13 30 11 14
+kimwitu++/kc; norm-best-speedup-cpu-cycles | 1.027541649256575; norm-worst-speedup-cpu-cycles | 0.9636985311877213; best-PassSet | 7 20 12 33 5 2 13 31 8 24 34
+Prolangs-C++/primes/primes; norm-best-speedup-cpu-cycles | 1.0274200739154988; norm-worst-speedup-cpu-cycles | 0.8863820475335181; best-PassSet | 24 34 1 12 23 14
+Olden/voronoi/voronoi; norm-best-speedup-cpu-cycles | 1.0270628280171243; norm-worst-speedup-cpu-cycles | 0.9606534629704064; best-PassSet | 25 29 5 15 14 31
+Prolangs-C/agrep/agrep; norm-best-speedup-cpu-cycles | 1.0270089586282645; norm-worst-speedup-cpu-cycles | 0.9922115441085511; best-PassSet | 16 18 17 26
+TSVC/Packing-flt/Packing-flt; norm-best-speedup-cpu-cycles | 1.0266334220381976; norm-worst-speedup-cpu-cycles | 0.9716054876465904; best-PassSet | 18 11 1 5
+TSVC/IndirectAddressing-dbl/IndirectAddressing-dbl; norm-best-speedup-cpu-cycles | 1.0262748066893395; norm-worst-speedup-cpu-cycles | 0.948578185528986; best-PassSet | 16 18 17 26
+Prolangs-C/assembler/assembler; norm-best-speedup-cpu-cycles | 1.0254082816268666; norm-worst-speedup-cpu-cycles | 0.9376897373465265; best-PassSet | 26 4 5 10
+nbench/nbench; norm-best-speedup-cpu-cycles | 1.0253541166489302; norm-worst-speedup-cpu-cycles | 0.9909919081138117; best-PassSet | 25 29 7 16
+Polybench/linear-algebra/kernels/syr2k/syr2k; norm-best-speedup-cpu-cycles | 1.024999865990305; norm-worst-speedup-cpu-cycles | 1.0021597487096112; best-PassSet | 33 14 27 17 5 15 19 21 4 2 34 1 29 20 30 3 32 18 12
+Polybench/linear-algebra/kernels/syrk/syrk; norm-best-speedup-cpu-cycles | 1.024731250441253; norm-worst-speedup-cpu-cycles | 0.9874552777670274; best-PassSet | 33 14 27 17 5 15 19 21 4 2 34 1 29 20 30 3 32 18 12
+TSVC/Expansion-dbl/Expansion-dbl; norm-best-speedup-cpu-cycles | 1.024584925813252; norm-worst-speedup-cpu-cycles | 0.9411891857739547; best-PassSet | 25 18 33 26
+Olden/bh/bh; norm-best-speedup-cpu-cycles | 1.0240733565274796; norm-worst-speedup-cpu-cycles | 0.9253727001364006; best-PassSet | 24 30 31 32
+Trimaran/netbench-url/netbench-url; norm-best-speedup-cpu-cycles | 1.0238754508714452; norm-worst-speedup-cpu-cycles | 0.8469470734509383; best-PassSet | 26 17 12 27
+Shootout-C++/Shootout-C++-matrix; norm-best-speedup-cpu-cycles | 1.0233183355098086; norm-worst-speedup-cpu-cycles | 0.9364547290928292; best-PassSet | 26 1 17 4 24 10 29 33 18 5 31 19 11 25 15 28 7 13 14
+TSVC/Symbolics-dbl/Symbolics-dbl; norm-best-speedup-cpu-cycles | 1.0232496466977887; norm-worst-speedup-cpu-cycles | 0.9855721023483257; best-PassSet | 34 16 4 3
+Polybench/stencils/seidel-2d/seidel-2d; norm-best-speedup-cpu-cycles | 1.0230891117462952; norm-worst-speedup-cpu-cycles | 1.0025545167960237; best-PassSet | 2 29 32 9 16 11 21 4 30 27 5 3 23 10 7 22 26 13 14
+Misc-C++-EH/spirit; norm-best-speedup-cpu-cycles | 1.0230762446426802; norm-worst-speedup-cpu-cycles | 0.9992134876360028; best-PassSet | 33 14 27 17 5 15 19 21 4 2 34 1 29 20 30 3 32 18 12
+TSVC/NodeSplitting-dbl/NodeSplitting-dbl; norm-best-speedup-cpu-cycles | 1.0228174959721166; norm-worst-speedup-cpu-cycles | 0.9762364554854056; best-PassSet | 13 12 29 30 23 4
+Shootout-C++/Shootout-C++-lists; norm-best-speedup-cpu-cycles | 1.0226586302912233; norm-worst-speedup-cpu-cycles | 0.9400914259681245; best-PassSet | 6 4 8 18 10 32 13 27 16 22 21 30 5 33 24 19 15 14 11
+Prolangs-C++/simul/simul; norm-best-speedup-cpu-cycles | 1.022639750524354; norm-worst-speedup-cpu-cycles | 0.9318862260730403; best-PassSet | 16 18 17 26
+CoyoteBench/almabench; norm-best-speedup-cpu-cycles | 1.0222913306079093; norm-worst-speedup-cpu-cycles | 0.9948316421619813; best-PassSet | 18 13 7 11 34 27 31 24 1 30 3 4 20 9 28 32 33 12 2
+Prolangs-C++/trees/trees; norm-best-speedup-cpu-cycles | 1.0221655332814463; norm-worst-speedup-cpu-cycles | 0.9292711484271666; best-PassSet | 10 12 15 26
+Polybench/linear-algebra/kernels/bicg/bicg; norm-best-speedup-cpu-cycles | 1.0217267071474758; norm-worst-speedup-cpu-cycles | 1.0057724483708175; best-PassSet | 14 25 18 30 27 26 28 13 19 29 6 12 32 10 34 7 4 1 11
+Polybench/medley/reg_detect/reg_detect; norm-best-speedup-cpu-cycles | 1.021315419910623; norm-worst-speedup-cpu-cycles | 0.9571967284024299; best-PassSet | 15 33 29 7 6 21 27 17 22 14 18
+oggenc/oggenc; norm-best-speedup-cpu-cycles | 1.02130370018265; norm-worst-speedup-cpu-cycles | 0.9248430904760356; best-PassSet | 31 28 34 29 6 15 25 17 8 3 19
+CoyoteBench/huffbench; norm-best-speedup-cpu-cycles | 1.0206629709671526; norm-worst-speedup-cpu-cycles | 0.9562550952900968; best-PassSet | 2 29 32 9 16 11 21 4 30 27 5 3 23 10 7 22 26 13 14
+spiff/spiff; norm-best-speedup-cpu-cycles | 1.0203994255089266; norm-worst-speedup-cpu-cycles | 0.931680594666262; best-PassSet | 13 30 18 15 19 26 8 28 11 29 21
+ASC_Sequoia/IRSmk/IRSmk; norm-best-speedup-cpu-cycles | 1.0203064936257051; norm-worst-speedup-cpu-cycles | 0.9263978268143872; best-PassSet | 33 8 17 32
+Shootout/Shootout-strcat; norm-best-speedup-cpu-cycles | 1.0202950632584125; norm-worst-speedup-cpu-cycles | 0.9897439604177999; best-PassSet | 19 34 18 31 3 32 16 12 13 27 23 9 11 7 8 24 30 33 6
+BenchmarkGame/puzzle; norm-best-speedup-cpu-cycles | 1.020223164261253; norm-worst-speedup-cpu-cycles | 0.9879150432342849; best-PassSet | 14 25 18 30 27 26 28 13 19 29 6 12 32 10 34 7 4 1 11
+Adobe-C++/stepanov_vector; norm-best-speedup-cpu-cycles | 1.0201532079024944; norm-worst-speedup-cpu-cycles | 0.991372560505164; best-PassSet | 26 14 33 25 34 28 21 16 8 9 10 6 15 5 11 1 19 22 4
+Olden/perimeter/perimeter; norm-best-speedup-cpu-cycles | 1.0200223336182601; norm-worst-speedup-cpu-cycles | 0.9057487738039967; best-PassSet | 25 13 12 27 5 33
+Shootout/Shootout-ackermann; norm-best-speedup-cpu-cycles | 1.0200134865270272; norm-worst-speedup-cpu-cycles | 0.9990240380684893; best-PassSet | 24 31 18 4 21 29 34 20 8 9 32 22 30 27 3 5 28 13 15
+MallocBench/gs/gs; norm-best-speedup-cpu-cycles | 1.0195690775782076; norm-worst-speedup-cpu-cycles | 0.9102693415361711; best-PassSet | 13 5 16 34
+TSVC/Searching-dbl/Searching-dbl; norm-best-speedup-cpu-cycles | 1.0190779551769649; norm-worst-speedup-cpu-cycles | 0.954905748040405; best-PassSet | 32 18 20 1
+TSVC/GlobalDataFlow-flt/GlobalDataFlow-flt; norm-best-speedup-cpu-cycles | 1.019032570796534; norm-worst-speedup-cpu-cycles | 0.9753154373665376; best-PassSet | 19 1 30 18
+Misc/evalloop; norm-best-speedup-cpu-cycles | 1.019021661884252; norm-worst-speedup-cpu-cycles | 0.67625310678265; best-PassSet | 25 8 21 18 13 20 34 14 10 33 7 29 22 32 9 24 3 11 12
+mediabench/adpcm/rawcaudio/rawcaudio; norm-best-speedup-cpu-cycles | 1.018328200045491; norm-worst-speedup-cpu-cycles | 0.9906202700507093; best-PassSet | 11 24 9 17
+BenchmarkGame/fannkuch; norm-best-speedup-cpu-cycles | 1.0182936926856572; norm-worst-speedup-cpu-cycles | 0.902610952511732; best-PassSet | 14 17 1 15 22 3 20 11 18 16 8 26 19 5 4 21 25 10 28
+MiBench/office-stringsearch/office-stringsearch; norm-best-speedup-cpu-cycles | 1.0181982931068587; norm-worst-speedup-cpu-cycles | 0.9911022274742314; best-PassSet | 13 12 29 30 23 4
+Misc/ReedSolomon; norm-best-speedup-cpu-cycles | 1.0179955575695607; norm-worst-speedup-cpu-cycles | 0.9526974165462502; best-PassSet | 24 32 30 16 8 20 27 4 5 21 26 31 17 33 34 3 29 28 9
+Stanford/Oscar; norm-best-speedup-cpu-cycles | 1.0179525643292253; norm-worst-speedup-cpu-cycles | 1.0092939708721942; best-PassSet | 12 4 18 25 20 9 2 32 5 3 17 33 10 31 28 22 29 34 21
+Trimaran/enc-rc4/enc-rc4; norm-best-speedup-cpu-cycles | 1.0178014346852748; norm-worst-speedup-cpu-cycles | 0.975019717948522; best-PassSet | 7 11 33 29
+Polybench/medley/floyd-warshall/floyd-warshall; norm-best-speedup-cpu-cycles | 1.0177533904922857; norm-worst-speedup-cpu-cycles | 0.9618430540640308; best-PassSet | 31 8 24 7 15 32 9 12 26 2 16
+mediabench/jpeg/jpeg-6a/cjpeg; norm-best-speedup-cpu-cycles | 1.017407382198054; norm-worst-speedup-cpu-cycles | 0.9516551323923805; best-PassSet | 25 14 3 6
+TSVC/IndirectAddressing-flt/IndirectAddressing-flt; norm-best-speedup-cpu-cycles | 1.0171220129583778; norm-worst-speedup-cpu-cycles | 0.9745179488272776; best-PassSet | 26 34 13 28 8 30
+Adobe-C++/stepanov_abstraction; norm-best-speedup-cpu-cycles | 1.017117244955251; norm-worst-speedup-cpu-cycles | 0.9879626815512558; best-PassSet | 2 10 25 16 12 13 24 5 7 26 21 34 3 17 27 29 22 11 33
+BitBench/uuencode/uuencode; norm-best-speedup-cpu-cycles | 1.016532758234924; norm-worst-speedup-cpu-cycles | 0.9809135878864802; best-PassSet | 2 4 21 17
+Olden/treeadd/treeadd; norm-best-speedup-cpu-cycles | 1.0164320502264976; norm-worst-speedup-cpu-cycles | 0.9631881352847991; best-PassSet | 13 12 29 30 23 4
+sgefa/sgefa; norm-best-speedup-cpu-cycles | 1.0164069582310666; norm-worst-speedup-cpu-cycles | 0.17421380836130393; best-PassSet | 31 11 1 30 34 24 12 4 23 20 14
+Stanford/Queens; norm-best-speedup-cpu-cycles | 1.0161052838310176; norm-worst-speedup-cpu-cycles | 0.8238922953321441; best-PassSet | 4 10 34 23 11 26 13 5 14 1 2
+McGill/misr; norm-best-speedup-cpu-cycles | 1.0159119163110375; norm-worst-speedup-cpu-cycles | 0.8316429569961353; best-PassSet | 20 24 31 30 19 27 26 9 11 7 1 33 16 28 3 12 8 10 23
+McCat/03-testtrie/testtrie; norm-best-speedup-cpu-cycles | 1.0156242179117905; norm-worst-speedup-cpu-cycles | 0.9096727842276976; best-PassSet | 16 18 17 26
+TSVC/LoopRerolling-flt/LoopRerolling-flt; norm-best-speedup-cpu-cycles | 1.0155519014580603; norm-worst-speedup-cpu-cycles | 0.98944209584221; best-PassSet | 25 13 12 27 5 33
+Stanford/RealMM; norm-best-speedup-cpu-cycles | 1.0152007680075912; norm-worst-speedup-cpu-cycles | 0.9899102940103789; best-PassSet | 25 8 21 18 13 20 34 14 10 33 7 29 22 32 9 24 3 11 12
+FreeBench/mason/mason; norm-best-speedup-cpu-cycles | 1.0150129940761043; norm-worst-speedup-cpu-cycles | 0.9840308654009006; best-PassSet | 26 31 27 11 28 24
+tramp3d-v4/tramp3d-v4; norm-best-speedup-cpu-cycles | 1.0146080708644005; norm-worst-speedup-cpu-cycles | 0.9793096470369442; best-PassSet | 24 34 1 12 23 14
+MiBench/security-rijndael/security-rijndael; norm-best-speedup-cpu-cycles | 1.0145124378682615; norm-worst-speedup-cpu-cycles | 0.9802237498269418; best-PassSet | 16 7 26 21 1 20
+Stanford/Perm; norm-best-speedup-cpu-cycles | 1.0142919974667841; norm-worst-speedup-cpu-cycles | 0.9371635367757435; best-PassSet | 33 31 5 28 25 34 8 9 18 29 10 15 27 24 30 19 11 4 26
+Misc-C++/oopack_v1p8; norm-best-speedup-cpu-cycles | 1.0142022637977441; norm-worst-speedup-cpu-cycles | 0.7868917841159471; best-PassSet | 3 25 34 21 7 1 8 30 6 31 9 23 13 10 28 5 26 2 27
+viterbi/viterbi; norm-best-speedup-cpu-cycles | 1.0137517248838326; norm-worst-speedup-cpu-cycles | 0.9516586896499173; best-PassSet | 9 32 31 13 16 14 17 24 5 25 18
+McCat/12-IOtest/iotest; norm-best-speedup-cpu-cycles | 1.0134327646521626; norm-worst-speedup-cpu-cycles | 0.8221889081680938; best-PassSet | 34 16 4 3
+Shootout/Shootout-sieve; norm-best-speedup-cpu-cycles | 1.0130624208249748; norm-worst-speedup-cpu-cycles | 0.9637352628468967; best-PassSet | 23 27 3 5 28 29 32 20 13 9 15 30 25 33 4 1 7 21 24
+MiBench/network-patricia/network-patricia; norm-best-speedup-cpu-cycles | 1.0129272144258623; norm-worst-speedup-cpu-cycles | 0.963977081638775; best-PassSet | 32 31 20 24
+MallocBench/cfrac/cfrac; norm-best-speedup-cpu-cycles | 1.012687262254261; norm-worst-speedup-cpu-cycles | 0.9697130284975445; best-PassSet | 19 26 2 16
+Prolangs-C++/employ/employ; norm-best-speedup-cpu-cycles | 1.0125701300819814; norm-worst-speedup-cpu-cycles | 0.9724090725389014; best-PassSet | 26 34 13 28 8 30
+MiBench/automotive-bitcount/automotive-bitcount; norm-best-speedup-cpu-cycles | 1.0125442311131008; norm-worst-speedup-cpu-cycles | 0.9903487729266716; best-PassSet | 31 20 19 17 25 28
+MallocBench/espresso/espresso; norm-best-speedup-cpu-cycles | 1.0125197527813072; norm-worst-speedup-cpu-cycles | 0.9461833016747231; best-PassSet | 2 4 21 17
+Prolangs-C/bison/mybison; norm-best-speedup-cpu-cycles | 1.0123947865657352; norm-worst-speedup-cpu-cycles | 0.9137593215638223; best-PassSet | 2 8 28 21
+TSVC/Searching-flt/Searching-flt; norm-best-speedup-cpu-cycles | 1.0123926985144724; norm-worst-speedup-cpu-cycles | 0.9772902266882058; best-PassSet | 8 1 10 12
+Dhrystone/fldry; norm-best-speedup-cpu-cycles | 1.0121465939917373; norm-worst-speedup-cpu-cycles | 0.9528077054694369; best-PassSet | 15 33 29 7 6 21 27 17 22 14 18
+TSVC/LoopRerolling-dbl/LoopRerolling-dbl; norm-best-speedup-cpu-cycles | 1.0120430670064362; norm-worst-speedup-cpu-cycles | 0.9894919260683889; best-PassSet | 13 12 29 30 23 4
+TSVC/LinearDependence-dbl/LinearDependence-dbl; norm-best-speedup-cpu-cycles | 1.0113128309209156; norm-worst-speedup-cpu-cycles | 0.9869645716948819; best-PassSet | 23 15 20 3
+MiBench/telecomm-FFT/telecomm-fft; norm-best-speedup-cpu-cycles | 1.0112245136606262; norm-worst-speedup-cpu-cycles | 0.9815751725742257; best-PassSet | 29 33 27 30
+Prolangs-C++/city/city; norm-best-speedup-cpu-cycles | 1.0111803133347745; norm-worst-speedup-cpu-cycles | 0.863936253665056; best-PassSet | 13 12 29 30 23 4
+Prolangs-C++/life/life; norm-best-speedup-cpu-cycles | 1.0108241320147533; norm-worst-speedup-cpu-cycles | 0.9667136593084956; best-PassSet | 24 33 9 20
+McCat/08-main/main; norm-best-speedup-cpu-cycles | 1.010697536988478; norm-worst-speedup-cpu-cycles | 0.9828614701745704; best-PassSet | 25 14 3 6
+SciMark2-C/scimark2; norm-best-speedup-cpu-cycles | 1.0104360104393175; norm-worst-speedup-cpu-cycles | 0.988259039549942; best-PassSet | 2 16 27 10
+TSVC/Reductions-dbl/Reductions-dbl; norm-best-speedup-cpu-cycles | 1.0102262905129185; norm-worst-speedup-cpu-cycles | 0.7012793091219942; best-PassSet | 24 3 18 19
+MiBench/telecomm-CRC32/telecomm-CRC32; norm-best-speedup-cpu-cycles | 1.009649604829339; norm-worst-speedup-cpu-cycles | 0.9450969461007864; best-PassSet | 6 31 3 13
+MiBench/automotive-susan/automotive-susan; norm-best-speedup-cpu-cycles | 1.0096341865280984; norm-worst-speedup-cpu-cycles | 0.889081585300077; best-PassSet | 26 31 27 11 28 24
+BenchmarkGame/n-body; norm-best-speedup-cpu-cycles | 1.0092819743513102; norm-worst-speedup-cpu-cycles | 0.99906862877394; best-PassSet | 31 8 24 7 15 32 9 12 26 2 16
+Misc/whetstone; norm-best-speedup-cpu-cycles | 1.0090231614651926; norm-worst-speedup-cpu-cycles | 0.9911779319331497; best-PassSet | 8 29 27 21 17 28 23 4 18 2 14 16 12 32 9 30 5 7 20
+TSVC/Equivalencing-flt/Equivalencing-flt; norm-best-speedup-cpu-cycles | 1.009010266387775; norm-worst-speedup-cpu-cycles | 0.9647354927089344; best-PassSet | 24 34 1 12 23 14
+Polybench/linear-algebra/solvers/lu/lu; norm-best-speedup-cpu-cycles | 1.0090098665935594; norm-worst-speedup-cpu-cycles | 0.3677345011071617; best-PassSet | 33 3 11 6 18 28 27 26 10 25 8 20 16 34 7 31 14 5 32
+Olden/em3d/em3d; norm-best-speedup-cpu-cycles | 1.0089340555226372; norm-worst-speedup-cpu-cycles | 0.9410139936608517; best-PassSet | 6 26 22 5
+BenchmarkGame/recursive; norm-best-speedup-cpu-cycles | 1.008688119121665; norm-worst-speedup-cpu-cycles | 0.9775341084958349; best-PassSet | 14 30 12 26 24 17 34 13 23 10 32 6 5 21 3 9 2 1 11
+Shootout/Shootout-fib2; norm-best-speedup-cpu-cycles | 1.0084192725249295; norm-worst-speedup-cpu-cycles | 0.973419526420713; best-PassSet | 15 33 29 7 6 21 27 17 22 14 18
+sqlite3/sqlite3; norm-best-speedup-cpu-cycles | 1.0083760814810994; norm-worst-speedup-cpu-cycles | 0.9293788725690147; best-PassSet | 32 2 33 29 6 30 13 20 3 1 28
+Polybench/linear-algebra/solvers/durbin/durbin; norm-best-speedup-cpu-cycles | 1.0077560899107365; norm-worst-speedup-cpu-cycles | 0.9753468715968853; best-PassSet | 4 25 30 1 17 15 2 12 29 16 5 14 3 18 10 9 22 23 32
+TSVC/Equivalencing-dbl/Equivalencing-dbl; norm-best-speedup-cpu-cycles | 1.0076287727719304; norm-worst-speedup-cpu-cycles | 0.9809373245325237; best-PassSet | 14 22 19 23 29 4
+Misc-C++/stepanov_v1p2; norm-best-speedup-cpu-cycles | 1.0075816947765195; norm-worst-speedup-cpu-cycles | 1.003709328122695; best-PassSet | 2 29 32 9 16 11 21 4 30 27 5 3 23 10 7 22 26 13 14
+Shootout-C++/Shootout-C++-lists1; norm-best-speedup-cpu-cycles | 1.007262653558158; norm-worst-speedup-cpu-cycles | 0.9438264787661058; best-PassSet | 7 11 32 16 28 2 12 10 14 31 24
+FreeBench/neural/neural; norm-best-speedup-cpu-cycles | 1.0071179130875099; norm-worst-speedup-cpu-cycles | 0.9618430090801068; best-PassSet | 26 34 13 28 8 30
+Misc/dt; norm-best-speedup-cpu-cycles | 1.0070805917834917; norm-worst-speedup-cpu-cycles | 0.995952585777607; best-PassSet | 21 18 31 34 33 3 25 4 6 22 5 11 24 7 1 30 28 29 2
+Stanford/Towers; norm-best-speedup-cpu-cycles | 1.0070628218487059; norm-worst-speedup-cpu-cycles | 0.9491441236564637; best-PassSet | 31 15 30 9 18 22 29 27 10 21 13 32 23 11 1 34 12 20 24
+BitBench/five11/five11; norm-best-speedup-cpu-cycles | 1.007038289731772; norm-worst-speedup-cpu-cycles | 0.9348503874025578; best-PassSet | 14 4 17 13
+TSVC/ControlLoops-dbl/ControlLoops-dbl; norm-best-speedup-cpu-cycles | 1.0069233180717023; norm-worst-speedup-cpu-cycles | 0.9454285457379922; best-PassSet | 26 34 13 28 8 30
+MiBench/consumer-lame/consumer-lame; norm-best-speedup-cpu-cycles | 1.0065089043052073; norm-worst-speedup-cpu-cycles | 0.9681266265905751; best-PassSet | 14 27 22 32
+Stanford/Quicksort; norm-best-speedup-cpu-cycles | 1.00625975503458; norm-worst-speedup-cpu-cycles | 0.9406101259246591; best-PassSet | 26 14 33 25 34 28 21 16 8 9 10 6 15 5 11 1 19 22 4
+Misc/fbench; norm-best-speedup-cpu-cycles | 1.006068806664625; norm-worst-speedup-cpu-cycles | 0.971514303758266; best-PassSet | 31 16 22 8 25 1 28 21 32 5 29 6 14 20 7 9 30 24 26
+FreeBench/fourinarow/fourinarow; norm-best-speedup-cpu-cycles | 1.0059747904401473; norm-worst-speedup-cpu-cycles | 0.9662560477958563; best-PassSet | 25 14 3 6
+Shootout-C++/Shootout-C++-random; norm-best-speedup-cpu-cycles | 1.0057059070309933; norm-worst-speedup-cpu-cycles | 1.0030375455817133; best-PassSet | 8 23 32 25 34 28 3 15 18 31 13
+Shootout-C++/Shootout-C++-methcall; norm-best-speedup-cpu-cycles | 1.0056835173745695; norm-worst-speedup-cpu-cycles | 0.9618048318878509; best-PassSet | 12 26 33 25 8 29 11 24 6 31 10
+Misc/fp-convert; norm-best-speedup-cpu-cycles | 1.005622980569459; norm-worst-speedup-cpu-cycles | 0.9941443901702967; best-PassSet | 11 10 29 9 31 2 13 16 23 7 22 15 6 28 14 4 5 34 19
+Shootout-C++/Shootout-C++-fibo; norm-best-speedup-cpu-cycles | 1.0054923844602623; norm-worst-speedup-cpu-cycles | 0.9439385416036637; best-PassSet | 33 24 3 8 34 7 22 11 5 9 26 30 12 15 14 4 19 13 17
+Stanford/Bubblesort; norm-best-speedup-cpu-cycles | 1.00501119840467; norm-worst-speedup-cpu-cycles | 0.9894623205512045; best-PassSet | 17 27 18 24 28 9 34 3 1 15 16 13 4 33 26 7 31 10 21
+Misc/mandel; norm-best-speedup-cpu-cycles | 1.0049702823464204; norm-worst-speedup-cpu-cycles | 0.9991863529955952; best-PassSet | 21 5 14 22 33 8 9 10 29 19 20 18 15 1 11 6 34 32 13
+Misc/matmul_f64_4x4; norm-best-speedup-cpu-cycles | 1.0049077846418082; norm-worst-speedup-cpu-cycles | 0.9974367072994882; best-PassSet | 29 19 26 8 32 23 27 5 9 15 21 11 14 34 33 30 17 10 28
+McCat/05-eks/eks; norm-best-speedup-cpu-cycles | 1.004760497142094; norm-worst-speedup-cpu-cycles | 0.9847261160377275; best-PassSet | 10 12 4 23
+Misc/flops-2; norm-best-speedup-cpu-cycles | 1.0047311383047721; norm-worst-speedup-cpu-cycles | 0.9995921948096226; best-PassSet | 12 28 3 19 10 4 5 15 11 18 16 21 2 14 22 30 33 7 8
+Shootout-C++/EH/Shootout-C++-except; norm-best-speedup-cpu-cycles | 1.0046463970782433; norm-worst-speedup-cpu-cycles | 0.9886339033527249; best-PassSet | 5 10 14 32 31 9 19 12 23 7 13 15 16 18 22 20 25 33 28
+VersaBench/bmm/bmm; norm-best-speedup-cpu-cycles | 1.0046089567144114; norm-worst-speedup-cpu-cycles | 0.9785846999979958; best-PassSet | 8 23 16 15
+Trimaran/enc-md5/enc-md5; norm-best-speedup-cpu-cycles | 1.0046063352468961; norm-worst-speedup-cpu-cycles | 0.9943025287594229; best-PassSet | 14 27 22 32
+McCat/18-imp/imp; norm-best-speedup-cpu-cycles | 1.0045336050261742; norm-worst-speedup-cpu-cycles | 0.9486091704665; best-PassSet | 34 22 1 27
+VersaBench/8b10b/8b10b; norm-best-speedup-cpu-cycles | 1.0044362199475192; norm-worst-speedup-cpu-cycles | 0.9659866740867181; best-PassSet | 26 31 27 11 28 24
+Shootout/Shootout-random; norm-best-speedup-cpu-cycles | 1.0044079554100516; norm-worst-speedup-cpu-cycles | 0.9982153174778412; best-PassSet | 17 27 18 24 28 9 34 3 1 15 16 13 4 33 26 7 31 10 21
+Misc/flops-7; norm-best-speedup-cpu-cycles | 1.004195814605521; norm-worst-speedup-cpu-cycles | 1.0006522078510276; best-PassSet | 30 21 12 5 24 22 2 20 3 15 9 13 6 27 31 17 4 11 29
+Misc/flops-5; norm-best-speedup-cpu-cycles | 1.0041357529907877; norm-worst-speedup-cpu-cycles | 0.9904351763501171; best-PassSet | 8 11 22 31 7 12 9 29 28 33 18 3 25 19 15 1 16 20 14
+McGill/queens; norm-best-speedup-cpu-cycles | 1.0039812322877195; norm-worst-speedup-cpu-cycles | 0.976882305523988; best-PassSet | 8 23 32 25 34 28 3 15 18 31 13
+TSVC/LinearDependence-flt/LinearDependence-flt; norm-best-speedup-cpu-cycles | 1.0038364046280723; norm-worst-speedup-cpu-cycles | 0.9886211512101047; best-PassSet | 13 12 29 30 23 4
+Shootout/Shootout-methcall; norm-best-speedup-cpu-cycles | 1.003818531201601; norm-worst-speedup-cpu-cycles | 0.9536016635008331; best-PassSet | 3 25 34 21 7 1 8 30 6 31 9 23 13 10 28 5 26 2 27
+TSVC/Recurrences-dbl/Recurrences-dbl; norm-best-speedup-cpu-cycles | 1.0038165634480933; norm-worst-speedup-cpu-cycles | 0.9966331015427939; best-PassSet | 34 16 4 3
+TSVC/Reductions-flt/Reductions-flt; norm-best-speedup-cpu-cycles | 1.0037502158124136; norm-worst-speedup-cpu-cycles | 0.7933577805176356; best-PassSet | 24 34 1 12 23 14
+TSVC/Symbolics-flt/Symbolics-flt; norm-best-speedup-cpu-cycles | 1.0037273461063891; norm-worst-speedup-cpu-cycles | 0.9813136051583863; best-PassSet | 25 29 5 15 14 31
+BenchmarkGame/spectral-norm; norm-best-speedup-cpu-cycles | 1.0036509699970186; norm-worst-speedup-cpu-cycles | 0.9956883144608693; best-PassSet | 2 6 4 3 8 25 22 28 30 21 18 31 32 12 24 9 16 20 11
+Misc/flops; norm-best-speedup-cpu-cycles | 1.0036097081234203; norm-worst-speedup-cpu-cycles | 1.0018595679285107; best-PassSet | 31 8 24 7 15 32 9 12 26 2 16
+TSVC/CrossingThresholds-dbl/CrossingThresholds-dbl; norm-best-speedup-cpu-cycles | 1.0035729312476704; norm-worst-speedup-cpu-cycles | 0.9507486094678751; best-PassSet | 34 16 4 3
+Stanford/FloatMM; norm-best-speedup-cpu-cycles | 1.0035176753109842; norm-worst-speedup-cpu-cycles | 0.993177728105272; best-PassSet | 28 33 27 11 2 3 10 18 6 13 8 22 34 17 23 1 20 14 21
+Adobe-C++/simple_types_loop_invariant; norm-best-speedup-cpu-cycles | 1.0034065775394976; norm-worst-speedup-cpu-cycles | 0.9535792203681978; best-PassSet | 26 14 33 25 34 28 21 16 8 9 10 6 15 5 11 1 19 22 4
+Misc/flops-4; norm-best-speedup-cpu-cycles | 1.003320532326411; norm-worst-speedup-cpu-cycles | 1.000895385951914; best-PassSet | 32 31 15 27 34 25 26 14 10 9 21 1 12 17 8 7 28 4 30
+Trimaran/netbench-crc/netbench-crc; norm-best-speedup-cpu-cycles | 1.003313449478284; norm-worst-speedup-cpu-cycles | 0.9959369839063793; best-PassSet | 13 12 29 30 23 4
+Misc/flops-3; norm-best-speedup-cpu-cycles | 1.0033127428973982; norm-worst-speedup-cpu-cycles | 1.001707294746652; best-PassSet | 29 7 27 9 15 3 33 30 16 14 24 2 22 32 4 12 11 18 25
+Misc-C++/Large/sphereflake; norm-best-speedup-cpu-cycles | 1.0033098675607746; norm-worst-speedup-cpu-cycles | 0.9094910710305061; best-PassSet | 12 28 3 19 10 4 5 15 11 18 16 21 2 14 22 30 33 7 8
+TSVC/NodeSplitting-flt/NodeSplitting-flt; norm-best-speedup-cpu-cycles | 1.003213133480413; norm-worst-speedup-cpu-cycles | 0.9839173382554808; best-PassSet | 4 19 32 10
+ASC_Sequoia/CrystalMk/CrystalMk; norm-best-speedup-cpu-cycles | 1.0032097356891059; norm-worst-speedup-cpu-cycles | 0.9935528950091189; best-PassSet | 26 34 13 28 8 30
+McCat/04-bisect/bisect; norm-best-speedup-cpu-cycles | 1.0031051499863002; norm-worst-speedup-cpu-cycles | 0.9867087383164692; best-PassSet | 8 17 28 26
+Trimaran/enc-pc1/enc-pc1; norm-best-speedup-cpu-cycles | 1.002757621252542; norm-worst-speedup-cpu-cycles | 0.9844777302607334; best-PassSet | 25 29 5 15 14 31
+MiBench/network-dijkstra/network-dijkstra; norm-best-speedup-cpu-cycles | 1.0023720865881598; norm-worst-speedup-cpu-cycles | 0.9146895895113509; best-PassSet | 25 14 3 6
+Adobe-C++/loop_unroll; norm-best-speedup-cpu-cycles | 1.0023479620963924; norm-worst-speedup-cpu-cycles | 0.9872389990082765; best-PassSet | 9 23 33 25 3 29 8 24 32 2 15 4 28 12 5 19 11 31 18
+Dhrystone/dry; norm-best-speedup-cpu-cycles | 1.0022300670748654; norm-worst-speedup-cpu-cycles | 0.9131010688408233; best-PassSet | 31 8 24 7 15 32 9 12 26 2 16
+TSVC/InductionVariable-flt/InductionVariable-flt; norm-best-speedup-cpu-cycles | 1.0021280400226724; norm-worst-speedup-cpu-cycles | 0.9522897207288014; best-PassSet | 25 29 7 16
+McCat/17-bintr/bintr; norm-best-speedup-cpu-cycles | 1.0018757274257462; norm-worst-speedup-cpu-cycles | 0.956190529501877; best-PassSet | 33 30 27 19
+TSVC/ControlLoops-flt/ControlLoops-flt; norm-best-speedup-cpu-cycles | 1.0018235134025661; norm-worst-speedup-cpu-cycles | 0.9829154727710075; best-PassSet | 24 8 7 18
+Adobe-C++/simple_types_constant_folding; norm-best-speedup-cpu-cycles | 1.0015821775343527; norm-worst-speedup-cpu-cycles | 0.7730028698060339; best-PassSet | 7 13 19 3 30 31 10 32 14 8 23 28 22 4 1 16 9 6 17
+BenchmarkGame/Large/fasta; norm-best-speedup-cpu-cycles | 1.0013074944730405; norm-worst-speedup-cpu-cycles | 0.9924582778542564; best-PassSet | 23 26 32 10 18 33 7 14 13 29 34 28 12 2 16 22 1 8 31
+VersaBench/ecbdes/ecbdes; norm-best-speedup-cpu-cycles | 1.0012804610746382; norm-worst-speedup-cpu-cycles | 0.9921991867252914; best-PassSet | 28 7 18 11
+MiBench/automotive-basicmath/automotive-basicmath; norm-best-speedup-cpu-cycles | 1.00125880882769; norm-worst-speedup-cpu-cycles | 0.9522776825365464; best-PassSet | 6 33 26 17
+Trimaran/enc-3des/enc-3des; norm-best-speedup-cpu-cycles | 1.0003246328632476; norm-worst-speedup-cpu-cycles | 0.9539769334875198; best-PassSet | 9 18 19 2
+TSVC/Recurrences-flt/Recurrences-flt; norm-best-speedup-cpu-cycles | 1.0002670814146932; norm-worst-speedup-cpu-cycles | 0.9937410711369772; best-PassSet | 13 5 16 34
+TSVC/CrossingThresholds-flt/CrossingThresholds-flt; norm-best-speedup-cpu-cycles | 0.9996705974205989; norm-worst-speedup-cpu-cycles | 0.9523205189111581; best-PassSet | 26 34 13 28 8 30
+McCat/01-qbsort/qbsort; norm-best-speedup-cpu-cycles | 0.9973201264334294; norm-worst-speedup-cpu-cycles | 0.9104485738473617; best-PassSet | 26 31 27 11 28 24
+MiBench/telecomm-adpcm/telecomm-adpcm; norm-best-speedup-cpu-cycles | 0.9965503463387787; norm-worst-speedup-cpu-cycles | 0.8575299050109594; best-PassSet | 9 12 29 24
+Prolangs-C/plot2fig/plot2fig; norm-best-speedup-cpu-cycles | 0.9954036200398362; norm-worst-speedup-cpu-cycles | 0.89937073719255; best-PassSet | 13 30 11 14
+FreeBench/distray/distray; norm-best-speedup-cpu-cycles | 0.991723139709437; norm-worst-speedup-cpu-cycles | 0.9337676614284934; best-PassSet | 25 29 5 15 14 31
+SPASS/SPASS; norm-best-speedup-cpu-cycles | 0.9791250219367431; norm-worst-speedup-cpu-cycles | 0.9401274799483914; best-PassSet | 32 33 15 21 14 23 8 20 18 12 27
