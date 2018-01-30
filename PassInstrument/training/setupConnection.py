@@ -93,4 +93,5 @@ if __name__ == '__main__':
     ConInfo = lib.ConnectInfoService()
     IpDict = ConInfo.getConnectDict(EnvConInfoLoc)
     con.setupIptables(IpDict)
+    print("Note: make sure you already install perf tools in the \"remote.\"")
 
