@@ -30,7 +30,6 @@ def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
         p.wait()
         return p.returncode, out, err
     else:
-        #TODO
         print("TODO: non-blocking execute", file=sys.stderr)
 
 class EnvBuilder:
@@ -251,8 +250,22 @@ class ResponseActor:
             fileCmd = file.readline()
             file.close()
         BuiltBin = fileCmd.split()[1]
-        if os.path.exists(BuiltBin):
-            os.remove(BuiltBin)
+        '''
+        remove binary does not ensure it will be built again.
+        Therefore, we must use "make clean"
+        '''
+        binName = BuiltBin.split('/')[-1]
+        dirPath = BuiltBin[:-(len(binName) + 1):]
+        prevWd = os.getcwd()
+        os.chdir(dirPath)
+        os.system("make clean")
+        os.chdir(prevWd)
+
+        # remove feature file
+        FeatureFile = '/tmp/PredictionDaemon/worker-{}/features'.format(WorkerID)
+        if os.path.exists(FeatureFile):
+            os.remove(FeatureFile)
+
         '''
         build
         assuming the proper cmake is already done.
