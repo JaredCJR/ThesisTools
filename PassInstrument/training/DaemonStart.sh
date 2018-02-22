@@ -23,6 +23,8 @@ if [ "$worker" == "all" ]; then
     RestartDaemon $i
   done
 else
+    echo "Common Usage: $ ./DaemonStart.sh all"
+    echo "If you only want to start single worker: $ ./DaemonStart.sh [ID in number]"
     RestartDaemon $worker
 fi
 
