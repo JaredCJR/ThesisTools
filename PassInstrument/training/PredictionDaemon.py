@@ -245,11 +245,20 @@ class ResponseActor:
         remove previous build and build again
         '''
         env = EnvBuilder()
-        # ex. RUN: /llvm/test-suite/build-worker-1/SingleSource/Benchmarks/Dhrystone/dry
+        '''
+        ex1. RUN: /llvm/test-suite/build-worker-1/SingleSource/Benchmarks/Dhrystone/dry
+        ex2. RUN: cd /home/jrchang/workspace/llvm-thesis/test-suite/build-worker-1/MultiSource/Applications/sqlite3 ; /home/jrchang/workspace/llvm-thesis/test-suite/build-worker-1/MultiSource/Applications/sqlite3/sqlite3 -init /home/jrchang/workspace/llvm-thesis/test-suite/MultiSource/Applications/sqlite3/sqlite3rc :memory: < /home/jrchang/workspace/llvm-thesis/test-suite/MultiSource/Applications/sqlite3/commands
+        '''
         with open(testLoc, "r") as file:
             fileCmd = file.readline()
             file.close()
-        BuiltBin = fileCmd.split()[1]
+        MultiCmdList = fileCmd.split(';')
+        if len(MultiCmdList) == 1:
+            # cases like ex1.
+            BuiltBin = fileCmd.split()[1]
+        else:
+            # cases like ex2.
+            BuiltBin = MultiCmdList[1].strip().split()[0]
         '''
         remove binary does not ensure it will be built again.
         Therefore, we must use "make clean"
@@ -257,6 +266,14 @@ class ResponseActor:
         binName = BuiltBin.split('/')[-1]
         dirPath = BuiltBin[:-(len(binName) + 1):]
         prevWd = os.getcwd()
+        ##
+        '''
+        print("fileCmd={}".format(fileCmd))
+        print("BuiltBin={}".format(BuiltBin))
+        print("dirPath={}".format(dirPath))
+        print("binName={}".format(binName))
+        '''
+        ##
         os.chdir(dirPath)
         os.system("make clean")
         os.chdir(prevWd)
