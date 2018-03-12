@@ -11,8 +11,9 @@ import re
 import shlex
 import shutil
 import psutil
-import subprocess
+import subprocess, threading
 import Lib as lib
+import tfServer
 
 def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
     """
@@ -221,7 +222,7 @@ class EnvBuilder:
         return ret
 
 class ResponseActor:
-    def fooClangEcho(self, InputString, SenderIpString):
+    def ClangEcho(self, InputString, SenderIpString):
         """
         Input: "InputString" must be demangled function name
         """
@@ -230,7 +231,7 @@ class ResponseActor:
         #FuncFeatures = Inputs[1]
         #print(FuncName)
         retString = ""
-        Mode = "fooSet"
+        Mode = "InferenceSet"
         return retString
 
     def EnvEcho(self, BuildTarget):
@@ -307,6 +308,9 @@ class ResponseActor:
         return retString
 
 class tcpServer:
+    def __inti__():
+        self.tfServerThread = None
+
     class ClangTcpHandler(socketserver.StreamRequestHandler):
         def handle(self):
             global DaemonIpcFileLoc
@@ -322,11 +326,13 @@ class tcpServer:
                 Str = data.decode('utf-8')
             except Exception as e:
                 Str = "DecodeFailed"
-            #actor = ResponseActor()
-            #WriteContent = actor.fooClangEcho(Str, self.client_address[0])
+            actor = ResponseActor()
+            WriteContent = actor.ClangEcho(Str, self.client_address[0])
+            '''
             with open(DaemonIpcFileLoc, 'r') as IpcFile:
                 WriteContent = IpcFile.read()
                 IpcFile.close()
+            '''
             '''
             self.wfile is a file-like object used to write back
             to the client
@@ -414,8 +420,13 @@ class tcpServer:
                         WriteContent = file.read().strip()
                         file.close()
                 self.writeMsgBack(WriteContent)
-
-    def CreateClangTcpServer(self, HOST, PORT):
+    def CreateClangTcpServer(self, HOST, PORT, WorkerID):
+        '''
+        Create process for keeping the RL model
+        thread will make the sigterm handler in that thread crash.
+        '''
+        p = Process(target=tfServer.tfServer, args=(WorkerID,))
+        p.start()
         # Make port reusable
         socketserver.TCPServer.allow_reuse_address = True
         # Create the server, binding to host on port
@@ -486,18 +497,24 @@ class Daemon:
             for child in parent.children(recursive=True):
                 child.kill()
             # kill itselt and remove pid file.("atexit.register")
-            raise SystemExit(1)
+            try:
+                raise SystemExit(1)
+            except Exception as e:
+                print('raise SystemExit(1) failed. remove myself manually.')
+                os.remove(PidFile)
+                os.kill(parent_pid)
 
         signal.signal(signal.SIGTERM, sigterm_handler)
 
-    def SetupClangServer(self, ClangHost="127.0.0.1", ClangPort=7521):
+    def SetupClangServer(self, WorkerID, ClangHost="127.0.0.1", ClangPort=7521):
+        sys.stdout.write('Clang-Daemon started with pid {}\n'.format(os.getpid()))
         sys.stdout.write('Clang-Daemon started with pid {}\n'.format(os.getpid()))
         '''
         If the port is opened, close it!
         '''
         server = tcpServer()
         sys.stdout.write('Clang-TCP server started with ip:{} port:{}\n'.format(ClangHost, ClangPort))
-        server.CreateClangTcpServer(ClangHost, ClangPort)
+        server.CreateClangTcpServer(ClangHost, ClangPort, WorkerID)
 
     def SetupEnvServer(self, EnvHost="127.0.0.1", EnvPort=8521):
         sys.stdout.write('Env-Daemon started with pid {}\n'.format(os.getpid()))
@@ -523,7 +540,7 @@ class Daemon:
         return ClangConnectDict, EnvConnectDict
 
     def CreateDaemon(self, DaemonName, PidFile, LogFile,
-            Host, Port):
+            Host, Port, WorkerID=None):
         try:
             self.daemonize(PidFile,
                       LogFile,
@@ -533,7 +550,7 @@ class Daemon:
             print("{} daemonize failed. {}".format(DaemonName, e), file=sys.stderr)
             raise SystemExit(1)
         if DaemonName == "PredictionDaemon-Clang":
-            self.SetupClangServer(Host, Port)
+            self.SetupClangServer(WorkerID, Host, Port)
         elif DaemonName == "PredictionDaemon-Env":
             self.SetupEnvServer(Host, Port)
         else:
@@ -574,7 +591,7 @@ class Daemon:
             # tcp server will block the process, we need two processes.
             if os.fork():
                 # Create daemon for RL-env, Clang-Daemon shoud start first
-                time.sleep(1)
+                time.sleep(0.5)
                 # check cmake
                 builder = EnvBuilder()
                 builder.CheckTestSuiteCmake(WorkerID)
@@ -583,7 +600,7 @@ class Daemon:
             else:
                 # Create daemon for clang
                 self.CreateDaemon(ClangDaemonName, ClangPidFile, ClangLogFile,
-                        ClangHost, ClangPort)
+                        ClangHost, ClangPort, WorkerID)
 
         elif argv[1] == 'stop':
             ExitFlag = False
@@ -591,6 +608,7 @@ class Daemon:
             if os.path.exists(ClangPidFile):
                 with open(ClangPidFile) as f:
                     os.kill(int(f.read()), signal.SIGTERM)
+                    print("{} is killed successfully".format(ClangDaemonName))
             else:
                 print(ClangDaemonName + ': Not running', file=sys.stderr)
                 ExitFlag = True
@@ -598,6 +616,7 @@ class Daemon:
             if os.path.exists(EnvPidFile):
                 with open(EnvPidFile) as f:
                     os.kill(int(f.read()), signal.SIGTERM)
+                    print("{} is killed successfully".format(EnvDaemonName))
             else:
                 print(EnvDaemonName + ': Not running', file=sys.stderr)
                 ExitFlag = True
