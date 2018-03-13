@@ -32,14 +32,20 @@ def ConvertToArray(FeatureStr):
     array = np.asarray(retVec)
     return array
 
-def ChoosePass(RL_ChooseAction_Func, state, PassHistory):
+def ChoosePass(RL_ChooseAction_Func, State, FuncName, FunctionPassRec):
     """
     gym-OptClang and DPPO:   pass range --> 0~33
     Modified Clang:          pass range --> 1~34
     We need to add 1 to convert the range.
     """
-    retPass = RL_ChooseAction_Func(state, PassHistory)
-    #print("RL_ChooseAction_Func ret={}".format(retPass))
+    # create PassHistory for FuncName
+    if FuncName not in FunctionPassRec:
+        FunctionPassRec[FuncName] = {}
+    # call agent to predict
+    retPass = RL_ChooseAction_Func(State, FunctionPassRec[FuncName])
+    # if the pass meet the threshold, remove its history to keep memory.
+    if len(FunctionPassRec[FuncName].keys()) == 9:
+        FunctionPassRec.pop(FuncName, "None")
     return retPass + 1
 
 def tfServer(WorkerID, IpcQueue_Features, IpcQueue_Pass):
@@ -75,9 +81,8 @@ def tfServer(WorkerID, IpcQueue_Features, IpcQueue_Pass):
     Config = hp.LoadJsonConfig(OptClangLoc+'/config.json')
     # use the config to restore model
     ppo = RestoreModel(OptClangLoc, RelativeLogDir, ModelName, Config)
-
-    idx = 0
-    PassHistory = {}
+    # record the pass applied for each function
+    FunctionPassRec = {}
     # Main Loop
     while True:
         '''
@@ -86,14 +91,13 @@ def tfServer(WorkerID, IpcQueue_Features, IpcQueue_Pass):
         '''
         if not IpcQueue_Features.empty():
             FeatureStr = IpcQueue_Features.get()
+            Inputs = FeatureStr.split('@')
+            FuncName = Inputs[0].strip()
+            FuncFeatures = Inputs[1].strip()
             '''
             use model to predict retPass
             retPass must be integer
             '''
-            state = ConvertToArray(FeatureStr)
-            retPass = ChoosePass(ppo.choose_action, state, PassHistory)
+            state = ConvertToArray(FuncFeatures)
+            retPass = ChoosePass(ppo.choose_action, state, FuncName, FunctionPassRec)
             IpcQueue_Pass.put(retPass, block=True, timeout=None)
-            idx += 1
-            if idx == 9:
-                idx = 0
-                PassHistory = {}

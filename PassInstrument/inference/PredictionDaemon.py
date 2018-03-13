@@ -233,7 +233,8 @@ class ResponseActor:
         Inputs = InputString.split('@')
         FuncName = Inputs[0]
         FuncFeatures = Inputs[1]
-        GlobalIpcQueue_Features.put(FuncFeatures, block=True, timeout=None)
+        #GlobalIpcQueue_Features.put(FuncFeatures, block=True, timeout=None)
+        GlobalIpcQueue_Features.put(InputString, block=True, timeout=None)
         Pass = GlobalIpcQueue_Pass.get(block=True, timeout=None)
         #print("Get {}".format(Pass))
         return str(Pass)
