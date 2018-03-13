@@ -234,6 +234,7 @@ class ResponseActor:
         Inputs = InputString.split('@')
         FuncName = Inputs[0]
         FuncFeatures = Inputs[1]
+        # lock to prevent race condition
         tfServerLock.acquire()
         GlobalIpcQueue_Features.put(InputString, block=True, timeout=None)
         Pass = GlobalIpcQueue_Pass.get(block=True, timeout=None)

@@ -275,8 +275,9 @@ cd /path/to/llvm-thesis/ThesisTools/PassInstrument/
 # If you want to debug your "Rewritter", option "1" doesn't need to be executed multiple times.
 ```
 
-How to build LLVM/Clang for training framework:
+How to build LLVM/Clang for training framework
 ---------------------------------------------------------
+
  * Our framework based on LLVM/Clang 5.0.1
 ```
 git clone https://github.com/JaredCJR/llvm llvm-thesis
@@ -364,4 +365,21 @@ taskset -c 0 ./DaemonStart.sh all
 cd llvm-thesis/ThesisTools/PassInstrument/training
 ./fakeEnv.py
 # Then, you should see results from different remote workers.
+```
+
+How to train the model
+---------------------------------------------------------
+Please refer to [JaredCJR/PPO-OptClang](https://github.com/JaredCJR/PPO-OptClang)
+
+
+How to use the trained model to inference
+---------------------------------------------------------
+* Build LLVM/Clang for inference as same as the procedure in [Training Framework](#how-to-build-llvmclang-for-training-framework)
+* __Except the branch name: replace `PassPrediction-training` with `PassPrediction-inference`__
+
+```
+cd ./PassInstrument/inference
+./DaemonStart.sh all       or   ./DaemonStart.sh [WorkerID]
+(Then, use the Clang as the normal Clang)
+(/tmp/PassPrediction-* have logs for each worker to debug)
 ```
