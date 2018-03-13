@@ -4,6 +4,7 @@ import sys
 import atexit
 import signal
 from multiprocessing import Process
+import multiprocessing
 import time
 import socketserver
 import socket
@@ -14,6 +15,7 @@ import psutil
 import subprocess, threading
 import Lib as lib
 import tfServer
+from queue import Queue
 
 def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
     """
@@ -226,13 +228,15 @@ class ResponseActor:
         """
         Input: "InputString" must be demangled function name
         """
+        global GlobalIpcQueue
         Inputs = InputString.split('@')
         FuncName = Inputs[0]
-        #FuncFeatures = Inputs[1]
+        FuncFeatures = Inputs[1]
+        GlobalIpcQueue.put(FuncFeatures, block=True, timeout=None)
+        Pass = GlobalIpcQueue.get(block=True, timeout=None)
         #print(FuncName)
-        retString = ""
         Mode = "InferenceSet"
-        return retString
+        return str(Pass)
 
     def EnvEcho(self, BuildTarget):
         """
@@ -308,8 +312,13 @@ class ResponseActor:
         return retString
 
 class tcpServer:
-    def __inti__():
-        self.tfServerThread = None
+    def __init__(self):
+        m = multiprocessing.Manager()
+        '''
+        Out worker use different process to isolate the resources,
+        so we do not need mutex in this cases.
+        '''
+        self.IpcQueue = m.Queue()
 
     class ClangTcpHandler(socketserver.StreamRequestHandler):
         def handle(self):
@@ -425,7 +434,9 @@ class tcpServer:
         Create process for keeping the RL model
         thread will make the sigterm handler in that thread crash.
         '''
-        p = Process(target=tfServer.tfServer, args=(WorkerID,))
+        global GlobalIpcQueue
+        GlobalIpcQueue = self.IpcQueue
+        p = Process(target=tfServer.tfServer, args=(WorkerID, GlobalIpcQueue,))
         p.start()
         # Make port reusable
         socketserver.TCPServer.allow_reuse_address = True

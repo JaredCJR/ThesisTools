@@ -25,7 +25,7 @@ sudo apt install libelf-dev
 sudo apt install libncurses5-dev
 sudo apt install libgoogle-perftools-dev
 sudo apt-get install google-perftools libgoogle-perftools-dev
-sudo apt install graphviz  
+sudo apt install graphviz
 sudo apt install linux-tools-common linux-tools-generic linux-cloud-tools-generic
 
 #install kernel specific perf tools, you can type "$ perf " to see the corresponding version.
@@ -34,7 +34,7 @@ sudo sh -c 'echo kernel.perf_event_paranoid=0 > /etc/sysctl.d/local.conf'
 sudo sh -c 'echo kernel.kptr_restrict=0 >> /etc/sysctl.d/local.conf'
 
 # gcc 7.2
-sudo add-apt-repository ppa:ubuntu-toolchain-r/test 
+sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt-get update
 sudo apt-get install gcc-7 g++-7
 ```
@@ -57,7 +57,8 @@ export LLVM_THESIS_TestSuite=$LLVM_THESIS_HOME/test-suite/build
 export LLVM_THESIS_Random_LLVMTestSuiteScript=$LLVM_THESIS_RandomHome/LLVMTestSuiteScript
 export LLVM_THESIS_Random_LLVMTestSuite_Results=$LLVM_THESIS_Random_LLVMTestSuiteScript/results
 export LLVM_THESIS_lit="$LLVM_THESIS_HOME/utils/lit/lit.py"
-export PYTHONPATH=$LLVM_THESIS_Random_LLVMTestSuiteScript:$LLVM_THESIS_RandomHome:$PYTHONPATH
+export PPO_OptClang="$HOME/workspace/PPO-OptClang"
+export PYTHONPATH=$PPO_OptClang:$LLVM_THESIS_TrainingHome:$LLVM_THESIS_InstrumentHome/PyActor:$LLVM_THESIS_Random_LLVMTestSuiteScript:$LLVM_THESIS_RandomHome:$PYTHONPATH
 alias lit=$LLVM_THESIS_lit  #this lit is modified to read the above env
 
 # Make sure $clang++ and $clang are using your build (For `RandomSelect`)
