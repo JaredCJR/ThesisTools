@@ -46,6 +46,7 @@ def ChoosePass(RL_ChooseAction_Func, State, FuncName, FunctionPassRec):
     # if the pass meet the threshold, remove its history to keep memory.
     if len(FunctionPassRec[FuncName].keys()) == 9:
         FunctionPassRec.pop(FuncName, "None")
+        #print("Last pass={}".format(retPass+1))
     return retPass + 1
 
 def tfServer(WorkerID, IpcQueue_Features, IpcQueue_Pass):

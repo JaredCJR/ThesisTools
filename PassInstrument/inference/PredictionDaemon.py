@@ -3,7 +3,6 @@ import os
 import sys
 import atexit
 import signal
-from multiprocessing import Process
 import multiprocessing
 import time
 import socketserver
@@ -16,6 +15,7 @@ import subprocess, threading
 import Lib as lib
 import tfServer
 from queue import Queue
+from multiprocessing import Process, Lock
 
 def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
     """
@@ -230,13 +230,14 @@ class ResponseActor:
         """
         global GlobalIpcQueue_Features
         global GlobalIpcQueue_Pass
+        global tfServerLock
         Inputs = InputString.split('@')
         FuncName = Inputs[0]
         FuncFeatures = Inputs[1]
-        #GlobalIpcQueue_Features.put(FuncFeatures, block=True, timeout=None)
+        tfServerLock.acquire()
         GlobalIpcQueue_Features.put(InputString, block=True, timeout=None)
         Pass = GlobalIpcQueue_Pass.get(block=True, timeout=None)
-        #print("Get {}".format(Pass))
+        tfServerLock.release()
         return str(Pass)
 
     def EnvEcho(self, BuildTarget):
@@ -321,6 +322,7 @@ class tcpServer:
         '''
         self.GlobalIpcQueue_Features = m.Queue()
         self.GlobalIpcQueue_Pass = m.Queue()
+        self.tfServerLock = Lock()
 
     class ClangTcpHandler(socketserver.StreamRequestHandler):
         def handle(self):
@@ -438,10 +440,12 @@ class tcpServer:
         '''
         global GlobalIpcQueue_Features
         global GlobalIpcQueue_Pass
+        global tfServerLock
         GlobalIpcQueue_Features = self.GlobalIpcQueue_Features
         GlobalIpcQueue_Pass = self.GlobalIpcQueue_Pass
+        tfServerLock = self.tfServerLock
         p = Process(target=tfServer.tfServer, args=(WorkerID,
-            GlobalIpcQueue_Features, GlobalIpcQueue_Pass,))
+            GlobalIpcQueue_Features, GlobalIpcQueue_Pass, ))
         p.start()
         # Make port reusable
         socketserver.TCPServer.allow_reuse_address = True
