@@ -5,6 +5,7 @@ from queue import Queue
 import Helpers as hp
 import DPPO
 import gym, gym_OptClang
+import numpy as np
 
 def sigterm_handler(signo, frame):
     """
@@ -24,7 +25,24 @@ def RestoreModel(OptClangLoc, RelativeLogDir, ModelName, Config):
           UpdateDepth=Config['RL_Parameters']['UpdateDepth'])
     return ppo
 
-def tfServer(WorkerID, IpcQueue):
+def ConvertToArray(FeatureStr):
+    retVec = []
+    for num in FeatureStr.split():
+        retVec.append(int(num.split(',')[0]))
+    array = np.asarray(retVec)
+    return array
+
+def ChoosePass(RL_ChooseAction_Func, state, PassHistory):
+    """
+    gym-OptClang and DPPO:   pass range --> 0~33
+    Modified Clang:          pass range --> 1~34
+    We need to add 1 to convert the range.
+    """
+    retPass = RL_ChooseAction_Func(state, PassHistory)
+    #print("RL_ChooseAction_Func ret={}".format(retPass))
+    return retPass + 1
+
+def tfServer(WorkerID, IpcQueue_Features, IpcQueue_Pass):
     """
     Keep tensorflow model for use.
     Use environment var("PPO_OptClang") to set the dir of "PPO-OptClang"
@@ -47,7 +65,9 @@ def tfServer(WorkerID, IpcQueue):
     with open(pidFile, 'w') as f:
         f.write(str(pid))
 
-    #TODO: restore model
+    '''
+    restore RL model
+    '''
     OptClangLoc = os.getenv('PPO_OptClang', "PPO_OptClang:not set")
     RelativeLogDir = 'test'
     ModelName = 'model.ckpt'
@@ -56,12 +76,24 @@ def tfServer(WorkerID, IpcQueue):
     # use the config to restore model
     ppo = RestoreModel(OptClangLoc, RelativeLogDir, ModelName, Config)
 
+    idx = 0
+    PassHistory = {}
     # Main Loop
     while True:
-        if not IpcQueue.empty():
-            FeatureStr = IpcQueue.get()
-            #TODO: use model to predict retPass
-            #TODO: avoid pass repeating every 9 iters.
-            retPass = 1 # FIXME
-            # retPass must be integer
-            IpcQueue.put(retPass, block=True, timeout=None)
+        '''
+        Assuming the tfServer only serve one function once a time.
+        avoid repeated pass every 9 iters.
+        '''
+        if not IpcQueue_Features.empty():
+            FeatureStr = IpcQueue_Features.get()
+            '''
+            use model to predict retPass
+            retPass must be integer
+            '''
+            state = ConvertToArray(FeatureStr)
+            retPass = ChoosePass(ppo.choose_action, state, PassHistory)
+            IpcQueue_Pass.put(retPass, block=True, timeout=None)
+            idx += 1
+            if idx == 9:
+                idx = 0
+                PassHistory = {}

@@ -228,14 +228,14 @@ class ResponseActor:
         """
         Input: "InputString" must be demangled function name
         """
-        global GlobalIpcQueue
+        global GlobalIpcQueue_Features
+        global GlobalIpcQueue_Pass
         Inputs = InputString.split('@')
         FuncName = Inputs[0]
         FuncFeatures = Inputs[1]
-        GlobalIpcQueue.put(FuncFeatures, block=True, timeout=None)
-        Pass = GlobalIpcQueue.get(block=True, timeout=None)
-        #print(FuncName)
-        Mode = "InferenceSet"
+        GlobalIpcQueue_Features.put(FuncFeatures, block=True, timeout=None)
+        Pass = GlobalIpcQueue_Pass.get(block=True, timeout=None)
+        #print("Get {}".format(Pass))
         return str(Pass)
 
     def EnvEcho(self, BuildTarget):
@@ -318,7 +318,8 @@ class tcpServer:
         Out worker use different process to isolate the resources,
         so we do not need mutex in this cases.
         '''
-        self.IpcQueue = m.Queue()
+        self.GlobalIpcQueue_Features = m.Queue()
+        self.GlobalIpcQueue_Pass = m.Queue()
 
     class ClangTcpHandler(socketserver.StreamRequestHandler):
         def handle(self):
@@ -434,9 +435,12 @@ class tcpServer:
         Create process for keeping the RL model
         thread will make the sigterm handler in that thread crash.
         '''
-        global GlobalIpcQueue
-        GlobalIpcQueue = self.IpcQueue
-        p = Process(target=tfServer.tfServer, args=(WorkerID, GlobalIpcQueue,))
+        global GlobalIpcQueue_Features
+        global GlobalIpcQueue_Pass
+        GlobalIpcQueue_Features = self.GlobalIpcQueue_Features
+        GlobalIpcQueue_Pass = self.GlobalIpcQueue_Pass
+        p = Process(target=tfServer.tfServer, args=(WorkerID,
+            GlobalIpcQueue_Features, GlobalIpcQueue_Pass,))
         p.start()
         # Make port reusable
         socketserver.TCPServer.allow_reuse_address = True
