@@ -32,7 +32,26 @@ def ConvertToArray(FeatureStr):
     array = np.asarray(retVec)
     return array
 
-def ChoosePass(RL_ChooseAction_Func, State, FuncName, FunctionPassRec):
+def DebugRecord(DebugRec, FuncName, retPass):
+    """
+    debugging only.
+    You must remove the log file manually before validate
+    """
+    if FuncName not in DebugRec:
+        DebugRec[FuncName] = []
+    DebugRec[FuncName].append(str(retPass))
+    if len(DebugRec[FuncName]) == 9:
+        with open('/tmp/PassPrediction-debug-tfServer', 'a') as f:
+            f.write(FuncName + ":")
+            for pa in DebugRec[FuncName]:
+                f.write(pa + ',')
+            f.write('\n')
+            f.close()
+        DebugRec[FuncName] = []
+        DebugRec.pop(FuncName, "None")
+
+
+def ChoosePass(RL_ChooseAction_Func, State, FuncName, FunctionPassRec, DebugRec):
     """
     gym-OptClang and DPPO:   pass range --> 0~33
     Modified Clang:          pass range --> 1~34
@@ -43,6 +62,12 @@ def ChoosePass(RL_ChooseAction_Func, State, FuncName, FunctionPassRec):
         FunctionPassRec[FuncName] = {}
     # call agent to predict
     retPass = RL_ChooseAction_Func(State, FunctionPassRec[FuncName])
+    '''
+    # debugging purpose with tools/clang/lib/CodeGen/BackendUtil.cpp for race condition
+    # e.g. The tcp port cannot serve multiple processes once a time.
+    # It does not know which receiver is the right one.
+    DebugRecord(DebugRec, FuncName, retPass+1)
+    '''
     # if the pass meet the threshold, remove its history to keep memory.
     if len(FunctionPassRec[FuncName].keys()) == 9:
         FunctionPassRec.pop(FuncName, "None")
@@ -84,6 +109,7 @@ def tfServer(WorkerID, IpcQueue_Features, IpcQueue_Pass):
     ppo = RestoreModel(OptClangLoc, RelativeLogDir, ModelName, Config)
     # record the pass applied for each function
     FunctionPassRec = {}
+    DebugRec = {}
     # Main Loop
     while True:
         '''
@@ -100,5 +126,5 @@ def tfServer(WorkerID, IpcQueue_Features, IpcQueue_Pass):
             retPass must be integer
             '''
             state = ConvertToArray(FuncFeatures)
-            retPass = ChoosePass(ppo.choose_action, state, FuncName, FunctionPassRec)
+            retPass = ChoosePass(ppo.choose_action, state, FuncName, FunctionPassRec, DebugRec)
             IpcQueue_Pass.put(retPass, block=True, timeout=None)
