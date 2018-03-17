@@ -384,3 +384,11 @@ cd ./PassInstrument/inference
 (Then, use the Clang as the normal Clang)
 (/tmp/PassPrediction-* have logs for each worker to debug)
 ```
+
+Something that are not recomend:
+=============================================
+* Do not build multiple target on the same time.
+  * The runtime only consider the race-condition in sigle target.(e.g. "make -j12" for one target at the same time is fine.)
+  * Our python based automation only use one core at one time.
+    * Therefore, the multi-threaded cannot be guaranteed to be safe.
+    * However, I have designed and tested "multi-threaded build for one target" to be correct.
