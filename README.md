@@ -392,3 +392,7 @@ Something that are not recomend:
   * Our python based automation only use one core at one time.
     * Therefore, the multi-threaded cannot be guaranteed to be safe.
     * However, I have designed and tested "multi-threaded build for one target" to be correct.
+
+License
+----------------------------------------
+Refer to [LICENSE](./LICENSE)
