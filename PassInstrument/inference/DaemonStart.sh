@@ -7,6 +7,8 @@ rm -f /tmp/PredictionDaemon.err
 
 worker=$1
 
+echo "Make sure your environment variable are properly set. e.g. $LLVM_THESIS_HOME"
+
 function RestartDaemon {
 	rm -f /tmp/PredictionDaemon-Clang-$1.log
 	rm -f /tmp/PredictionDaemon-Env-$1.log

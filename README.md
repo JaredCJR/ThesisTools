@@ -47,6 +47,13 @@ Add below environment variables to your .bashrc:
 * ThesisTools only has `master` branch
   * `LLVM` and `Clang` have different branches for different purposes.
 
+__The environment variable below will affect what compiler yor are going to use.__
+---------------------------------------------------------------------------------------
+* Please read them.
+  * `$LLVM_THESIS_HOME` and `$PPO_OptClang` must be properly set.
+  * The following instructions assume that your base working directory is "~/workspace/"
+    * If you change to the place you like, please also modify the environment variables.
+
 ```
 #if you want lit to get these env, you need to modify "llvm-thesis/utils/lit/lit/TestingConfig.py"
 export LLVM_THESIS_HOME=$HOME/workspace/llvm-thesis

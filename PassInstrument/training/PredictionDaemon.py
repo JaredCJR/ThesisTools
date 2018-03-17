@@ -264,16 +264,14 @@ class ResponseActor:
         Therefore, we must use "make clean"
         '''
         binName = BuiltBin.split('/')[-1]
-        dirPath = BuiltBin[:-(len(binName) + 1):]
+        dirPath = BuiltBin[:-(len(binName) + 1)]
         prevWd = os.getcwd()
-        ##
         '''
         print("fileCmd={}".format(fileCmd))
         print("BuiltBin={}".format(BuiltBin))
         print("dirPath={}".format(dirPath))
         print("binName={}".format(binName))
         '''
-        ##
         os.chdir(dirPath)
         os.system("make clean")
         os.chdir(prevWd)
