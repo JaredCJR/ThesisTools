@@ -70,7 +70,7 @@ export PATH=$LLVM_THESIS_HOME/build-release-gcc7/bin:$PATH
 
 Using the "RandomSelect/LLVMTestSuiteScript" to generate the "Random-Graphs"
 ===============================================================================
-
+* Check the [ipynb](RandomSelect/LLVMTestSuiteScript/GraphGen/genGraphAnalysis.ipynb) to veiw the `raw` graph
 
 How to build LLVM/Clang for "RandomSelect/LLVMTestSuiteScript"
 ---------------------------------------------------------------------
@@ -376,6 +376,7 @@ How to use the trained model to inference
 ---------------------------------------------------------
 * Build LLVM/Clang for inference as same as the procedure in [Training Framework](#how-to-build-llvmclang-for-training-framework)
 * __Except the branch name: replace `PassPrediction-training` with `PassPrediction-inference`__
+* [Setup the network connection as the Training Framework](#how-to-setup-network-connection-for-training-framework)
 
 ```
 cd ./PassInstrument/inference
