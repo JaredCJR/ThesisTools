@@ -25,7 +25,7 @@ def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
     if Block:
         TrainLoc = os.getenv("LLVM_THESIS_TrainingHome", "Error")
         FullCmd = "taskset -c " + WorkerID + " " + Cmd
-        print(FullCmd)
+        #print(FullCmd)
         p = subprocess.Popen(shlex.split(FullCmd),
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE)
