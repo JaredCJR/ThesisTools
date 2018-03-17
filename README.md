@@ -338,6 +338,10 @@ make
 
 How to setup network connection for training framework:
 ---------------------------------------------------------
+* All the systems in the framework need to setup the network connection as follows.
+  * However, only the "Env server" will be able to daemonize itself.
+    * This will not affect the functionalites.
+    * If there is a future version, we will fix it.
 ```
 cd llvm-thesis/ThesisTools/PassInstrument/training
 # Every boot should execute "once" to setup the Iptables properly.
