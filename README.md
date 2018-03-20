@@ -351,6 +351,9 @@ sudo ./setupConnection.py
 # The format is :
 # [ip], [port start number], [how many workers for this IP with the starting port number]
 ```
+  
+* Usage example:
+![](image-README/setupConnection.png)
 
 How to test network connection with fakeEnv.py
 ---------------------------------------------------------
