@@ -397,7 +397,13 @@ cd ./PassInstrument/inference
 ./DaemonStart.sh all       or   ./DaemonStart.sh [WorkerID]
 (Then, use the Clang as the normal Clang)
 (/tmp/PassPrediction-* have logs for each worker to debug)
-```
+```  
+
+* How to use the model that you want.
+  * `vim PassInstrument/inference/tfServer.py`
+    * find `RelativeLogDir` and `ModelName`
+      * `RelativeLogDir` is the inference directory to save the trained model, which is a relative path to `PPO-OptClang`
+      * `ModelName` is the saved checkpoint prefix for tensorflow.
 
 Something that are not recomend:
 =============================================
