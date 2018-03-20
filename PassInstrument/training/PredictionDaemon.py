@@ -29,9 +29,9 @@ def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
             Core 1~5 as the "worker" to run programs.
             Core 6~11 are not "real core", they are hardware threads shared with Core 0~5.
         '''
-        CpuWorker = WorkerID % 5
+        CpuWorker = str(int(WorkerID) % 5)
         TrainLoc = os.getenv("LLVM_THESIS_TrainingHome", "Error")
-        FullCmd = "taskset -c " + WorkerID + " " + Cmd
+        FullCmd = "taskset -c " + CpuWorker + " " + Cmd
         #print(FullCmd)
         p = subprocess.Popen(shlex.split(FullCmd),
                 stdin=subprocess.PIPE,
