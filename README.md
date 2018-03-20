@@ -383,7 +383,31 @@ cd llvm-thesis/ThesisTools/PassInstrument/training
 
 How to train the model
 ---------------------------------------------------------
-Please refer to [JaredCJR/PPO-OptClang](https://github.com/JaredCJR/PPO-OptClang)
+* How to create daemons:
+  * The following instructions assume that you have three computers(thress systems)
+    * System A(train the model)
+    * System B1(build, run and verify the programs)
+    * System B2(build, run and verify the programs)
+```
+# First: setup network connection as the previous tutorial on __all systems__.
+# Second: Bring up the daemons on the __worker systems__.
+
+# On System A:
+## Do nothing, but run "PPO-OptClang" on System A as the below guide.
+
+# On System B1 and B2:
+cd PassInstrument/training/
+./PredictionDaemon.py stop [WorkerID] ## This is recommend, but not necessary.
+./PredictionDaemon.py start [WorkerID] ## Necessary.
+## e.g.  if System B2 has worker 6~10:
+## ./PredictionDaemon.py start 6
+## ./PredictionDaemon.py start 7
+## ./PredictionDaemon.py start 8
+## ./PredictionDaemon.py start 9
+## ./PredictionDaemon.py start 0
+```
+* run
+  * Please refer to [JaredCJR/PPO-OptClang](https://github.com/JaredCJR/PPO-OptClang)
 
 
 How to use the trained model to inference
