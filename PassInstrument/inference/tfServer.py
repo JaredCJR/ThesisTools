@@ -101,7 +101,7 @@ def tfServer(WorkerID, IpcQueue_Features, IpcQueue_Pass):
     restore RL model
     '''
     OptClangLoc = os.getenv('PPO_OptClang', "PPO_OptClang:not set")
-    RelativeLogDir = 'test'
+    RelativeLogDir = 'inference-agent'
     ModelName = 'model.ckpt'
     # read json config
     Config = hp.LoadJsonConfig(OptClangLoc+'/config.json')
