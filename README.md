@@ -27,16 +27,25 @@ sudo apt install libgoogle-perftools-dev
 sudo apt-get install google-perftools libgoogle-perftools-dev
 sudo apt install graphviz
 sudo apt install linux-tools-common linux-tools-generic linux-cloud-tools-generic
-
+  
 #install kernel specific perf tools, you can type "$ perf " to see the corresponding version.
 sudo apt install linux-tools-4.10.0-38-generic linux-cloud-tools-4.10.0-38-generic
 sudo sh -c 'echo kernel.perf_event_paranoid=0 > /etc/sysctl.d/local.conf'
 sudo sh -c 'echo kernel.kptr_restrict=0 >> /etc/sysctl.d/local.conf'
-
+  
 # gcc 7.2
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt-get update
 sudo apt-get install gcc-7 g++-7
+  
+# packages for python3(Our framework is based on Python3)
+sudo -H pip3 install psutil
+sudo -H pip3 install progressbar2
+sudo -H pip3 install ruamel_yaml
+sudo -H pip3 install virtualenv
+sudo -H pip3 install colorama
+sudo -H pip3 install sklearn
+sudo -H pip3 install pytz
 ```
 
 Add below environment variables to your .bashrc:
@@ -306,7 +315,8 @@ git checkout -b PassPrediction-training remotes/origin/PassPrediction-training
 # The following example is for "worker1"
 # Notice the  variable in cmake command "DAEMON_WORKER_ID"
 
-mkdir build-release-gcc7-worker1
+mkdir build-release-gcc7-worker1 
+#Note: if you change the dir name, you have to modify the related parts in the PredictionDaemon.py
 cd build-release-gcc7-worker1
 
 cmake -DCMAKE_BUILD_TYPE=Release \
@@ -379,6 +389,19 @@ cd llvm-thesis/ThesisTools/PassInstrument/training
 # Then, you should see results from different remote workers.
 ```
 
+Install "gym-OptClang"
+---------------------------------------------------------
+* Refer to [gym-OptClang](https://github.com/JaredCJR/gym-OptClang)
+  * `git clone https://github.com/JaredCJR/PPO-OptClang`
+
+Install "PPO-OptClang"
+---------------------------------------------------------
+* Refer to [PPO-OptClang](https://github.com/JaredCJR/PPO-OptClang)
+```
+cd workspace
+git clone https://github.com/JaredCJR/PPO-OptClang
+```
+
 How to train the model
 ---------------------------------------------------------
 * How to create daemons:
@@ -392,14 +415,14 @@ How to train the model
 ```
 # On System B1 and B2:
 cd PassInstrument/training/
-./PredictionDaemon.py stop [WorkerID] ## This is recommend, but not necessary.
-./PredictionDaemon.py start [WorkerID] ## Necessary.
+taskset -c 0 ./PredictionDaemon.py stop [WorkerID] ## This is recommend, but not necessary.
+taskset -c 0 ./PredictionDaemon.py start [WorkerID] ## Necessary.
 ## e.g.  if System B2 has worker 6~10:
-## ./PredictionDaemon.py start 6
-## ./PredictionDaemon.py start 7
-## ./PredictionDaemon.py start 8
-## ./PredictionDaemon.py start 9
-## ./PredictionDaemon.py start 0
+## taskset -c 0 ./PredictionDaemon.py start 6
+## taskset -c 0 ./PredictionDaemon.py start 7
+## taskset -c 0 ./PredictionDaemon.py start 8
+## taskset -c 0 ./PredictionDaemon.py start 9
+## taskset -c 0 ./PredictionDaemon.py start 10
 
 # On System A:
 ## Do nothing, but run "PPO-OptClang" on System A as the below guide.
@@ -407,6 +430,9 @@ cd PassInstrument/training/
 * run
   * Please refer to [JaredCJR/PPO-OptClang](https://github.com/JaredCJR/PPO-OptClang)
 
+How to check the messages from "PredictionDaemon.py"
+---------------------------------------------------------
+* All the stdout/stderr are redirect to /tmp/PredictionDaemon*
 
 How to use the trained model to inference
 ---------------------------------------------------------
@@ -415,8 +441,11 @@ How to use the trained model to inference
 * [Setup the network connection as the Training Framework](#how-to-setup-network-connection-for-training-framework)
 
 ```
+# make sure the following points:
+# 1. "PPO-OptClang" is already cloned as the environment variable says($PPO_OptClang).
+# 2. "gym-OptClang" is installed with the Daemon(s).
 cd ./PassInstrument/inference
-./DaemonStart.sh all       or   ./DaemonStart.sh [WorkerID]
+./PredictionDaemon start [WorkerID] # You can launch it with different WorkerID for multiple workers
 (Then, use the Clang as the normal Clang)
 (/tmp/PassPrediction-* have logs for each worker to debug)
 ```  
