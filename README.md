@@ -96,19 +96,17 @@ git clone https://github.com/JaredCJR/llvm llvm-thesis
 cd llvm-thesis
 git checkout -b RandomSelect-BenchmarkLevel remotes/origin/RandomSelect-BenchmarkLevel
 git submodule update --init --recursive --remote
-
-
 -----------------------------
 # Optional, update to the latest version.
 # The branch will remember the last version that I used. However, it may be outdated for other branches.
+# It is recommended to pull.
 cd ThesisTools
 git checkout master
 git pull
 -----------------------------
-
-
 cd tools
 git clone https://github.com/JaredCJR/clang
+cd clang
 git checkout -b RandomSelect-BenchmarkLevel remotes/origin/RandomSelect-BenchmarkLevel
 
 
