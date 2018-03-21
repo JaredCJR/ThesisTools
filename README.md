@@ -437,6 +437,7 @@ How to check the messages from "PredictionDaemon.py"
 How to use the trained model to inference
 ---------------------------------------------------------
 * Build LLVM/Clang for inference as same as the procedure in [Training Framework](#how-to-build-llvmclang-for-training-framework)
+  * Make sure your environment variable $LLVM_THESIS_HOME point to the llvm dir of inference-branch
 * __Except the branch name: replace `PassPrediction-training` with `PassPrediction-inference`__
 * [Setup the network connection as the Training Framework](#how-to-setup-network-connection-for-training-framework)
 
