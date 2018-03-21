@@ -21,6 +21,8 @@ def RestoreModel(OptClangLoc, RelativeLogDir, ModelName, Config):
           GAMMA=Config['WorkerParameters']['GAMMA'],
           A_LR=Config['RL_Parameters']['A_LR'],
           C_LR=Config['RL_Parameters']['C_LR'],
+          L1Neurons=Config['RL_Parameters']['L1Neurons'],
+          L2Neurons=Config['RL_Parameters']['L2Neurons'],
           ClippingEpsilon=Config['RL_Parameters']['ClippingEpsilon'],
           UpdateDepth=Config['RL_Parameters']['UpdateDepth'])
     return ppo
@@ -101,7 +103,7 @@ def tfServer(WorkerID, IpcQueue_Features, IpcQueue_Pass):
     restore RL model
     '''
     OptClangLoc = os.getenv('PPO_OptClang', "PPO_OptClang:not set")
-    RelativeLogDir = 'test'
+    RelativeLogDir = 'inference-agent'
     ModelName = 'model.ckpt'
     # read json config
     Config = hp.LoadJsonConfig(OptClangLoc+'/config.json')

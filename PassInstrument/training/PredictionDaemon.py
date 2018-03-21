@@ -20,9 +20,19 @@ def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
     """
     # Use taskset by default
     if Block:
+        '''
+        The taskset configuration depends on the hardware.
+        If your computer is other than 8700K, you must customized it.
+        Current configuration:
+        intel 8700K: 
+            Core 0 as the "benchmark scheduler"
+            Core 1~5 as the "worker" to run programs.
+            Core 6~11 are not "real core", they are hardware threads shared with Core 0~5.
+        '''
+        CpuWorker = str((int(WorkerID) % 5) + 1) 
         TrainLoc = os.getenv("LLVM_THESIS_TrainingHome", "Error")
-        FullCmd = "taskset -c " + WorkerID + " " + Cmd
-        print(FullCmd)
+        FullCmd = "taskset -c " + CpuWorker + " " + Cmd
+        #print(FullCmd)
         p = subprocess.Popen(shlex.split(FullCmd),
                 stdin=subprocess.PIPE,
                 stdout=subprocess.PIPE)
@@ -264,16 +274,14 @@ class ResponseActor:
         Therefore, we must use "make clean"
         '''
         binName = BuiltBin.split('/')[-1]
-        dirPath = BuiltBin[:-(len(binName) + 1):]
+        dirPath = BuiltBin[:-(len(binName) + 1)]
         prevWd = os.getcwd()
-        ##
         '''
         print("fileCmd={}".format(fileCmd))
         print("BuiltBin={}".format(BuiltBin))
         print("dirPath={}".format(dirPath))
         print("binName={}".format(binName))
         '''
-        ##
         os.chdir(dirPath)
         os.system("make clean")
         os.chdir(prevWd)

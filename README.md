@@ -47,6 +47,13 @@ Add below environment variables to your .bashrc:
 * ThesisTools only has `master` branch
   * `LLVM` and `Clang` have different branches for different purposes.
 
+__The environment variable below will affect what compiler yor are going to use.__
+---------------------------------------------------------------------------------------
+* Please read them.
+  * `$LLVM_THESIS_HOME` and `$PPO_OptClang` must be properly set.
+  * The following instructions assume that your base working directory is "~/workspace/"
+    * If you change to the place you like, please also modify the environment variables.
+
 ```
 #if you want lit to get these env, you need to modify "llvm-thesis/utils/lit/lit/TestingConfig.py"
 export LLVM_THESIS_HOME=$HOME/workspace/llvm-thesis
@@ -331,6 +338,10 @@ make
 
 How to setup network connection for training framework:
 ---------------------------------------------------------
+* All the systems in the framework need to setup the network connection as follows.
+  * However, only the "Env server" will be able to daemonize itself.
+    * This will not affect the functionalites.
+    * If there is a future version, we will fix it.
 ```
 cd llvm-thesis/ThesisTools/PassInstrument/training
 # Every boot should execute "once" to setup the Iptables properly.
@@ -340,6 +351,9 @@ sudo ./setupConnection.py
 # The format is :
 # [ip], [port start number], [how many workers for this IP with the starting port number]
 ```
+  
+* Usage example:
+![](image-README/setupConnection.png)
 
 How to test network connection with fakeEnv.py
 ---------------------------------------------------------
@@ -369,7 +383,31 @@ cd llvm-thesis/ThesisTools/PassInstrument/training
 
 How to train the model
 ---------------------------------------------------------
-Please refer to [JaredCJR/PPO-OptClang](https://github.com/JaredCJR/PPO-OptClang)
+* How to create daemons:
+  * The following instructions assume that you have three computers(thress systems)
+    * System A(train the model)
+    * System B1(build, run and verify the programs)
+    * System B2(build, run and verify the programs)
+  * Guide Overview:
+    * First: setup network connection as the previous tutorial on __all systems__.
+    * Second: Bring up the daemons on the __worker systems__.
+```
+# On System B1 and B2:
+cd PassInstrument/training/
+./PredictionDaemon.py stop [WorkerID] ## This is recommend, but not necessary.
+./PredictionDaemon.py start [WorkerID] ## Necessary.
+## e.g.  if System B2 has worker 6~10:
+## ./PredictionDaemon.py start 6
+## ./PredictionDaemon.py start 7
+## ./PredictionDaemon.py start 8
+## ./PredictionDaemon.py start 9
+## ./PredictionDaemon.py start 0
+
+# On System A:
+## Do nothing, but run "PPO-OptClang" on System A as the below guide.
+```
+* run
+  * Please refer to [JaredCJR/PPO-OptClang](https://github.com/JaredCJR/PPO-OptClang)
 
 
 How to use the trained model to inference
@@ -383,7 +421,13 @@ cd ./PassInstrument/inference
 ./DaemonStart.sh all       or   ./DaemonStart.sh [WorkerID]
 (Then, use the Clang as the normal Clang)
 (/tmp/PassPrediction-* have logs for each worker to debug)
-```
+```  
+
+* How to use the model that you want.
+  * `vim PassInstrument/inference/tfServer.py`
+    * find `RelativeLogDir` and `ModelName`
+      * `RelativeLogDir` is the inference directory to save the trained model, which is a relative path to `PPO-OptClang`
+      * `ModelName` is the saved checkpoint prefix for tensorflow.
 
 Something that are not recomended:
 =============================================
@@ -392,3 +436,7 @@ Something that are not recomended:
   * Our python based automation only use one core at one time.
     * Therefore, the multi-threaded cannot be guaranteed to be safe.
     * However, I have designed and tested "multi-threaded build for one target" to be correct.
+
+License
+----------------------------------------
+Refer to [LICENSE](./LICENSE)
