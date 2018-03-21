@@ -458,9 +458,9 @@ cd ./PassInstrument/inference
       * `RelativeLogDir` is the inference directory to save the trained model, which is a relative path to `PPO-OptClang`
       * `ModelName` is the saved checkpoint prefix for tensorflow.
 
-Something that are not recomend:
+Something that are not recomended:
 =============================================
-* Do not build multiple target on the same time.
+* Do not build multiple target at the same time.
   * The runtime only consider the race-condition in sigle target.(e.g. "make -j12" for one target at the same time is fine.)
   * Our python based automation only use one core at one time.
     * Therefore, the multi-threaded cannot be guaranteed to be safe.
