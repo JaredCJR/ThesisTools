@@ -41,27 +41,42 @@ def Eval(TargetDict, BuildTimeDict, threadNum):
     CpuNum = multiprocessing.cpu_count()
     for target, targetRoot in TargetDict.items():
         isCorrect = False
+        isBuilt = False
         try:
             os.chdir(targetRoot)
             # make clean
             os.system("make clean")
             # build
-            startTime = time.perf_counter()
-            os.system("taskset -c 0-{} make -j{}".format(threadNum-1, threadNum))
-            endTime = time.perf_counter()
-            measuredTime = endTime - startTime
-            # verify
             try:
-                cmd = "{} -j{} -q {}".format(lit, CpuNum, target)
+                cmd = "taskset -c 0-{} make -j{}".format(threadNum-1, threadNum)
+                print('------------------------------------')
+                print("build cmd={}".format(cmd))
+                startTime = time.perf_counter()
                 p = sp.Popen(shlex.split(cmd), stdout=sp.PIPE, stderr= sp.PIPE)
                 out, err = p.communicate()
                 p.wait()
-                if out is None and err is None:
-                    isCorrect = True
+                endTime = time.perf_counter()
+                measuredTime = endTime - startTime
+                if err.decode('utf-8').strip() is "":
+                    isBuilt = True
             except Exception as e:
-                print("{} verified failed: {}".format(target, e))
+                print("{} build failed: {}".format(target, e))
+            if isBuilt:
+                # verify
+                try:
+                    cmd = "{} -j{} -q {}.test".format(lit, CpuNum, target)
+                    print("verify cmd={}".format(cmd))
+                    p = sp.Popen(shlex.split(cmd), stdout=sp.PIPE, stderr= sp.PIPE)
+                    out, err = p.communicate()
+                    p.wait()
+                    if out.decode('utf-8').strip() is "" and err.decode('utf-8').strip() is "":
+                        isCorrect = True
+                        print("Verify successfully.")
+                        print('------------------------------------')
+                except Exception as e:
+                    print("{} verified failed: {}".format(target, e))
         except Exception as e:
-            print("{} build failed: {}".format(target, e))
+            print("{} unexpected failed: {}".format(target, e))
         if isCorrect:
             BuildTimeDict[target] = measuredTime        
     os.chdir(prevCwd)
@@ -78,17 +93,17 @@ def runEval(TargetRoot, key_1, key_2):
     BuildTimeDict_1 = {}
     Eval(Targets, BuildTimeDict_1, 1)
     #print(BuildTimeDict_1)
-    # 6 thread
-    BuildTimeDict_6 = {}
-    Eval(Targets, BuildTimeDict_6, 6) 
-    #print(BuildTimeDict_6)
+    # 12 thread
+    BuildTimeDict_12 = {}
+    Eval(Targets, BuildTimeDict_12, 12) 
+    #print(BuildTimeDict_12)
     # combine the results
     retDict = {}
     for target, _time in BuildTimeDict_1.items():
         retDict[target] = {}
         retDict[target][key_1] = _time
 
-    for target, _time in BuildTimeDict_6.items():
+    for target, _time in BuildTimeDict_12.items():
         if retDict.get(target) is None:
             retDict[target] = {}
         retDict[target][key_2] = _time
@@ -100,19 +115,28 @@ def WriteToCsv(writePath, Dict1, Dict2, keys_1, keys_2):
     """
     ResultDict = dict.fromkeys(list(Dict1.keys()), {})
     for key, _time in Dict1.items():
-        ResultDict[key][keys_1[0]] = Dict1[keys_1[0]]
-        ResultDict[key][keys_1[1]] = Dict1[keys_1[1]]
-        ResultDict[key][keys_2[0]] = Dict1[keys_2[0]]
-        ResultDict[key][keys_2[1]] = Dict1[keys_2[1]]
+        if Dict1.get(key) is not None:
+            if Dict1[key].get(keys_1[0]) is not None:
+                ResultDict[key][keys_1[0]] = Dict1[key][keys_1[0]]
+            if Dict1[key].get(keys_1[1]) is not None:
+                ResultDict[key][keys_1[1]] = Dict1[key][keys_1[1]]
+        if Dict2.get(key) is not None:
+            if Dict2[key].get(keys_2[0]) is not None:
+                ResultDict[key][keys_2[0]] = Dict2[key][keys_2[0]]
+            if Dict2[key].get(keys_2[1]) is not None:
+                ResultDict[key][keys_2[1]] = Dict2[key][keys_2[1]]
     # write ResultDict to csv
-    with open(writePath, 'w') as csv_file:
+    print(ResultDict)
+    with open(writePath, 'w', newline='') as csv_file:
         fieldnames = ['target', keys_1[0], keys_2[0], keys_1[1], keys_2[1]]
         writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
         writer.writeheader()
         for target, times in ResultDict.items():
-            times['target'] = target
-            writer.writerow(times)
-            print(times)
+            tmp = times
+            tmp['target'] = target
+            print("write input:")
+            print(tmp)
+            writer.writerow(tmp)
 
 
 
@@ -131,6 +155,6 @@ if __name__ == '__main__':
     key_4 = "ABC-6-threads"
     ABC_results = runEval("/home/jrchang/workspace/llvm-thesis-inference/test-suite/build-worker-6/MultiSource/Applications", key_3, key_4)
     # Merge all result into csv-format file
-    WriteToCsv("./build.csv", Orig_results, ABC_results, [key_1, key_2], [key_3, key_4])
+    WriteToCsv("./buildEval.csv", Orig_results, ABC_results, [key_1, key_2], [key_3, key_4])
     endTime = time.perf_counter()
     print("The evaluation procedure takse:{} mins".format((endTime - startTime)/60))
