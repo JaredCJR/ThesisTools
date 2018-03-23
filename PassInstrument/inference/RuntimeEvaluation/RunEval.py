@@ -129,14 +129,36 @@ def WriteToCsv(writePath, Dict1, Dict2, keys_1, keys_2):
         if Dict1.get(key) is not None:
             if Dict1[key].get(keys_1[0]) is not None:
                 ResultDict[key][keys_1[0]] = Dict1[key][keys_1[0]]
-                #print(Dict1[key][keys_1[0]])
+            else:
+                print("target: {} missing {}".format(key, keys_1[0]))
+                ResultDict[key][keys_1[0]] = -1
+
             if Dict1[key].get(keys_1[1]) is not None:
                 ResultDict[key][keys_1[1]] = Dict1[key][keys_1[1]]
+            else:
+                print("target: {} missing {}".format(key, keys_1[1]))
+                ResultDict[key][keys_1[1]] = -1
+        else:
+            print("target: {} missing {} and {}".format(key, keys_1[0],keys_1[1]))
+            ResultDict[key][keys_1[0]] = -1
+            ResultDict[key][keys_1[1]] = -1
+
         if Dict2.get(key) is not None:
             if Dict2[key].get(keys_2[0]) is not None:
                 ResultDict[key][keys_2[0]] = Dict2[key][keys_2[0]]
+            else:
+                print("target: {} missing {}".format(key, keys_2[0]))
+                ResultDict[key][keys_2[0]] = -1
+
             if Dict2[key].get(keys_2[1]) is not None:
                 ResultDict[key][keys_2[1]] = Dict2[key][keys_2[1]]
+            else:
+                print("target: {} missing {}".format(key, keys_2[1]))
+                ResultDict[key][keys_2[1]] = -1
+        else:
+            print("target: {} missing {} and {}".format(key, keys_2[0],keys_2[1]))
+            ResultDict[key][keys_2[0]] = -1
+            ResultDict[key][keys_2[1]] = -1
         # write ResultDict to csv
         with open(writePath, 'a', newline='') as csv_file:
             writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
@@ -153,19 +175,19 @@ if __name__ == '__main__':
     '''
     key_1 = "Original-1-thread"
     key_2 = "Original-12-threads"
-    Orig_results = runEval("/home/jrchang/workspace/llvm-official/test-suite/build/MultiSource/Applications", key_1, key_2, "Original.json")
+    #Orig_results = runEval("/home/jrchang/workspace/llvm-official/test-suite/build/MultiSource/Applications", key_1, key_2, "Original.json")
     '''
     Measure the build time for ABC
     '''
     key_3 = "ABC-1-thread"
     key_4 = "ABC-12-threads"
-    ABC_results = runEval("/home/jrchang/workspace/llvm-thesis-inference/test-suite/build-worker-6/MultiSource/Applications", key_3, key_4, "ABC.json")
+    #ABC_results = runEval("/home/jrchang/workspace/llvm-thesis-inference/test-suite/build-worker-6/MultiSource/Applications", key_3, key_4, "ABC.json")
 
     '''
     If you already run, just read data.
     '''
-    #Orig_results = json.load(open("Original.json"))
-    #ABC_results = json.load(open("ABC.json"))
+    Orig_results = json.load(open("Original.json"))
+    ABC_results = json.load(open("ABC.json"))
 
     # Merge all result into csv-format file
     WriteToCsv("./buildEval.csv", Orig_results, ABC_results, [key_1, key_2], [key_3, key_4])
