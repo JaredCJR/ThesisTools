@@ -303,6 +303,7 @@ class ResponseActor:
         '''
         ret = env.verify(WorkerID, testLoc)
         if ret != 0:
+            retString = "Failed"
             return "Failed"
         '''
         distribute PyActor
