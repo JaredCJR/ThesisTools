@@ -24,12 +24,12 @@ def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
         The taskset configuration depends on the hardware.
         If your computer is other than 8700K, you must customized it.
         Current configuration:
-        intel 8700K: 
+        intel 8700K:
             Core 0 as the "benchmark scheduler"
             Core 1~5 as the "worker" to run programs.
             Core 6~11 are not "real core", they are hardware threads shared with Core 0~5.
         '''
-        CpuWorker = str((int(WorkerID) % 5) + 1) 
+        CpuWorker = str((int(WorkerID) % 5) + 1)
         TrainLoc = os.getenv("LLVM_THESIS_TrainingHome", "Error")
         FullCmd = "taskset -c " + CpuWorker + " " + Cmd
         #print(FullCmd)
@@ -86,6 +86,12 @@ class EnvBuilder:
             child.kill()
         parent.kill()
 
+    def KillPid(self, pid):
+        '''
+        kill the pid
+        '''
+        os.kill(pid, signal.SIGKILL)
+
     def LimitTimeExec(self, LimitTime, Func, *args):
         """
         Input:
@@ -99,9 +105,12 @@ class EnvBuilder:
         retList = []
         PrevWd = os.getcwd()
         isKilled = False
+        ParentPid = os.getpid()
         pid = os.fork()
         if pid == 0:
             retList = Func(args)
+            # kill the timing thread
+            self.KillPid(ParentPid)
         else:
             WaitSecs = 0
             WaitUnit = 1
@@ -110,12 +119,11 @@ class EnvBuilder:
                 if rid == 0 and status == 0:
                     time.sleep(WaitUnit)
                     WaitSecs += WaitUnit
-                else:
-                    break
                 # The time depends on you =)
                 if WaitSecs > LimitTime:
                     self.KillProcesses(pid)
                     isKilled = True
+                    retList.append(-1)
         os.chdir(PrevWd)
         return isKilled, retList
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, sys
+import os, sys, signal
 import multiprocessing
 import subprocess as sp
 import shutil
@@ -74,6 +74,12 @@ def KillProcesses(pid):
         child.kill()
     parent.kill()
 
+def KillPid(pid):
+    '''
+    kill the pid
+    '''
+    os.kill(pid, signal.SIGKILL)
+
 def ExecuteCmd(Cmd=""):
     p = sp.Popen(shlex.split(Cmd),
             stdin=sp.PIPE,
@@ -95,9 +101,12 @@ def LimitTimeExec(LimitTime, Func, *args):
     retList = []
     PrevWd = os.getcwd()
     isKilled = False
+    ParentPid = os.getpid()
     pid = os.fork()
     if pid == 0:
         retList = Func(args)
+        KillPid(ParentPid)
+        print("Kill the timing thread with pid={}".format(ParentPid))
     else:
         WaitSecs = 0
         WaitUnit = 1
@@ -106,12 +115,11 @@ def LimitTimeExec(LimitTime, Func, *args):
             if rid == 0 and status == 0:
                 time.sleep(WaitUnit)
                 WaitSecs += WaitUnit
-            else:
-                break
             # The time depends on you =)
             if WaitSecs > LimitTime:
                 KillProcesses(pid)
                 isKilled = True
+                retList.append(-1)
     os.chdir(PrevWd)
     return isKilled, retList
 
@@ -129,7 +137,7 @@ def workerRun(TestLoc):
         print("$LLVM_THESIS_lit not defined.", file=sys.stderr)
         sys.exit(1)
     CpuNum = str(multiprocessing.cpu_count())
-    cmd = Lit + " -q -j" + CpuNum + ' ' + TestLoc
+    cmd = Lit + " -q -j1 " + TestLoc[0]
     _, out, err = ExecuteCmd(Cmd=cmd)
     if out:
         retList.append(-1)
@@ -146,9 +154,8 @@ def workerExecCmd(cmd):
             others --> build failed
     """
     retList = []
-    _, out, err = ExecuteCmd(Cmd=cmd)
-
-    if err.decode('utf-8').strip() is "":
+    _, out, err = ExecuteCmd(Cmd=cmd[0])
+    if err is None:
         retList.append(0)
     else:
         retList.append(-1)
@@ -168,58 +175,65 @@ def Eval(TargetDict, threadNum, WorkerID):
     for target, targetRoot in TargetDict.items():
         isBuilt = False
         measuredTime = 0
+        """
         try:
-            os.chdir(targetRoot)
-            # make clean
-            os.system("make clean")
-            # build
+        """
+        os.chdir(targetRoot)
+        # make clean
+        os.system("make clean")
+        # build
+        try:
+            cmd = "make -j{}".format(threadNum)
+            print('------------------------------------')
+            print("build cmd={}".format(cmd))
+            #startTime = time.perf_counter()
+            isKilled, retList = LimitTimeExec(1500, workerExecCmd, cmd)
+            #endTime = time.perf_counter()
+            if not isKilled and retList[0] == 0:
+                isBuilt = True
+                #measuredTime = endTime - startTime
+            else:
+                print("Killed or failed in build: {}".format(cmd))
+        except Exception as e:
+            print("{} build failed: {}".format(target, e))
+        if isBuilt:
+            # verify
             try:
-                cmd = "taskset -c 0-{} make -j{}".format(threadNum-1, threadNum)
-                print('------------------------------------')
-                print("build cmd={}".format(cmd))
-                #startTime = time.perf_counter()
-                isKilled, retList = LimitTimeExec(900, workerExecCmd, cmd)
-                #endTime = time.perf_counter()
+                TestLoc = targetRoot + '/' + target + '.test'
+                isKilled, retList = LimitTimeExec(300, workerRun, TestLoc)
                 if not isKilled and retList[0] == 0:
-                    isBuilt = True
-                    #measuredTime = endTime - startTime
-            except Exception as e:
-                print("{} build failed: {}".format(target, e))
-            if isBuilt:
-                # verify
-                try:
-                    isKilled, retList = LimitTimeExec(300, workerRun, TestLoc)
+                    # distribute pyactor
+                    distributePyActor(targetRoot + '/' + target + '.test')
+                    # run and extract cycles
+                    isKilled, retList = LimitTimeExec(500, workerRun, TestLoc)
                     if not isKilled and retList[0] == 0:
-                        # distribute pyactor
-                        distributePyActor(targetRoot + '/' + target + '.test')
-                        # run and extract cycles
-                        isKilled, retList = LimitTimeExec(500, workerRun, TestLoc)
-                        if not isKilled and retList[0] == 0::
-                            # get cycles from "RecordTargetFilePath"
-                            '''
-                            ex.
-                            log file format: /tmp/PredictionDaemon/worker-[n]/[BenchmarkName]
-                            record path example:
-                            /tmp/PredictionDaemon/worker-1/bmm.usage
-                            e.g.
-                            bmm; cpu-cycles | 5668022249; func | matmult | 0.997
-                            '''
-                            loc = '/tmp/PredictionDaemon/worker-' + WorkerID + '/' + target
-                            with open(RecordTargetFilePath, 'r') as file:
-                                info = file.read()
-                            TotalCycles = info.split(';')[1].split('|')[1].strip()
-                            RunCyclesDict[target] = int(TotalCycles)
-                            print("Target={}, takes {} cycles".format(target, TotalCycles))
-                        else:
-                            print("Run too long, killed")
-                            RunCyclesDict[target] = -1
+                        # get cycles from "RecordTargetFilePath"
+                        '''
+                        ex.
+                        log file format: /tmp/PredictionDaemon/worker-[n]/[BenchmarkName].usage
+                        record path example:
+                        /tmp/PredictionDaemon/worker-1/bmm.usage
+                        e.g.
+                        bmm; cpu-cycles | 5668022249; func | matmult | 0.997
+                        '''
+                        RecordTargetFilePath = '/tmp/PredictionDaemon/worker-' + WorkerID + '/' + target + '.usage'
+                        with open(RecordTargetFilePath, 'r') as recFile:
+                            info = recFile.read()
+                        TotalCycles = info.split(';')[1].split('|')[1].strip()
+                        RunCyclesDict[target] = int(TotalCycles)
+                        print("Target={}, takes {} cycles".format(target, TotalCycles))
                     else:
-                        print("Verify failed.")
+                        print("Run too long, killed")
                         RunCyclesDict[target] = -1
-                except Exception as e:
-                    print("{} verified failed: {}".format(target, e))
+                else:
+                    print("Verify failed.")
+                    RunCyclesDict[target] = -1
+            except Exception as e:
+                print("{} verified failed: {}".format(target, e))
+        """
         except Exception as e:
             print("{} unexpected failed: {}".format(target, e))
+        """
     os.chdir(prevCwd)
     return RunCyclesDict
 
@@ -229,9 +243,10 @@ def runEval(TargetRoot, key, jsonPath):
     return {"target": {key_1: first_time, key_2: second_time}}
     """
     # get all .test target
-    Targets = getTargets(TargetRoot + 'SingleSource/Benchmarks')
-    Targets.update(getTargets(TargetRoot + 'MultiSource/Benchmarks'))
-    Targets.update(getTargets(TargetRoot + 'MultiSource/Applications'))
+    Targets = getTargets(TargetRoot + '/SingleSource/Benchmarks')
+    Targets.update(getTargets(TargetRoot + '/MultiSource/Benchmarks'))
+    Targets.update(getTargets(TargetRoot + '/MultiSource/Applications'))
+    #Targets = {"GlobalDataFlow-dbl":"/home/jrchang/workspace/llvm-thesis-inference/test-suite/build-worker-6/MultiSource/Benchmarks/TSVC/GlobalDataFlow-dbl"}
     # Build, verify and log run time
     WorkerID = TargetRoot[-1]
     retDict = Eval(Targets, 12, WorkerID)
@@ -294,7 +309,7 @@ def WriteToCsv(writePath, Dict1, Dict2, keys_1, keys_2):
 
 
 if __name__ == '__main__':
-    for i in range(2):
+    for i in range(1):
         startTime = time.perf_counter()
         '''
         Measure the build time for original clang
@@ -302,7 +317,8 @@ if __name__ == '__main__':
         key_1 = "Original"
         # build-worker-0 for designition compatiable in InstrumentServiceLib.py
         # must end with [WorkerID], not "/"
-        Orig_results = runEval("/home/jrchang/workspace/llvm-official/test-suite/build-worker-0", key_1, "Original.json")
+        # $LLVM_THESIS_HOME is important
+        #Orig_results = runEval("/home/jrchang/workspace/llvm-official/test-suite/build-worker-0", key_1, "Original.json")
         '''
         Measure the build time for ABC
         '''

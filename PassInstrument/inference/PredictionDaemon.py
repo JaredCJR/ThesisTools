@@ -79,6 +79,12 @@ class EnvBuilder:
             child.kill()
         parent.kill()
 
+    def KillPid(self, pid):
+        '''
+        kill the pid
+        '''
+        os.kill(pid, signal.SIGKILL)
+
     def LimitTimeExec(self, LimitTime, Func, *args):
         """
         Input:
@@ -92,9 +98,12 @@ class EnvBuilder:
         retList = []
         PrevWd = os.getcwd()
         isKilled = False
+        ParentPid = os.getpid()
         pid = os.fork()
         if pid == 0:
             retList = Func(args)
+            # kill the timing thread
+            self.KillPid(ParentPid)
         else:
             WaitSecs = 0
             WaitUnit = 1
@@ -103,12 +112,11 @@ class EnvBuilder:
                 if rid == 0 and status == 0:
                     time.sleep(WaitUnit)
                     WaitSecs += WaitUnit
-                else:
-                    break
                 # The time depends on you =)
                 if WaitSecs > LimitTime:
                     self.KillProcesses(pid)
                     isKilled = True
+                    retList.append(-1)
         os.chdir(PrevWd)
         return isKilled, retList
 
