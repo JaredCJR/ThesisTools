@@ -246,75 +246,32 @@ def runEval(TargetRoot, key, jsonPath):
     # Build, verify and log run time
     WorkerID = TargetRoot[-1]
     retDict = Eval(Targets, 12, WorkerID)
-    # record as file for debugging
+    # record as file for logging
     with open(jsonPath, 'w') as fp:
         json.dump(retDict, fp)
     return retDict
 
-def WriteToCsv(writePath, Dict1, Dict2, keys_1, keys_2):
-    """
-    Dict1 must contains all the "keys"
-    """
-    ResultDict = dict.fromkeys(list(Dict1.keys()), {})
-    # write csv header
-    fieldnames = ['target', keys_1[0], keys_2[0], keys_1[1], keys_2[1]]
-    with open(writePath, 'w', newline='') as csv_file:
-        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-        writer.writeheader()
-    for key, _time in Dict1.items():
-        if Dict1.get(key) is not None:
-            if Dict1[key].get(keys_1[0]) is not None:
-                ResultDict[key][keys_1[0]] = Dict1[key][keys_1[0]]
-            else:
-                print("target: {} missing {}".format(key, keys_1[0]))
-                ResultDict[key][keys_1[0]] = -1
 
-            if Dict1[key].get(keys_1[1]) is not None:
-                ResultDict[key][keys_1[1]] = Dict1[key][keys_1[1]]
-            else:
-                print("target: {} missing {}".format(key, keys_1[1]))
-                ResultDict[key][keys_1[1]] = -1
-        else:
-            print("target: {} missing {} and {}".format(key, keys_1[0],keys_1[1]))
-            ResultDict[key][keys_1[0]] = -1
-            ResultDict[key][keys_1[1]] = -1
-
-        if Dict2.get(key) is not None:
-            if Dict2[key].get(keys_2[0]) is not None:
-                ResultDict[key][keys_2[0]] = Dict2[key][keys_2[0]]
-            else:
-                print("target: {} missing {}".format(key, keys_2[0]))
-                ResultDict[key][keys_2[0]] = -1
-
-            if Dict2[key].get(keys_2[1]) is not None:
-                ResultDict[key][keys_2[1]] = Dict2[key][keys_2[1]]
-            else:
-                print("target: {} missing {}".format(key, keys_2[1]))
-                ResultDict[key][keys_2[1]] = -1
-        else:
-            print("target: {} missing {} and {}".format(key, keys_2[0],keys_2[1]))
-            ResultDict[key][keys_2[0]] = -1
-            ResultDict[key][keys_2[1]] = -1
-        # write ResultDict to csv
-        with open(writePath, 'a', newline='') as csv_file:
-            writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
-            tmp = ResultDict[key]
-            tmp['target'] = key
-            writer.writerow(tmp)
-
+def readOriginalResults():
+    loc = os.getenv("LLVM_THESIS_RandomHome", "Error")
+    loc = loc + "/LLVMTestSuiteScript/GraphGen/output/newMeasurableStdBenchmarkMeanAndSigma"
+    Orig_results = {}
+    with open(loc, 'r') as File:
+        '''
+        e.g.
+        PAQ8p/paq8p; cpu-cycles-mean | 153224947840; cpu-cycles-sigma | 2111212874
+        '''
+        for line in File:
+            elms = line.split(';')
+            Target = elms[0].split('/')[-1]
+            Mean = elms[1].split('|')[1].strip()
+            Orig_results[Target] = int(Mean)
+    return Orig_results
 
 
 if __name__ == '__main__':
     for i in range(1):
         startTime = time.perf_counter()
-        '''
-        Measure the build time for original clang
-        '''
-        key_1 = "Original"
-        # build-worker-0 for designition compatiable in InstrumentServiceLib.py
-        # must end with [WorkerID], not "/"
-        # $LLVM_THESIS_HOME is important
-        #Orig_results = runEval("/home/jrchang/workspace/llvm-official/test-suite/build-worker-0", key_1, "Original.json")
         '''
         Measure the build time for ABC
         '''
@@ -324,10 +281,11 @@ if __name__ == '__main__':
         '''
         If you already ran, just read the data.
         '''
-        #Orig_results = json.load(open("Original.json"))
         #ABC_results = json.load(open("ABC.json"))
+        # read data from previous results
+        Orig_results = readOriginalResults()
+        with open("Orig.json", 'w') as fp:
+            json.dump(Orig_results, fp)
 
-        # Merge all results into csv-format file
-        #WriteToCsv("./data/runEval_" + str(i) + ".csv", Orig_results, ABC_results, [key_1, key_2], [key_3, key_4])
         endTime = time.perf_counter()
         print("The evaluation procedure takse:{} mins".format((endTime - startTime)/60))
