@@ -255,7 +255,8 @@ def runEval(TargetRoot, key, jsonPath):
 def readOriginalResults():
     loc = os.getenv("LLVM_THESIS_RandomHome", "Error")
     loc = loc + "/LLVMTestSuiteScript/GraphGen/output/newMeasurableStdBenchmarkMeanAndSigma"
-    Orig_results = {}
+    Orig_cycles_mean = {}
+    Orig_cycles_sigma = {}
     with open(loc, 'r') as File:
         '''
         e.g.
@@ -263,10 +264,12 @@ def readOriginalResults():
         '''
         for line in File:
             elms = line.split(';')
-            Target = elms[0].split('/')[-1]
-            Mean = elms[1].split('|')[1].strip()
-            Orig_results[Target] = int(Mean)
-    return Orig_results
+            target = elms[0].split('/')[-1]
+            mean = elms[1].split('|')[1].strip()
+            sigma = elms[2].split('|')[1].strip()
+            Orig_cycles_mean[target] = int(mean)
+            Orig_cycles_sigma[target] = int(sigma)
+    return Orig_cycles_mean, Orig_cycles_sigma
 
 
 if __name__ == '__main__':
@@ -276,16 +279,18 @@ if __name__ == '__main__':
         Measure the build time for ABC
         '''
         key_2 = "ABC"
-        ABC_results = runEval("/home/jrchang/workspace/llvm-thesis-inference/test-suite/build-worker-6", key_2, "ABC.json")
+        #ABC_results = runEval("/home/jrchang/workspace/llvm-thesis-inference/test-suite/build-worker-6", key_2, "ABC_cycles_mean.json")
 
         '''
         If you already ran, just read the data.
         '''
-        #ABC_results = json.load(open("ABC.json"))
+        ABC_results = json.load(open("ABC_cycles_mean.json"))
         # read data from previous results
-        Orig_results = readOriginalResults()
-        with open("Orig.json", 'w') as fp:
-            json.dump(Orig_results, fp)
+        Orig_cycles_mean, Orig_cycles_sigma = readOriginalResults()
+        with open("Orig_cycles_mean.json", 'w') as fp:
+            json.dump(Orig_cycles_mean, fp)
+        with open("Orig_cycles_sigma.json", 'w') as fp:
+            json.dump(Orig_cycles_sigma, fp)
 
         endTime = time.perf_counter()
         print("The evaluation procedure takse:{} mins".format((endTime - startTime)/60))

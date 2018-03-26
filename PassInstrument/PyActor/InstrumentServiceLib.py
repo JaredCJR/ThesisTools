@@ -248,7 +248,7 @@ class PyActorService:
                 Make sure every benchmark execute at least "ThresholdTime"
                 '''
                 out, err, ElapsedTime = self.RunCmd(Cmd, BoolWithStdin, realStdin)
-                ThresholdTime = 8.0
+                ThresholdTime = 10.0
                 LoopCount = int(ThresholdTime // ElapsedTime)
                 if LoopCount < 5:
                     LoopCount = 5
