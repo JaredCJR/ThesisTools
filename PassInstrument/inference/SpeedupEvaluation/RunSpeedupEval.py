@@ -105,8 +105,8 @@ def LimitTimeExec(LimitTime, Func, *args):
     pid = os.fork()
     if pid == 0:
         retList = Func(args)
+        # Kill the timing thread
         KillPid(ParentPid)
-        print("Kill the timing thread with pid={}".format(ParentPid))
     else:
         WaitSecs = 0
         WaitUnit = 1
@@ -174,7 +174,6 @@ def Eval(TargetDict, threadNum, WorkerID):
     CpuNum = multiprocessing.cpu_count()
     for target, targetRoot in TargetDict.items():
         isBuilt = False
-        measuredTime = 0
         """
         try:
         """
@@ -186,12 +185,9 @@ def Eval(TargetDict, threadNum, WorkerID):
             cmd = "make -j{}".format(threadNum)
             print('------------------------------------')
             print("build cmd={}".format(cmd))
-            #startTime = time.perf_counter()
             isKilled, retList = LimitTimeExec(1500, workerExecCmd, cmd)
-            #endTime = time.perf_counter()
             if not isKilled and retList[0] == 0:
                 isBuilt = True
-                #measuredTime = endTime - startTime
             else:
                 print("Killed or failed in build: {}".format(cmd))
         except Exception as e:
