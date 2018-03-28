@@ -1,5 +1,15 @@
 #!/usr/bin/env python3
 """
+** Written in 2018/3/28
+I have collect the raw data in data/InstCount
+The file end with "-InstCount" are the raw data, and 
+the name before "-InstCount" are the name of directories 
+in "test-suite/MultiSource/Applications"
+Normally, you don't have to do this by yourself.
+The processed data is stored as "CountStat.csv".
+You should directly use it.
+
+** Written in 2018/3/27
 This script can gather the number of IR and the number of function in a programs.
 However, you have to produce the raw data by yourself.
 
