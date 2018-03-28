@@ -9,7 +9,7 @@ if __name__ == '__main__':
     key_4 = "ABC-12-threads"
     TargetDict = None
     
-    prefix = "./raw-data"
+    prefix = "./raw-data/BuildTime"
     ListOfData = []
     for root, dirs ,files in os.walk(prefix):
         for file in files:
