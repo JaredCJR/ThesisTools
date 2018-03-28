@@ -191,6 +191,6 @@ if __name__ == '__main__':
         #ABC_results = json.load(open("ABC.json"))
 
         # Merge all results into csv-format file
-        WriteToCsv("./data/buildEval_" + str(i) + ".csv", Orig_results, ABC_results, [key_1, key_2], [key_3, key_4])
+        WriteToCsv("./raw-data/buildEval_" + str(i) + ".csv", Orig_results, ABC_results, [key_1, key_2], [key_3, key_4])
         endTime = time.perf_counter()
         print("The evaluation procedure takse:{} mins".format((endTime - startTime)/60))

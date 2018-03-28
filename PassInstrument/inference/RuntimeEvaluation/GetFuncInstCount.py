@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 ** Written in 2018/3/28
-I have collect the raw data in data/InstCount
+I have collect the raw data in "raw-data/InstCount"
 The file end with "-InstCount" are the raw data, and 
 the name before "-InstCount" are the name of directories 
 in "test-suite/MultiSource/Applications"
