@@ -78,6 +78,7 @@ def KillPid(pid):
     '''
     kill the pid
     '''
+    # This is the main reason why terminal will produce "Killed" msgs.
     os.kill(pid, signal.SIGKILL)
 
 def ExecuteCmd(Cmd=""):
@@ -87,6 +88,16 @@ def ExecuteCmd(Cmd=""):
     out, err = p.communicate()
     p.wait()
     return p.returncode, out, err
+
+def sigterm_handler(signo, frame):
+    #kill all the children of pid and itself
+    parent_pid = os.getpid()
+    parent = psutil.Process(parent_pid)
+    for child in parent.children(recursive=True):
+        child.kill()
+    # kill itselt and remove pid file.("atexit.register")
+    raise SystemExit(1)
+
 
 def LimitTimeExec(LimitTime, Func, *args):
     """
@@ -103,6 +114,7 @@ def LimitTimeExec(LimitTime, Func, *args):
     isKilled = False
     ParentPid = os.getpid()
     pid = os.fork()
+    #signal.signal(signal.SIGTERM, sigterm_handler)
     if pid == 0:
         retList = Func(args)
         # Kill the timing thread
@@ -117,6 +129,7 @@ def LimitTimeExec(LimitTime, Func, *args):
                 WaitSecs += WaitUnit
             # The time depends on you =)
             if WaitSecs > LimitTime:
+                print("Times up, bug!")
                 KillProcesses(pid)
                 isKilled = True
                 retList.append(-1)
@@ -273,18 +286,22 @@ def readOriginalResults():
 
 
 if __name__ == '__main__':
+    print("Current implementation may not let you terminate this script by ctrl+c")
+    print("This is due to the LimitTimeExec(), may be its \"child\" to continue to do the job.")
+    print("You may see some output message like \"Killed\", that is normal.")
+    print("The message are from the OS because we use signal to kill process.")
     for i in range(1):
         startTime = time.perf_counter()
         '''
         Measure the build time for ABC
         '''
         key_2 = "ABC"
-        #ABC_results = runEval("/home/jrchang/workspace/llvm-thesis-inference/test-suite/build-worker-6", key_2, "ABC_cycles_mean.json")
+        ABC_results = runEval("/home/jrchang/workspace/llvm-thesis-inference/test-suite/build-worker-6", key_2, "ABC_cycles_mean.json")
 
         '''
         If you already ran, just read the data.
         '''
-        ABC_results = json.load(open("ABC_cycles_mean.json"))
+        #ABC_results = json.load(open("ABC_cycles_mean.json"))
         # read data from previous results
         Orig_cycles_mean, Orig_cycles_sigma = readOriginalResults()
         with open("Orig_cycles_mean.json", 'w') as fp:
