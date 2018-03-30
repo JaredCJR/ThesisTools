@@ -8,6 +8,8 @@ import psutil
 import time
 import csv
 import json
+import pytz
+from datetime import datetime
 
 sys.path.append('/home/jrchang/workspace/gym-OptClang/gym_OptClang/envs/')
 import RemoteWorker as rwork
@@ -260,7 +262,10 @@ def runEval(TargetRoot, key, jsonPath):
     WorkerID = TargetRoot[-1]
     retDict = Eval(Targets, 12, WorkerID)
     # record as file for logging
-    with open(jsonPath, 'w') as fp:
+    date = datetime.now(pytz.timezone('Asia/Taipei')).strftime("%m-%d_%H-%M")
+    Dir = "log-" + date
+    os.makedirs(Dir)
+    with open(Dir + '/' + jsonPath, 'w') as fp:
         json.dump(retDict, fp)
     return retDict
 
@@ -303,11 +308,14 @@ if __name__ == '__main__':
         '''
         #ABC_results = json.load(open("ABC_cycles_mean.json"))
         # read data from previous results
+        # we don't have to read the original data for every time
+        '''
         Orig_cycles_mean, Orig_cycles_sigma = readOriginalResults()
         with open("Orig_cycles_mean.json", 'w') as fp:
             json.dump(Orig_cycles_mean, fp)
         with open("Orig_cycles_sigma.json", 'w') as fp:
             json.dump(Orig_cycles_sigma, fp)
+        '''
 
         endTime = time.perf_counter()
         print("The evaluation procedure takse:{} mins".format((endTime - startTime)/60))
