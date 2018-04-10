@@ -81,9 +81,13 @@ class EnvBuilder:
         kill all the children of pid and itself
         '''
         parent_pid = pid
-        parent = psutil.Process(parent_pid)
-        for child in parent.children(recursive=True):
-            child.kill()
+        try:
+            parent = psutil.Process(parent_pid)
+            for child in parent.children(recursive=True):
+                child.kill()
+        except Exception as e:
+            print("Failed to KillProcesses with pid={}\n Skip it.".format(pid))
+            return
         parent.kill()
 
     def KillPid(self, pid):
