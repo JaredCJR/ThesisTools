@@ -162,7 +162,7 @@ class EnvBuilder:
         0 --> build success
         others   --> build failed
         """
-        isKilled, retList = self.LimitTimeExec(500, self.workerMake, WorkerID, BuildTarget)
+        isKilled, retList = self.LimitTimeExec(1200, self.workerMake, WorkerID, BuildTarget)
         if isKilled or retList[0] != 0:
             return -1
         else:
