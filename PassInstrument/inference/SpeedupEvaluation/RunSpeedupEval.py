@@ -291,6 +291,9 @@ def readOriginalResults():
 
 
 if __name__ == '__main__':
+    print("-------------------------------------------")
+    print("Make sure your $$LLVM_THESIS_HOME point to the inference one.")
+    print("-------------------------------------------")
     print("Current implementation may not let you terminate this script by ctrl+c")
     print("This is due to the LimitTimeExec(), may be its \"child\" to continue to do the job.")
     print("You may see some output message like \"Killed\", that is normal.")
