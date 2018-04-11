@@ -119,11 +119,7 @@ class EnvBuilder:
             WaitSecs = 0
             WaitUnit = 1
             while True:
-                try:
-                    rid, status = os.waitpid(pid, os.WNOHANG)
-                except Exception as e:
-                    print("Caught the pid not exist error:\n{}".format(e))
-                    sys.exit(1)
+                rid, status = os.waitpid(pid, os.WNOHANG)
                 if rid == 0 and status == 0:
                     time.sleep(WaitUnit)
                     WaitSecs += WaitUnit
@@ -132,6 +128,8 @@ class EnvBuilder:
                     self.KillProcesses(pid)
                     isKilled = True
                     retList.append(-1)
+                    print("Achieve time limitation, kill it.")
+                    break
         os.chdir(PrevWd)
         return isKilled, retList
 
