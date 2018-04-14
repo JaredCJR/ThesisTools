@@ -96,7 +96,7 @@ def LimitTimeExec(LimitTime, Func, *args):
             # return the return code to indicate success or not
             ret = ExecProc.exitcode
             isKilled = False
-            print("The command is finished at {} with exitcode={}, break.".format(ret, date))
+            print("The command is finished at {} with exitcode={}, break.".format(date, ret))
             break
         if WaitSecs > LimitTime:
             if not ExecProc.is_alive():
