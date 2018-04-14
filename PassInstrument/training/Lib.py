@@ -108,7 +108,7 @@ def LimitTimeExec(LimitTime, Func, *args):
                 sys.exit(0)
             isKilled = True
             ret = -1
-            print("Achieve time limitation, kill it at {}.".break(getTaipeiTime()))
+            print("Achieve time limitation, kill it at {}.".format(getTaipeiTime()))
             break
     os.chdir(PrevWd)
     return isKilled, ret
