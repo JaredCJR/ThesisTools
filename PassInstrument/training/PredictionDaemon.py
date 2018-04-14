@@ -14,33 +14,6 @@ import psutil
 import subprocess
 import Lib as lib
 
-def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
-    """
-    return cmd's return code, STDOUT, STDERR
-    """
-    # Use taskset by default
-    if Block:
-        '''
-        The taskset configuration depends on the hardware.
-        If your computer is other than 8700K, you must customized it.
-        Current configuration:
-        intel 8700K:
-            Core 0 as the "benchmark scheduler"
-            Core 1~5 as the "worker" to run programs.
-            Core 6~11 are not "real core", they are hardware threads shared with Core 0~5.
-        '''
-        CpuWorker = str((int(WorkerID) % 5) + 1)
-        TrainLoc = os.getenv("LLVM_THESIS_TrainingHome", "Error")
-        FullCmd = "taskset -c " + CpuWorker + " " + Cmd
-        #print(FullCmd)
-        p = subprocess.Popen(shlex.split(FullCmd),
-                stdin=subprocess.PIPE,
-                stdout=subprocess.PIPE)
-        out, err = p.communicate()
-        p.wait()
-        return p.returncode, out, err
-    else:
-        print("TODO: non-blocking execute", file=sys.stderr)
 
 class EnvBuilder:
     def CheckTestSuiteCmake(self, WorkerID):
@@ -61,7 +34,7 @@ class EnvBuilder:
             cBinSrc = llvmSrc + "/build-release-gcc7-worker" + WorkerID + "/bin/clang"
             cxxBinSrc = cBinSrc + "++"
             cmd = "cmake -DCMAKE_C_COMPILER=" + cBinSrc + " -DCMAKE_CXX_COMPILER=" + cxxBinSrc + " ../"
-            ret = ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
+            ret = lib.ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
             os.chdir(PrevWd)
             if ret != 0:
                 print("cmake failed.", file=sys.stderr)
@@ -90,63 +63,21 @@ class EnvBuilder:
             return
         parent.kill()
 
-    def KillPid(self, pid):
-        '''
-        kill the pid
-        '''
-        os.kill(pid, signal.SIGKILL)
-
-    def LimitTimeExec(self, LimitTime, Func, *args):
-        """
-        Input:
-        1. LimitTime: is in the unit of secs.
-        2. Func: must return a list that contains your return value
-        3. args: pass into Func
-        Return value:
-        1. isKilled: killed by timing
-        2. retList: from Func(args)
-        """
-        retList = []
-        PrevWd = os.getcwd()
-        isKilled = False
-        ParentPid = os.getpid()
-        pid = os.fork()
-        if pid == 0:
-            retList = Func(args)
-            # kill the timing thread
-            self.KillPid(ParentPid)
-        else:
-            WaitSecs = 0
-            WaitUnit = 1
-            while True:
-                rid, status = os.waitpid(pid, os.WNOHANG)
-                if rid == 0 and status == 0:
-                    time.sleep(WaitUnit)
-                    WaitSecs += WaitUnit
-                # The time depends on you =)
-                if WaitSecs > LimitTime:
-                    self.KillProcesses(pid)
-                    isKilled = True
-                    retList.append(-1)
-                    print("Achieve time limitation, kill it.")
-                    break
-        os.chdir(PrevWd)
-        return isKilled, retList
 
     def workerMake(self, args):
         """
-        Input(tuple):
+        Input: args(tuple):
         [0]:WorkerID
         [1]:BuildTarget
-        Return a list:
-        [0]: a number that indicate status.
-                0      --> build success
-                others --> build failed
+        Return a int:
+        a number that indicate status.
+            0      --> build success
+            others --> build failed
         """
         PrevWd = os.getcwd()
         WorkerID = args[0]
         BuildTarget = args[1]
-        retList = []
+        ret = -1
         '''
         build
         '''
@@ -154,9 +85,8 @@ class EnvBuilder:
         TestSrc = llvmSrc + "/test-suite/build-worker-" + WorkerID
         os.chdir(TestSrc)
         cmd = "make " + BuildTarget
-        ret, _, _ = ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
-        retList.append(ret)
-        return retList
+        ret, _, _ = lib.ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
+        return ret
 
     def make(self, WorkerID, BuildTarget):
         """
@@ -164,8 +94,8 @@ class EnvBuilder:
         0 --> build success
         others   --> build failed
         """
-        isKilled, retList = self.LimitTimeExec(1200, self.workerMake, WorkerID, BuildTarget)
-        if isKilled or retList[0] != 0:
+        isKilled, ret = lib.LimitTimeExec(900, self.workerMake, WorkerID, BuildTarget)
+        if isKilled or ret != 0:
             return -1
         else:
             return 0
@@ -175,12 +105,12 @@ class EnvBuilder:
         Input(tuple):
         [0]:WorkerID
         [1]:TestLoc
-        Return a list:
-        [0]: a number that indicate status.
-                0      --> build success
-                others --> build failed
+        Return a int:
+        a number that indicate status.
+            0      --> build success
+            others --> build failed
         """
-        retList = []
+        ret = -1
         WorkerID = args[0]
         TestLoc = args[1]
         Lit = os.getenv("LLVM_THESIS_lit", "Error")
@@ -188,21 +118,21 @@ class EnvBuilder:
             print("$LLVM_THESIS_lit not defined.", file=sys.stderr)
             sys.exit(1)
         cmd = Lit + " -q " + TestLoc
-        _, out, err = ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
+        _, out, err = lib.ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
         if out:
-            retList.append(-1)
+            ret = -1
         else:
-            retList.append(0)
-        return retList
+            ret = 0
+        return ret
 
     def verify(self, WorkerID, TestLoc):
         """
         return a number:
-        0 --> build success
-        others   --> build failed
+        0 --> success and correct
+        others   --> failed
         """
-        isKilled, retList = self.LimitTimeExec(500, self.workerVerify, WorkerID, TestLoc)
-        if isKilled or retList[0] != 0:
+        isKilled, ret = lib.LimitTimeExec(500, self.workerVerify, WorkerID, TestLoc)
+        if isKilled or ret != 0:
             return -1
         else:
             return 0
