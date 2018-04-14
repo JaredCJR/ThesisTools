@@ -1,11 +1,14 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 import os, psutil, signal
 import sys
 import fcntl
-import pytz, datetime
+import pytz
+import time
+from datetime import datetime
 import multiprocessing
 from multiprocessing import Queue
+import subprocess, shlex
 
 def getTaipeiTime():
     return datetime.now(pytz.timezone('Asia/Taipei')).strftime("%m-%d_%H-%M")
@@ -77,7 +80,7 @@ def LimitTimeExec(LimitTime, Func, *args):
     isKilled = False
     WaitSecs = 0
     WaitUnit = 10
-    ExecProc = multiprocessing.Process(target=Func, args=[q, args])
+    ExecProc = multiprocessing.Process(target=Func, args=[args])
     # NOTE: SIGKILL will not kill the children
     # kill all its sub-process when parent is killed.
     ExecProc.daemon = True
