@@ -62,7 +62,10 @@ def KillPid(pid):
     '''
     kill the pid
     '''
-    os.kill(pid, signal.SIGKILL)
+    try:
+        os.kill(pid, signal.SIGKILL)
+    except Exception as e:
+        print("KillPid() failed.\n reasons:{}".format(e))
 
 
 def LimitTimeExec(LimitTime, Func, *args):
@@ -106,8 +109,11 @@ def LimitTimeExec(LimitTime, Func, *args):
             KillChildren(ExecProc.pid)
             # with daemon flag, all children will be terminated
             ExecProc.terminate()
-            if ExecProc.is_alive():
-                print("ExecProc.terminate() failed; stop daemon.")
+            KillPid(ExecProc.pid)
+            # wait for a few secs
+            ExecProc.join(10)
+            if ExecProc.exitcode is None: # exitcode is None for unfinished proc.
+                print("ExecProc.terminate() failed; Daemon handler exit.")
                 sys.exit(0)
             isKilled = True
             ret = -1
