@@ -9,6 +9,12 @@ from datetime import datetime
 import multiprocessing
 from multiprocessing import Queue
 import subprocess, shlex
+import atexit
+import signal
+import socketserver
+import socket
+import re
+import shutil
 
 def getTaipeiTime():
     return datetime.now(pytz.timezone('Asia/Taipei')).strftime("%m-%d_%H-%M")
@@ -149,6 +155,236 @@ def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
         return p.returncode, out, err
     else:
         print("TODO: non-blocking execute", file=sys.stderr)
+
+class EnvBuilder:
+    def CheckTestSuiteCmake(self, WorkerID):
+        llvmSrc = os.getenv("LLVM_THESIS_HOME", "Error")
+        if llvmSrc == "Error":
+            print("$LLVM_THESIS_HOME or not defined.", file=sys.stderr)
+            sys.exit(1)
+        TestSrc = llvmSrc + "/test-suite/build-worker-" + WorkerID
+        PrevWd = os.getcwd()
+        # if the cmake is not done, do it once.
+        if not os.path.isdir(TestSrc):
+            os.mkdir(TestSrc)
+            os.chdir(TestSrc)
+            '''
+            ex.
+            cmake -DCMAKE_C_COMPILER=/home/jrchang/workspace/llvm-thesis/build-release-gcc7-worker1/bin/clang -DCMAKE_CXX_COMPILER=/home/jrchang/workspace/llvm-thesis/build-release-gcc7-worker1/bin/clang++ ../
+            '''
+            cBinSrc = llvmSrc + "/build-release-gcc7-worker" + WorkerID + "/bin/clang"
+            cxxBinSrc = cBinSrc + "++"
+            cmd = "cmake -DCMAKE_C_COMPILER=" + cBinSrc + " -DCMAKE_CXX_COMPILER=" + cxxBinSrc + " ../"
+            ret = ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
+            os.chdir(PrevWd)
+            if ret != 0:
+                print("cmake failed.", file=sys.stderr)
+                sys.exit(1)
+        # Build .test dict for verification and run
+        global LitTestDict # { target-name: .test-loc }
+        LitTestDict = {}
+        for root, dirs, files in os.walk(TestSrc):
+            for file in files:
+                if file.endswith(".test"):
+                    name = file[:-5]
+                    path = os.path.join(root, file)
+                    LitTestDict[name] = path
+
+    def workerMake(self, args):
+        """
+        Input: args(tuple):
+        [0]:WorkerID
+        [1]:BuildTarget
+        Return a int:
+        a number that indicate status.
+            0      --> build success
+            others --> build failed
+        """
+        PrevWd = os.getcwd()
+        WorkerID = args[0]
+        BuildTarget = args[1]
+        ret = -1
+        '''
+        build
+        '''
+        llvmSrc = os.getenv("LLVM_THESIS_HOME", "Error")
+        TestSrc = llvmSrc + "/test-suite/build-worker-" + WorkerID
+        os.chdir(TestSrc)
+        cmd = "make " + BuildTarget
+        ret, _, _ = ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
+        return ret
+
+    def make(self, WorkerID, BuildTarget):
+        """
+        return a number:
+        0 --> build success
+        others   --> build failed
+        """
+        isKilled, ret = LimitTimeExec(900, self.workerMake, WorkerID, BuildTarget)
+        if isKilled or ret != 0:
+            return -1
+        else:
+            return 0
+    def workerVerify(self, args):
+        """
+        Input(tuple):
+        [0]:WorkerID
+        [1]:TestLoc
+        Return a int:
+        a number that indicate status.
+            0      --> build success
+            others --> build failed
+        """
+        ret = -1
+        WorkerID = args[0]
+        TestLoc = args[1]
+        Lit = os.getenv("LLVM_THESIS_lit", "Error")
+        if Lit == "Error":
+            print("$LLVM_THESIS_lit not defined.", file=sys.stderr)
+            sys.exit(1)
+        cmd = Lit + " -q " + TestLoc
+        _, out, err = ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
+        if out:
+            ret = -1
+        else:
+            ret = 0
+        return ret
+
+    def verify(self, WorkerID, TestLoc):
+        """
+        return a number:
+        0 --> success and correct
+        others   --> failed
+        """
+        isKilled, ret = LimitTimeExec(500, self.workerVerify, WorkerID, TestLoc)
+        if isKilled or ret != 0:
+            return -1
+        else:
+            return 0
+
+    def distributePyActor(self, TestFilePath):
+        """
+        return 0 for success
+        return -1 for failure.
+        """
+        Log = LogService()
+        # Does this benchmark need stdin?
+        NeedStdin = False
+        with open(TestFilePath, "r") as TestFile:
+            for line in TestFile:
+                if line.startswith("RUN:"):
+                    if line.find("<") != -1:
+                        NeedStdin = True
+                    break
+            TestFile.close()
+        # Rename elf and copy actor
+        ElfPath = TestFilePath.replace(".test", '')
+        NewElfPath = ElfPath + ".OriElf"
+        #based on "stdin" for to copy the right ones
+        InstrumentSrc = os.getenv("LLVM_THESIS_InstrumentHome", "Error")
+        if NeedStdin == True:
+            PyCallerLoc = InstrumentSrc + '/PyActor/WithStdin/PyCaller'
+            PyActorLoc = InstrumentSrc + '/PyActor/WithStdin/MimicAndFeatureExtractor.py'
+        else:
+            PyCallerLoc = InstrumentSrc + '/PyActor/WithoutStdin/PyCaller'
+            PyActorLoc = InstrumentSrc + '/PyActor/WithoutStdin/MimicAndFeatureExtractor.py'
+        try:
+            # Rename the real elf
+            shutil.move(ElfPath, NewElfPath)
+            # Copy the feature-extractor
+            shutil.copy2(PyActorLoc, ElfPath + ".py")
+        except Exception as e:
+            print("distributePyActor() errors, Reasons:\n{}".format(e))
+            return -1
+        # Copy the PyCaller
+        if os.path.exists(PyCallerLoc) == True:
+            shutil.copy2(PyCallerLoc, ElfPath)
+        else:
+            Log.err("Please \"$ make\" to get PyCaller in {}\n".format(PyCallerLoc))
+            return -1
+        return 0 #success
+
+    def run(self, WorkerID, TestLoc):
+        ret = self.verify(WorkerID, TestLoc)
+        return ret
+
+class EnvResponseActor:
+    def EnvEcho(self, BuildTarget):
+        """
+        return "Success" or "Failed"
+        """
+        global WorkerID
+        global LitTestDict
+        testLoc = LitTestDict[BuildTarget]
+        retString = "Success"
+        '''
+        remove previous build and build again
+        '''
+        env = EnvBuilder()
+        '''
+        ex1. RUN: /llvm/test-suite/build-worker-1/SingleSource/Benchmarks/Dhrystone/dry
+        ex2. RUN: cd /home/jrchang/workspace/llvm-thesis/test-suite/build-worker-1/MultiSource/Applications/sqlite3 ; /home/jrchang/workspace/llvm-thesis/test-suite/build-worker-1/MultiSource/Applications/sqlite3/sqlite3 -init /home/jrchang/workspace/llvm-thesis/test-suite/MultiSource/Applications/sqlite3/sqlite3rc :memory: < /home/jrchang/workspace/llvm-thesis/test-suite/MultiSource/Applications/sqlite3/commands
+        '''
+        with open(testLoc, "r") as file:
+            fileCmd = file.readline()
+            file.close()
+        MultiCmdList = fileCmd.split(';')
+        if len(MultiCmdList) == 1:
+            # cases like ex1.
+            BuiltBin = fileCmd.split()[1]
+        else:
+            # cases like ex2.
+            BuiltBin = MultiCmdList[1].strip().split()[0]
+        '''
+        remove binary does not ensure it will be built again.
+        Therefore, we must use "make clean"
+        '''
+        binName = BuiltBin.split('/')[-1]
+        dirPath = BuiltBin[:-(len(binName) + 1)]
+        prevWd = os.getcwd()
+        '''
+        print("fileCmd={}".format(fileCmd))
+        print("BuiltBin={}".format(BuiltBin))
+        print("dirPath={}".format(dirPath))
+        print("binName={}".format(binName))
+        '''
+        os.chdir(dirPath)
+        os.system("make clean")
+        os.chdir(prevWd)
+
+        # remove feature file
+        FeatureFile = '/tmp/PredictionDaemon/worker-{}/features'.format(WorkerID)
+        if os.path.exists(FeatureFile):
+            os.remove(FeatureFile)
+
+        '''
+        build
+        assuming the proper cmake is already done.
+        '''
+        ret = env.make(WorkerID, BuildTarget)
+        if ret != 0:
+            return "Failed"
+        '''
+        verify
+        '''
+        ret = env.verify(WorkerID, testLoc)
+        if ret != 0:
+            return "Failed"
+        '''
+        distribute PyActor
+        '''
+        ret = env.distributePyActor(testLoc)
+        if ret != 0:
+            return "Failed"
+        '''
+        run and extract performance
+        The return value from env.run() can be ignored.
+        We already use env.verify() to verify it.
+        '''
+        ret = env.run(WorkerID, testLoc)
+        return retString
+
+
 
 class LogService():
     def __init__(self):
