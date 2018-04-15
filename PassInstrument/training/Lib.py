@@ -158,6 +158,9 @@ def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
 
 class EnvBuilder:
     def CheckTestSuiteCmake(self, WorkerID):
+        """
+        return LitTestDict: { target-name: .test-loc }
+        """
         llvmSrc = os.getenv("LLVM_THESIS_HOME", "Error")
         if llvmSrc == "Error":
             print("$LLVM_THESIS_HOME or not defined.", file=sys.stderr)
@@ -181,7 +184,6 @@ class EnvBuilder:
                 print("cmake failed.", file=sys.stderr)
                 sys.exit(1)
         # Build .test dict for verification and run
-        global LitTestDict # { target-name: .test-loc }
         LitTestDict = {}
         for root, dirs, files in os.walk(TestSrc):
             for file in files:
@@ -189,6 +191,7 @@ class EnvBuilder:
                     name = file[:-5]
                     path = os.path.join(root, file)
                     LitTestDict[name] = path
+        return LitTestDict
 
     def workerMake(self, args):
         """
@@ -309,12 +312,10 @@ class EnvBuilder:
         return ret
 
 class EnvResponseActor:
-    def EnvEcho(self, BuildTarget):
+    def EnvEcho(self, BuildTarget, WorkerID, LitTestDict):
         """
         return "Success" or "Failed"
         """
-        global WorkerID
-        global LitTestDict
         testLoc = LitTestDict[BuildTarget]
         retString = "Success"
         '''
