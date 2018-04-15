@@ -364,18 +364,21 @@ class EnvResponseActor:
         '''
         ret = env.make(WorkerID, BuildTarget)
         if ret != 0:
+            print("Failed sent.")
             return "Failed"
         '''
         verify
         '''
         ret = env.verify(WorkerID, testLoc)
         if ret != 0:
+            print("Failed sent.")
             return "Failed"
         '''
         distribute PyActor
         '''
         ret = env.distributePyActor(testLoc)
         if ret != 0:
+            print("Failed sent.")
             return "Failed"
         '''
         run and extract performance
