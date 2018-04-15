@@ -29,7 +29,7 @@ class ResponseActor:
         return retString
 
     def EnvEcho(self, BuildTarget):
-        return lib.EnvResponseActor().EnvEcho()
+        return lib.EnvResponseActor().EnvEcho(BuildTarget)
 
 class tcpServer:
     class ClangTcpHandler(socketserver.StreamRequestHandler):
