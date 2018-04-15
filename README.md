@@ -353,11 +353,16 @@ How to setup network connection for training framework:
 ```
 cd llvm-thesis/ThesisTools/PassInstrument/training
 # Every boot should execute "once" to setup the Iptables properly.
+# if you can set Iptables without sudo, you can execute this withou sudo
 # Execute it multiple times may cause the rules self-conflict to drop the packets.
 sudo ./setupConnection.py
 # There are examples show on the shell, read it !
 # The format is :
 # [ip], [port start number], [how many workers for this IP with the starting port number]
+
+## A more convenient approach:
+## $ sudo ./setupConnection.py < ips.txt
+## write the content inside ips.txt
 ```
   
 * Usage example:

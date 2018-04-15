@@ -35,8 +35,8 @@ class ResponseActor:
         tfServerLock.release()
         return str(Pass)
 
-    def EnvEcho(self, BuildTarget):
-        return lib.EnvResponseActor().EnvEcho()
+    def EnvEcho(self, BuildTarget, WorkerID, LitTestDict):
+        return lib.EnvResponseActor().EnvEcho(BuildTarget, WorkerID, LitTestDict)
 
 class tcpServer:
     def __init__(self):
@@ -91,6 +91,7 @@ class tcpServer:
         def handle(self):
             global DaemonIpcFileLoc
             global WorkerID
+            global LitTestDict
             '''
             self.rfile is a file-like object created by the handler;
             we can now use e.g. readline() instead of raw recv() calls
@@ -117,7 +118,7 @@ class tcpServer:
                     IpcFile.close()
                 actor = ResponseActor()
                 # build, verify, run.
-                WriteContent = actor.EnvEcho(BuildTarget)
+                WriteContent = actor.EnvEcho(BuildTarget, WorkerID, LitTestDict)
                 PossibleRet = ["Success", "Failed"]
                 if WriteContent not in PossibleRet:
                     self.writeMsgBack("EnvEcho Error!")
@@ -339,7 +340,8 @@ class Daemon:
                 time.sleep(1)
                 # check cmake
                 builder = lib.EnvBuilder()
-                builder.CheckTestSuiteCmake(WorkerID)
+                global LitTestDict
+                LitTestDict = builder.CheckTestSuiteCmake(WorkerID)
                 self.CreateDaemon(EnvDaemonName, EnvPidFile, EnvLogFile,
                         EnvHost, EnvPort)
             else:
