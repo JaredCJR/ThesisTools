@@ -138,6 +138,10 @@ class EnvBuilder:
             return 0
 
     def distributePyActor(self, TestFilePath):
+        """
+        return 0 for success
+        return -1 for failure.
+        """
         Log = lib.LogService()
         # Does this benchmark need stdin?
         NeedStdin = False
@@ -159,16 +163,21 @@ class EnvBuilder:
         else:
             PyCallerLoc = InstrumentSrc + '/PyActor/WithoutStdin/PyCaller'
             PyActorLoc = InstrumentSrc + '/PyActor/WithoutStdin/MimicAndFeatureExtractor.py'
-        # Rename the real elf
-        shutil.move(ElfPath, NewElfPath)
-        # Copy the feature-extractor
-        shutil.copy2(PyActorLoc, ElfPath + ".py")
+        try:
+            # Rename the real elf
+            shutil.move(ElfPath, NewElfPath)
+            # Copy the feature-extractor
+            shutil.copy2(PyActorLoc, ElfPath + ".py")
+        except Exception as e:
+            print("distributePyActor() errors, Reasons:\n{}".format(e))
+            return -1
         # Copy the PyCaller
         if os.path.exists(PyCallerLoc) == True:
             shutil.copy2(PyCallerLoc, ElfPath)
         else:
             Log.err("Please \"$ make\" to get PyCaller in {}\n".format(PyCallerLoc))
-            return
+            return -1
+        return 0 #success
 
     def run(self, WorkerID, TestLoc):
         ret = self.verify(WorkerID, TestLoc)
@@ -252,7 +261,10 @@ class ResponseActor:
         '''
         distribute PyActor
         '''
-        env.distributePyActor(testLoc)
+        ret = env.distributePyActor(testLoc)
+        if ret != 0:
+            retString = "Failed"
+            return "Failed"
         '''
         run and extract performance
         '''

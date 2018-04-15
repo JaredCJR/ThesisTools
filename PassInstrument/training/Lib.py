@@ -168,7 +168,8 @@ class LogService():
         self.outNotToFile(msg)
 
     def err(self, msg):
-        self.FileWriter("/tmp/PredictionDaemon.err", msg)
+        self.out(msg)
+        #self.FileWriter("/tmp/PredictionDaemon.err", msg)
 
 class ConnectInfoService():
     def getConnectDict(self, path):
