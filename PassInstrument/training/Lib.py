@@ -191,12 +191,23 @@ class EnvBuilder:
                 sys.exit(1)
         # Build .test dict for verification and run
         LitTestDict = {}
+        '''
+        only add the "measurable targets"
+        '''
+        MeasurableRec = os.getenv("LLVM_THESIS_RandomHome", "Error")
+        MeasurableRec = MeasurableRec +
+            '/LLVMTestSuiteScript/GraphGen/output/newMeasurableStdBenchmarkMeanAndSigma'
+        MeasurableList = []
+        with open(MeasurableRec, 'r') as f:
+            for line in f:
+                MeasurableList.append(line.split(';')[0].split('/')[-1].strip())
         for root, dirs, files in os.walk(TestSrc):
             for file in files:
                 if file.endswith(".test"):
                     name = file[:-5]
-                    path = os.path.join(root, file)
-                    LitTestDict[name] = path
+                    if name in MeasurableList:
+                        path = os.path.join(root, file)
+                        LitTestDict[name] = path
         return LitTestDict
 
     def workerMake(self, args):
