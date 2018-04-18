@@ -376,6 +376,5 @@ class Daemon:
             raise SystemExit(1)
 
 if __name__ == '__main__':
-    print("If you see some messages like \"Killed\", that is produced by \"KillPid()\". This isn't a bug.")
     daemon = Daemon()
     daemon.run(sys.argv)
