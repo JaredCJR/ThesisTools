@@ -45,9 +45,10 @@ def Eval(TargetDict, threadNum, WorkerID):
     """
     RunCyclesDict = {}
     prevCwd = os.getcwd()
+    actor = lib.EnvResponseActor()
     for target, targetRoot in TargetDict.items():
         isBuilt = False
-        retStatus = lib.EnvResponseActor.EnvEcho(target, WorkerID, TargetDict)
+        retStatus = actor.EnvEcho(target, WorkerID, TargetDict)
         if retStatus == "Success":
             # get cycles from "RecordTargetFilePath"
             '''
@@ -69,7 +70,7 @@ def Eval(TargetDict, threadNum, WorkerID):
     os.chdir(prevCwd)
     return RunCyclesDict
 
-def runEval(TargetRoot, key, jsonPath):
+def runEval(WorkerID, jsonPath):
     """
     TargetRoot: the root path in your test-suite/build
     return {"target": {key_1: first_time, key_2: second_time}}
@@ -84,7 +85,6 @@ def runEval(TargetRoot, key, jsonPath):
     # Build, verify and log run time
     builder = lib.EnvBuilder()
     LitTestDict = builder.CheckTestSuiteCmake(WorkerID)
-    WorkerID = TargetRoot[-1]
     retDict = Eval(LitTestDict, 12, WorkerID)
     # record as file for logging
     date = datetime.now(pytz.timezone('Asia/Taipei')).strftime("%m-%d_%H-%M")
@@ -116,8 +116,11 @@ def readOriginalResults():
 
 
 if __name__ == '__main__':
+    WorkerID = "6"
     print("-------------------------------------------")
     print("Make sure your $$LLVM_THESIS_HOME point to the inference one.")
+    print("If you would like to change worker, modify the passed args of runEval()")
+    print("Default WorkerID={}".format(WorkerID))
     print("-------------------------------------------")
     for i in range(1):
         startTime = time.perf_counter()
@@ -125,7 +128,7 @@ if __name__ == '__main__':
         Measure the build time for ABC
         '''
         key_2 = "ABC"
-        ABC_results = runEval("/home/jrchang/workspace/llvm-thesis-inference/test-suite/build-worker-6", key_2, "ABC_cycles_mean.json")
+        ABC_results = runEval(WorkerID, "ABC_cycles_mean.json")
 
         '''
         If you already ran, just read the data.
