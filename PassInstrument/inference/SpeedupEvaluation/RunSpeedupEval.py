@@ -37,10 +37,9 @@ def getTargets(path):
 
 
 
-def Eval(TargetDict, threadNum, WorkerID):
+def Eval(TargetDict, WorkerID):
     """
     TargetDict = {"target": "target root path"}
-    threadNum: make -j[threadNum]
     return BuildTimeDict = {"target": run-time}
     """
     RunCyclesDict = {}
@@ -85,7 +84,7 @@ def runEval(WorkerID, jsonPath):
     # Build, verify and log run time
     builder = lib.EnvBuilder()
     LitTestDict = builder.CheckTestSuiteCmake(WorkerID)
-    retDict = Eval(LitTestDict, 12, WorkerID)
+    retDict = Eval(LitTestDict, WorkerID)
     # record as file for logging
     date = datetime.now(pytz.timezone('Asia/Taipei')).strftime("%m-%d_%H-%M")
     Dir = "log-" + date

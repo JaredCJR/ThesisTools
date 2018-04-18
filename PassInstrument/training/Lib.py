@@ -194,9 +194,9 @@ class EnvBuilder:
         '''
         only add the "measurable targets"
         '''
-        MeasurableRec = os.getenv("LLVM_THESIS_RandomHome", "Error")
-        MeasurableRec = MeasurableRec +
-            '/LLVMTestSuiteScript/GraphGen/output/newMeasurableStdBenchmarkMeanAndSigma'
+        MeasurableRec = os.getenv("LLVM_THESIS_Random_LLVMTestSuiteScript", "Error")
+        MeasurableRec = \
+            MeasurableRec + '/GraphGen/output/newMeasurableStdBenchmarkMeanAndSigma'
         MeasurableList = []
         with open(MeasurableRec, 'r') as f:
             for line in f:
