@@ -128,7 +128,7 @@ def LimitTimeExec(LimitTime, Func, *args):
     os.chdir(PrevWd)
     return isKilled, ret
 
-def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
+def ExecuteCmd(WorkerID=1, Cmd="", Block=True, ParallelBuild=False):
     """
     return cmd's return code, STDOUT, STDERR
     """
@@ -145,7 +145,13 @@ def ExecuteCmd(WorkerID=1, Cmd="", Block=True):
         '''
         CpuWorker = str((int(WorkerID) % 5) + 1)
         TrainLoc = os.getenv("LLVM_THESIS_TrainingHome", "Error")
-        FullCmd = "taskset -c " + CpuWorker + " " + Cmd
+        if not ParallelBuild:
+            FullCmd = "taskset -c " + CpuWorker + " " + Cmd
+        else:
+            if Cmd.split()[0] == "make":
+                FullCmd = Cmd + " -j" + str(multiprocessing.cpu_count())
+            else:
+                FullCmd = Cmd
         #print(FullCmd)
         p = subprocess.Popen(shlex.split(FullCmd),
                 stdin=subprocess.PIPE,
@@ -198,6 +204,8 @@ class EnvBuilder:
         Input: args(tuple):
         [0]:WorkerID
         [1]:BuildTarget
+        [2]:ParallelBuild <---This arg is optional
+            (Default is using taskset to build on a core)
         Return a int:
         a number that indicate status.
             0      --> build success
@@ -206,6 +214,9 @@ class EnvBuilder:
         PrevWd = os.getcwd()
         WorkerID = args[0]
         BuildTarget = args[1]
+        ParallelBuild = False
+        if len(args) > 2:
+            ParallelBuild = args[2]
         ret = -1
         '''
         build
@@ -214,20 +225,21 @@ class EnvBuilder:
         TestSrc = llvmSrc + "/test-suite/build-worker-" + WorkerID
         os.chdir(TestSrc)
         cmd = "make " + BuildTarget
-        ret, _, _ = ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True)
+        ret, _, _ = ExecuteCmd(WorkerID=WorkerID, Cmd=cmd, Block=True, ParallelBuild=ParallelBuild)
         return ret
 
-    def make(self, WorkerID, BuildTarget):
+    def make(self, WorkerID, BuildTarget, ParallelBuild=False):
         """
         return a number:
         0 --> build success
         others   --> build failed
         """
-        isKilled, ret = LimitTimeExec(900, self.workerMake, WorkerID, BuildTarget)
+        isKilled, ret = LimitTimeExec(900, self.workerMake, WorkerID, BuildTarget, ParallelBuild)
         if isKilled or ret != 0:
             return -1
         else:
             return 0
+
     def workerVerify(self, args):
         """
         Input(tuple):
@@ -312,7 +324,7 @@ class EnvBuilder:
         return ret
 
 class EnvResponseActor:
-    def EnvEcho(self, BuildTarget, WorkerID, LitTestDict):
+    def EnvEcho(self, BuildTarget, WorkerID, LitTestDict, ParallelBuild=False):
         """
         return "Success" or "Failed"
         """
@@ -362,7 +374,7 @@ class EnvResponseActor:
         build
         assuming the proper cmake is already done.
         '''
-        ret = env.make(WorkerID, BuildTarget)
+        ret = env.make(WorkerID, BuildTarget, ParallelBuild)
         if ret != 0:
             print("Failed sent.")
             return "Failed"

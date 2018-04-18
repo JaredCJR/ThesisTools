@@ -48,7 +48,7 @@ def Eval(TargetDict, threadNum, WorkerID):
     actor = lib.EnvResponseActor()
     for target, targetRoot in TargetDict.items():
         isBuilt = False
-        retStatus = actor.EnvEcho(target, WorkerID, TargetDict)
+        retStatus = actor.EnvEcho(target, WorkerID, TargetDict, ParallelBuild=True)
         if retStatus == "Success":
             # get cycles from "RecordTargetFilePath"
             '''
