@@ -461,6 +461,7 @@ cd ./PassInstrument/inference
     * find `RelativeLogDir` and `ModelName`
       * `RelativeLogDir` is the inference directory to save the trained model, which is a relative path to `PPO-OptClang`
       * `ModelName` is the saved checkpoint prefix for tensorflow.
+      * In restoring the model, we use the latest checkpoint. If you want specific checkpoint, you have to do this by yourself.
 
 Something that are not recomended:
 =============================================
