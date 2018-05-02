@@ -1,7 +1,8 @@
 //------------------------------------------------------------------------------
 // Author: Chang, Jia-Rung (jaredcjr.tw@gmail.com)
 // Based on Eli's example. (eliben@gmail.com)
-// 
+// https://github.com/eliben/llvm-clang-samples
+//
 // This code is for inserting timing APIs for each function.
 //------------------------------------------------------------------------------
 #include <sstream>
@@ -94,7 +95,7 @@ public:
     for (DeclGroupRef::iterator b = DR.begin(), e = DR.end(); b != e; ++b) {
       // Traverse the declaration using our AST visitor.
       Visitor.TraverseDecl(*b);
-      (*b)->dump();
+      //(*b)->dump(); // This will dump the AST tree
     }
     return true;
   }
