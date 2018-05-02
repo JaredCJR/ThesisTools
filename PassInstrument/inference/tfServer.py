@@ -3,7 +3,7 @@ import os, sys, signal
 import threading
 from queue import Queue
 import Helpers as hp
-import DPPO
+import PPPO
 import gym, gym_OptClang
 import numpy as np
 
@@ -14,7 +14,7 @@ def sigterm_handler(signo, frame):
     raise SystemExit(1)
 
 def RestoreModel(OptClangLoc, RelativeLogDir, ModelName, Config):
-    ppo = DPPO.PPO(gym.make('OptClang-v0').unwrapped,
+    ppo = PPPO.PPO(gym.make('OptClang-v0').unwrapped,
           OptClangLoc+'/'+RelativeLogDir, ModelName,
           isTraining="N", # This is not bool, is str
           EP_MAX=Config['WorkerParameters']['EP_MAX'],
@@ -55,7 +55,7 @@ def DebugRecord(DebugRec, FuncName, retPass):
 
 def ChoosePass(RL_ChooseAction_Func, State, FuncName, FunctionPassRec, DebugRec):
     """
-    gym-OptClang and DPPO:   pass range --> 0~33
+    gym-OptClang and PPPO:   pass range --> 0~33
     Modified Clang:          pass range --> 1~34
     We need to add 1 to convert the range.
     """
