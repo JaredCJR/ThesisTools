@@ -7,6 +7,7 @@
 //------------------------------------------------------------------------------
 #include <sstream>
 #include <string>
+#include <iostream>
 
 #include "clang/AST/AST.h"
 #include "clang/AST/ASTConsumer.h"
@@ -18,20 +19,45 @@
 #include "clang/Tooling/CommonOptionsParser.h"
 #include "clang/Tooling/Tooling.h"
 #include "llvm/Support/raw_ostream.h"
+#include "clang/ARCMigrate/ARCMT.h"
+#include "Transforms.h"
 
 using namespace clang;
 using namespace clang::driver;
 using namespace clang::tooling;
 
-static llvm::cl::OptionCategory ToolingSampleCategory("Tooling Sample");
+#define FunctionEntryApi "unsigned long long __thesis_entry = __thesis_getUserTime();\n"
+#define ReturnEntryApi    "__thesis_LogTiming(__thesis_entry);\n"
+
+static llvm::cl::OptionCategory ToolingCategory("Tooling For Timing Measurement");
+
+namespace {
+  std::string ReturnEntry = std::string("{//return entry\n") + ReturnEntryApi;
+  void recursiveStmtVisitor(Stmt *stmt, Rewriter &TheRewriter, CompilerInstance &CI) {
+    if (stmt) {
+      if (isa<ReturnStmt>(stmt)) {
+        TheRewriter.InsertText(stmt->getLocStart(), ReturnEntry, true, true);
+        SourceLocation semiPos = 
+          clang::arcmt::trans::findSemiAfterLocation(stmt->getLocEnd(), CI.getASTContext(), false);
+        //TheRewriter.InsertText(semiPos, "//}", false, true);
+        TheRewriter.InsertTextAfterToken(semiPos, "}//return exit\n");
+      }
+      for (auto iter:stmt->children()) {
+        recursiveStmtVisitor(iter, TheRewriter, CI);
+      }
+    }
+  }
+}
+
 
 // By implementing RecursiveASTVisitor, we can specify which AST nodes
 // we're interested in by overriding relevant methods.
 class MyASTVisitor : public RecursiveASTVisitor<MyASTVisitor> {
 public:
-  MyASTVisitor(Rewriter &R) : TheRewriter(R) {}
+  MyASTVisitor(Rewriter &R, CompilerInstance &CI) : TheRewriter(R), TheCompiler(CI) {}
 
   bool VisitStmt(Stmt *s) {
+    /*
     // Only care about If statements.
     if (isa<IfStmt>(s)) {
       IfStmt *IfStatement = cast<IfStmt>(s);
@@ -45,7 +71,12 @@ public:
         TheRewriter.InsertText(Else->getLocStart(), "// the 'else' part\n",
                                true, true);
     }
-
+    */
+    if (isa<ReturnStmt>(s)) {
+      ReturnStmt *retStmt = cast<ReturnStmt>(s);
+      //TheRewriter.InsertText(retStmt->getLocStart(), "{\n  getUserTime();\n", false, false);
+      //TheRewriter.InsertText(retStmt->getRetValue()->getExprLoc(), "}", true, false);
+    }
     return true;
   }
 
@@ -53,7 +84,10 @@ public:
     // Only function definitions (with bodies), not declarations.
     if (f->hasBody()) {
       Stmt *FuncBody = f->getBody();
-
+      for (auto iter:FuncBody->children()) {
+        recursiveStmtVisitor(iter, TheRewriter, TheCompiler);
+      }
+      /*
       // Type name as string
       QualType QT = f->getReturnType();
       std::string TypeStr = QT.getAsString();
@@ -74,6 +108,7 @@ public:
       SSAfter << "\n// End function " << FuncName;
       ST = FuncBody->getLocEnd().getLocWithOffset(1);
       TheRewriter.InsertText(ST, SSAfter.str(), true, true);
+      */
     }
 
     return true;
@@ -81,13 +116,14 @@ public:
 
 private:
   Rewriter &TheRewriter;
+  CompilerInstance &TheCompiler;
 };
 
 // Implementation of the ASTConsumer interface for reading an AST produced
 // by the Clang parser.
 class MyASTConsumer : public ASTConsumer {
 public:
-  MyASTConsumer(Rewriter &R) : Visitor(R) {}
+  MyASTConsumer(Rewriter &R, CompilerInstance &CI) : Visitor(R, CI) {}
 
   // Override the method that gets called for each parsed top-level
   // declaration.
@@ -119,9 +155,9 @@ public:
 
   std::unique_ptr<ASTConsumer> CreateASTConsumer(CompilerInstance &CI,
                                                  StringRef file) override {
-    llvm::errs() << "** Creating AST consumer for: " << file << "\n";
+    //llvm::errs() << "** Creating AST consumer for: " << file << "\n";
     TheRewriter.setSourceMgr(CI.getSourceManager(), CI.getLangOpts());
-    return llvm::make_unique<MyASTConsumer>(TheRewriter);
+    return llvm::make_unique<MyASTConsumer>(TheRewriter, CI);
   }
 
 private:
@@ -129,7 +165,7 @@ private:
 };
 
 int main(int argc, const char **argv) {
-  CommonOptionsParser op(argc, argv, ToolingSampleCategory);
+  CommonOptionsParser op(argc, argv, ToolingCategory);
   ClangTool Tool(op.getCompilations(), op.getSourcePathList());
 
   // ClangTool::run accepts a FrontendActionFactory, which is then used to

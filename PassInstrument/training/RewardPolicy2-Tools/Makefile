@@ -2,7 +2,7 @@ CXX := g++-7
 CXXFLAGS := -fno-rtti -O0
 
 # User specific variable
-# The LLVM build must using the following Cmake cmd
+# The LLVM 5.0 build must using the following Cmake cmd
 # $ cmake -DCMAKE_BUILD_TYPE=Release \
 #         -DLLVM_ENABLE_ASSERTIONS=ON \
 #         -DCMAKE_C_FLAGS=-DLLVM_ENABLE_DUMP \
@@ -18,7 +18,8 @@ LLVM_CXXFLAGS := `$(LLVM_BIN_PATH)/llvm-config --cxxflags`
 LLVM_LDFLAGS := `$(LLVM_BIN_PATH)/llvm-config --ldflags --libs --system-libs`
 CLANG_INCLUDES := \
     -I$(LLVM_SRC_PATH)/tools/clang/include \
-    -I$(LLVM_BUILD_PATH)/tools/clang/include
+    -I$(LLVM_BUILD_PATH)/tools/clang/include \
+    -I$(LLVM_SRC_PATH)/tools/clang/lib/ARCMigrate
 
 # List of Clang libraries to link. The proper -L will be provided by the
 # call to llvm-config
@@ -49,6 +50,7 @@ CLANG_LIBS := \
     -lclangToolingCore \
     -lclangTooling \
     -lclangFormat \
+    -lclangARCMigrate \
     -Wl,--end-group
 
 

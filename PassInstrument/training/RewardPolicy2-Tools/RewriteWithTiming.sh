@@ -1,10 +1,11 @@
 #!/bin/bash
 LLVMHeaders=${LLVM_THESIS_HOME}/include/llvm
 SystemHeaders=`cat SystemHeaders`
-#AdditionalHeaders=${LLVM_THESIS_HOME}/lib/Transforms/InstCombine
-Headers=$SystemHeaders" -I"$LLVMHeaders
+#AdditionalHeaders=${LLVM_THESIS_HOME}/tools/clang/lib/ARCMigrate
+Headers=$SystemHeaders" -I"$LLVMHeaders" -I"AdditionalHeaders
 
 #build
+make clean
 make -j4
 
 input=test.c
