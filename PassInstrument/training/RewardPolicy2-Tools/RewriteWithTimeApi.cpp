@@ -4,6 +4,7 @@
 // https://github.com/eliben/llvm-clang-samples
 //
 // This code is for inserting timing APIs for each function.
+// We do not handle "C++ operator" overloading
 //------------------------------------------------------------------------------
 #include <sstream>
 #include <string>
@@ -21,6 +22,7 @@
 #include "llvm/Support/raw_ostream.h"
 #include "clang/ARCMigrate/ARCMT.h"
 #include "Transforms.h"
+#include "clang/Index/CodegenNameGenerator.h"
 
 using namespace clang;
 using namespace clang::driver;
@@ -34,12 +36,18 @@ static llvm::cl::OptionCategory ToolingCategory("Tooling For Timing Measurement"
 
 namespace {
   std::string ReturnEntry = std::string("{//return entry\n") + ReturnEntryApi_1;
+
+  std::string getMangledFuncName(CompilerInstance &CI, FunctionDecl *f) {
+    clang::index::CodegenNameGenerator CGNameGen(CI.getASTContext());
+    return CGNameGen.getName(f);
+  }
+
   void recursiveStmtVisitor(FunctionDecl *f, Stmt *stmt, Rewriter &TheRewriter,
       CompilerInstance &CI) {
     if (stmt) {
       if (isa<ReturnStmt>(stmt)) {
         TheRewriter.InsertText(stmt->getLocStart(),
-            ReturnEntry + f->getNameInfo().getAsString() + ReturnEntryApi_2, true, true);
+            ReturnEntry + getMangledFuncName(CI, f) + ReturnEntryApi_2, true, true);
         SourceLocation semiPos =
           clang::arcmt::trans::findSemiAfterLocation(stmt->getLocEnd(),
               CI.getASTContext(), false);
@@ -59,15 +67,6 @@ class MyASTVisitor : public RecursiveASTVisitor<MyASTVisitor> {
 public:
   MyASTVisitor(Rewriter &R, CompilerInstance &CI) : TheRewriter(R), TheCompiler(CI) {}
 
-  bool VisitStmt(Stmt *s) {
-    if (isa<ReturnStmt>(s)) {
-      ReturnStmt *retStmt = cast<ReturnStmt>(s);
-      //TheRewriter.InsertText(retStmt->getLocStart(), "{\n  getUserTime();\n", false, false);
-      //TheRewriter.InsertText(retStmt->getRetValue()->getExprLoc(), "}", true, false);
-    }
-    return true;
-  }
-
   bool VisitFunctionDecl(FunctionDecl *f) {
     // Only function definitions (with bodies), not declarations.
     if (f->hasBody()) {
@@ -82,32 +81,10 @@ public:
       // If the function return "void", insert before last brackets
       if (f->getReturnType().getAsString() == "void") {
         std::string api = std::string(ReturnEntryApi_1) +
-          f->getNameInfo().getAsString() + std::string(ReturnEntryApi_2) +
-          std::string("//Function End");
+          getMangledFuncName(TheCompiler, f) + std::string(ReturnEntryApi_2) +
+          std::string("//Function End\n");
         TheRewriter.InsertText(FuncBody->getLocEnd(), api, false, true);
       }
-      /*
-      // Type name as string
-      QualType QT = f->getReturnType();
-      std::string TypeStr = QT.getAsString();
-
-      // Function name
-      DeclarationName DeclName = f->getNameInfo().getName();
-      std::string FuncName = DeclName.getAsString();
-
-      // Add comment before
-      std::stringstream SSBefore;
-      SSBefore << "// Begin function " << FuncName << " returning " << TypeStr
-               << "\n";
-      SourceLocation ST = f->getSourceRange().getBegin();
-      TheRewriter.InsertText(ST, SSBefore.str(), true, true);
-
-      // And after
-      std::stringstream SSAfter;
-      SSAfter << "\n// End function " << FuncName;
-      ST = FuncBody->getLocEnd().getLocWithOffset(1);
-      TheRewriter.InsertText(ST, SSAfter.str(), true, true);
-      */
     }
 
     return true;
@@ -144,12 +121,19 @@ class MyFrontendAction : public ASTFrontendAction {
 public:
   MyFrontendAction() {}
   void EndSourceFileAction() override {
-    SourceManager &SM = TheRewriter.getSourceMgr();
-    llvm::errs() << "** EndSourceFileAction for: "
-                 << SM.getFileEntryForID(SM.getMainFileID())->getName() << "\n";
-
+    //SourceManager &SM = TheRewriter.getSourceMgr();
+    //llvm::errs() << "** EndSourceFileAction for: " << SM.getFileEntryForID(SM.getMainFileID())->getName() << "\n";
     // Now emit the rewritten buffer.
-    TheRewriter.getEditBuffer(SM.getMainFileID()).write(llvm::outs());
+    //TheRewriter.getEditBuffer(SM.getMainFileID()).write(llvm::outs());
+    SourceManager & sm = TheRewriter.getSourceMgr();
+    FileID fileID = sm.getMainFileID();
+    std::string path = sm.getFilename(sm.getLocForStartOfFile(fileID)).str();
+    std::error_code ec;
+    llvm::raw_fd_ostream *stream = new llvm::raw_fd_ostream(path, ec, llvm::sys::fs::OpenFlags::F_RW);
+    // Write to original file.
+    TheRewriter.getEditBuffer(fileID)
+        .write(*stream);
+    stream->close(); 
   }
 
   std::unique_ptr<ASTConsumer> CreateASTConsumer(CompilerInstance &CI,

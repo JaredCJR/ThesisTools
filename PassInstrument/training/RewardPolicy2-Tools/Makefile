@@ -51,6 +51,7 @@ CLANG_LIBS := \
     -lclangTooling \
     -lclangFormat \
     -lclangARCMigrate \
+		-lclangIndex \
     -Wl,--end-group
 
 
