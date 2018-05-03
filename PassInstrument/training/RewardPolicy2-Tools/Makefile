@@ -54,12 +54,12 @@ CLANG_LIBS := \
     -Wl,--end-group
 
 
-SRC := MeasuringFuncTime.cpp
+SRC := RewriteWithTimeApi.cpp
 
 .PHONY: all clean
-all: MeasuringFuncTime
+all: RewriteWithTimeApi
 
-MeasuringFuncTime: $(SRC)
+RewriteWithTimeApi: $(SRC)
 	$(CXX) $(CXXFLAGS) $(LLVM_CXXFLAGS) $(CLANG_INCLUDES) $^ \
         $(CLANG_LIBS) $(LLVM_LDFLAGS) -o $@
 
@@ -77,4 +77,4 @@ rewrite-sample: PassRewriter
 	./PassRewriter DCE-tidy-format.cpp  -- -std=c++11 -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include -I/home/jrchang/workspace/llvm-thesis/include/llvm > DCE-rewritten.cpp
 
 clean:
-	rm -f PassRewriter
+	rm -f RewriteWithTimeApi

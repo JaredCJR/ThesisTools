@@ -26,24 +26,27 @@ using namespace clang;
 using namespace clang::driver;
 using namespace clang::tooling;
 
-#define FunctionEntryApi "unsigned long long __thesis_entry = __thesis_getUserTime();\n"
-#define ReturnEntryApi    "__thesis_LogTiming(__thesis_entry);\n"
+#define FunctionEntryApi "\nunsigned long long __thesis_entry = __thesis_getUserTime();\n"
+#define ReturnEntryApi_1    "__thesis_LogTiming(__thesis_entry, \""
+#define ReturnEntryApi_2    "\");\n"
 
 static llvm::cl::OptionCategory ToolingCategory("Tooling For Timing Measurement");
 
 namespace {
-  std::string ReturnEntry = std::string("{//return entry\n") + ReturnEntryApi;
-  void recursiveStmtVisitor(Stmt *stmt, Rewriter &TheRewriter, CompilerInstance &CI) {
+  std::string ReturnEntry = std::string("{//return entry\n") + ReturnEntryApi_1;
+  void recursiveStmtVisitor(FunctionDecl *f, Stmt *stmt, Rewriter &TheRewriter,
+      CompilerInstance &CI) {
     if (stmt) {
       if (isa<ReturnStmt>(stmt)) {
-        TheRewriter.InsertText(stmt->getLocStart(), ReturnEntry, true, true);
-        SourceLocation semiPos = 
-          clang::arcmt::trans::findSemiAfterLocation(stmt->getLocEnd(), CI.getASTContext(), false);
-        //TheRewriter.InsertText(semiPos, "//}", false, true);
+        TheRewriter.InsertText(stmt->getLocStart(),
+            ReturnEntry + f->getNameInfo().getAsString() + ReturnEntryApi_2, true, true);
+        SourceLocation semiPos =
+          clang::arcmt::trans::findSemiAfterLocation(stmt->getLocEnd(),
+              CI.getASTContext(), false);
         TheRewriter.InsertTextAfterToken(semiPos, "}//return exit\n");
       }
       for (auto iter:stmt->children()) {
-        recursiveStmtVisitor(iter, TheRewriter, CI);
+        recursiveStmtVisitor(f, iter, TheRewriter, CI);
       }
     }
   }
@@ -57,21 +60,6 @@ public:
   MyASTVisitor(Rewriter &R, CompilerInstance &CI) : TheRewriter(R), TheCompiler(CI) {}
 
   bool VisitStmt(Stmt *s) {
-    /*
-    // Only care about If statements.
-    if (isa<IfStmt>(s)) {
-      IfStmt *IfStatement = cast<IfStmt>(s);
-      Stmt *Then = IfStatement->getThen();
-
-      TheRewriter.InsertText(Then->getLocStart(), "// the 'if' part\n", true,
-                             true);
-
-      Stmt *Else = IfStatement->getElse();
-      if (Else)
-        TheRewriter.InsertText(Else->getLocStart(), "// the 'else' part\n",
-                               true, true);
-    }
-    */
     if (isa<ReturnStmt>(s)) {
       ReturnStmt *retStmt = cast<ReturnStmt>(s);
       //TheRewriter.InsertText(retStmt->getLocStart(), "{\n  getUserTime();\n", false, false);
@@ -84,8 +72,19 @@ public:
     // Only function definitions (with bodies), not declarations.
     if (f->hasBody()) {
       Stmt *FuncBody = f->getBody();
+      // Insert api in the begining of function
+      TheRewriter.InsertText(FuncBody->getLocStart().getLocWithOffset(1),
+          FunctionEntryApi, true, true);
+      // Recursive inserting for "return"
       for (auto iter:FuncBody->children()) {
-        recursiveStmtVisitor(iter, TheRewriter, TheCompiler);
+        recursiveStmtVisitor(f, iter, TheRewriter, TheCompiler);
+      }
+      // If the function return "void", insert before last brackets
+      if (f->getReturnType().getAsString() == "void") {
+        std::string api = std::string(ReturnEntryApi_1) +
+          f->getNameInfo().getAsString() + std::string(ReturnEntryApi_2) +
+          std::string("//Function End");
+        TheRewriter.InsertText(FuncBody->getLocEnd(), api, false, true);
       }
       /*
       // Type name as string
