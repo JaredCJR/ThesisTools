@@ -518,7 +518,7 @@ cd PassInstrument/training/RewardPolicy2-Tools
 TODO: add how to use the tools for inserting automatically.
 
 
-Something that are not recomended:
+Issues
 =============================================
 * Do not build multiple target at the same time.
   * The runtime only consider the race-condition in sigle target.(whereas, "make -j12" for one target at the same time is fine.)
