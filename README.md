@@ -86,7 +86,9 @@ export PATH=$LLVM_THESIS_HOME/build-release-gcc7/bin:$PATH
 
 Using the "RandomSelect/LLVMTestSuiteScript" to generate the "Random-Graphs"
 ===============================================================================
-* Check the [ipynb](RandomSelect/LLVMTestSuiteScript/GraphGen/genGraphAnalysis.ipynb) to veiw the `raw` graph
+* The related directory is at [here](RandomSelect/LLVMTestSuiteScript/GraphGen).
+* Check the [ipynb](RandomSelect/LLVMTestSuiteScript/GraphGen/genGraphAnalysis.ipynb) to veiw the `raw` figures.
+  * Use ipython(from Anaconda) to execute it.
 
 How to build LLVM/Clang for "RandomSelect/LLVMTestSuiteScript"
 ---------------------------------------------------------------------
@@ -462,6 +464,36 @@ cd ./PassInstrument/inference
       * `RelativeLogDir` is the inference directory to save the trained model, which is a relative path to `PPO-OptClang`
       * `ModelName` is the saved checkpoint prefix for tensorflow.
       * In restoring the model, we use the latest checkpoint. If you want specific checkpoint, you have to do this by yourself.
+
+
+How to evaluate the trained model
+==============================================
+
+Inference Runtime Evaluation
+----------------------------------
+The first point is not important, you can jump to second point.
+
+* We run the `test-suite/MultiSources/Applications` manually(Most of the statistics of runtime do not have a fully automatic script).
+  * All the raw-data is at [here](PassInstrument/inference/RuntimeEvaluation/raw-data).
+    * The script for producing statistics is at [here](PassInstrument/inference/RuntimeEvaluation/BuildTimeAnalysis.ipynb).
+    * These data is not all of them.
+* The preprocessed data(Microsoft Excel format) are [here](PassInstrument/inference/RuntimeEvaluation/buildEval_graph_withStat.xlsx).
+  * The figures of runtime are also inside it.
+
+
+Trained Model Evaluation(Speedup) For Inference
+-------------------------------------------------
+* The directory is at [here](PassInstrument/inference/SpeedupEvaluation).
+  * Run `LoadAndDraw.ipynb` with ipython(from Anaconda) can reproduce the figures.
+* If you would like to run the speedup evaluation by yourself
+  * Simply run `RunSpeedupEval.py` with python3.
+    * The log directory will be produced after evaluate all apps(takes about 10 hours on i7-8700k) with date time.
+  * When it finished, run `LoadAndDraw.ipynb` with modifying the input log directory.
+
+Change Reward Policy
+=============================================
+
+
 
 Something that are not recomended:
 =============================================
