@@ -492,16 +492,27 @@ Trained Model Evaluation(Speedup) For Inference
 
 Change Reward Policy
 =============================================
+* The previous setup is for `perf sampling based rewards`.
+* The following are about changing to `use clang tools to insert our APIs for getting accurate function-level performance`.
+* Most of the setup are as same as the above says for training.
+* The difference are:
+  * `test-suite`
+    * In order to link with our library, checkout the branch to `RewardPolicy2` of `test-suite`.
+  * Library setup
+```
+cd PassInstrument/training/RewardPolicy2-Tools
+./deployLib.sh
+```
 
+TODO: add how to use the tools for inserting automatically.
 
 
 Something that are not recomended:
 =============================================
 * Do not build multiple target at the same time.
-  * The runtime only consider the race-condition in sigle target.(e.g. "make -j12" for one target at the same time is fine.)
-  * Our python based automation only use one core at one time.
-    * Therefore, the multi-threaded cannot be guaranteed to be safe.
-    * However, I have designed and tested "multi-threaded build for one target" to be correct.
+  * The runtime only consider the race-condition in sigle target.(whereas, "make -j12" for one target at the same time is fine.)
+    * e.g., TCP connection will fall into race-condition.
+  * However, I have designed and tested "multi-threaded build for one target" to be correct.
 
 License
 ----------------------------------------
