@@ -2,7 +2,7 @@
 cd sharedLib
 # build .so
 make clean && make
-sudo mkdir /opt/lib
+sudo mkdir -p /opt/lib
 sudo cp libfunctime.so.1.0 /opt/lib
 sudo ln -sf /opt/lib/libfunctime.so.1.0 /opt/lib/libfunctime.so.1
 sudo ln -sf /opt/lib/libfunctime.so.1 /opt/lib/libfunctime.so

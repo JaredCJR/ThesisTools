@@ -17,7 +17,7 @@ unsigned long long __thesis_getUserTime() {
   return time.tv_sec*1000000 + time.tv_usec;
 }
 
-void __thesis_LogTiming(unsigned long long entryTime, char *FuncName) {
+void __thesis_LogTiming(unsigned long long entryTime, const char *FuncName) {
   unsigned long long elapsed = __thesis_getUserTime() - entryTime;
   /* prepare the log content */
   char buf[128] = {0};
@@ -25,6 +25,7 @@ void __thesis_LogTiming(unsigned long long entryTime, char *FuncName) {
   /* log to file */
   int fd;
   fd = open("/tmp/test-IR-write", O_WRONLY|O_APPEND|O_CREAT);
+  fchmod(fd, S_IRUSR | S_IWUSR);
   write(fd, buf, sizeof(buf));
   close(fd);
 }
