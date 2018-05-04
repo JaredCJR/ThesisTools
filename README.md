@@ -18,6 +18,7 @@ Prerequisite packages
 -----------------------------------------------------
 * OS: Ubuntu 16.04 64 bit
 * We use gcc 7.2 as our default compiler to compile the LLVM/Clang
+  * gcc 7.3 is also tested.
 
 ```
 sudo apt install cmake
@@ -27,17 +28,17 @@ sudo apt install libgoogle-perftools-dev
 sudo apt-get install google-perftools libgoogle-perftools-dev
 sudo apt install graphviz
 sudo apt install linux-tools-common linux-tools-generic linux-cloud-tools-generic
-  
+
 #install kernel specific perf tools, you can type "$ perf " to see the corresponding version.
 sudo apt install linux-tools-4.10.0-38-generic linux-cloud-tools-4.10.0-38-generic
 sudo sh -c 'echo kernel.perf_event_paranoid=0 > /etc/sysctl.d/local.conf'
 sudo sh -c 'echo kernel.kptr_restrict=0 >> /etc/sysctl.d/local.conf'
-  
+
 # gcc 7.2
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt-get update
 sudo apt-get install gcc-7 g++-7
-  
+
 # packages for python3(Our framework is based on Python3)
 sudo -H pip3 install psutil
 sudo -H pip3 install progressbar2
@@ -74,8 +75,17 @@ export LLVM_THESIS_Random_LLVMTestSuiteScript=$LLVM_THESIS_RandomHome/LLVMTestSu
 export LLVM_THESIS_Random_LLVMTestSuite_Results=$LLVM_THESIS_Random_LLVMTestSuiteScript/results
 export LLVM_THESIS_lit="$LLVM_THESIS_HOME/utils/lit/lit.py"
 export PPO_OptClang="$HOME/workspace/PPO-OptClang"
+# For reward policy 2
+export LLVM_THESIS_REWARD_LIB="$LLVM_THESIS_TrainingHome/RewardPolicy2-Tools/sharedLib"
+export LLVM_THESIS_REWARD_HEADER="$LLVM_THESIS_REWARD_LIB/headers"
+export C_INCLUDE_PATH=$LLVM_THESIS_REWARD_HEADER/c:$C_INCLUDE_PATH
+export CPLUS_INCLUDE_PATH=$LLVM_THESIS_REWARD_HEADER/cpp:$CPLUS_INCLUDE_PATH
+export LD_LIBRARY_PATH=/opt/lib:$LD_LIBRARY_PATH
+# avoid -L/opt/lib for reward policy 2
+export LIBRARY_PATH=/opt/lib:$LIBRARY_PATH
 export PYTHONPATH=$PPO_OptClang:$LLVM_THESIS_TrainingHome:$LLVM_THESIS_InstrumentHome/PyActor:$LLVM_THESIS_Random_LLVMTestSuiteScript:$LLVM_THESIS_RandomHome:$PYTHONPATH
 alias lit=$LLVM_THESIS_lit  #this lit is modified to read the above env
+
 
 # Make sure $clang++ and $clang are using your build (For `RandomSelect`)
 export PATH=$LLVM_THESIS_HOME/build-release-gcc7/bin:$PATH
@@ -224,7 +234,7 @@ Training framework in "PassInstrument"
 * Build LLVM/Clang for Rewriter
   * The clone procedure is really similar to the official guide.
   * The prerequisite packages are as same as the above guide.
-     * Also, we use gcc 7.2 as out compiler to build LLVM/Clang
+     * Also, we use gcc 7.2(or above) as out compiler to build LLVM/Clang
 ```
 git clone https://github.com/llvm-mirror/llvm llvm-official
 cd llvm-official
@@ -317,7 +327,7 @@ git checkout -b PassPrediction-training remotes/origin/PassPrediction-training
 # The following example is for "worker1"
 # Notice the  variable in cmake command "DAEMON_WORKER_ID"
 
-mkdir build-release-gcc7-worker1 
+mkdir build-release-gcc7-worker1
 #Note: if you change the dir name, you have to modify the related parts in the PredictionDaemon.py
 cd build-release-gcc7-worker1
 
@@ -366,7 +376,7 @@ sudo ./setupConnection.py
 ## $ sudo ./setupConnection.py < ips.txt
 ## write the content inside ips.txt
 ```
-  
+
 * Usage example:
 ![](image-README/setupConnection.png)
 
@@ -456,7 +466,7 @@ cd ./PassInstrument/inference
 ./PredictionDaemon start [WorkerID] # You can launch it with different WorkerID for multiple workers
 (Then, use the Clang as the normal Clang)
 (/tmp/PassPrediction-* have logs for each worker to debug)
-```  
+```
 
 * How to use the model that you want.
   * `vim PassInstrument/inference/tfServer.py`
@@ -495,6 +505,7 @@ Change Reward Policy
 * The previous setup is for `perf sampling based rewards`.
 * The following are about changing to `use clang tools to insert our APIs for getting accurate function-level performance`.
 * Most of the setup are as same as the above says for training.
+* Make sure the `system library related path` are set as [previous said](#the-environment-variable-below-will-affect-what-compiler-yor-are-going-to-use).
 * The difference are:
   * `test-suite`
     * In order to link with our library, checkout the branch to `RewardPolicy2` of `test-suite`.
