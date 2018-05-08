@@ -19,13 +19,15 @@ unsigned long long __thesis_getUserTime() {
 
 void __thesis_LogTiming(unsigned long long entryTime, const char *FuncName) {
   unsigned long long elapsed = __thesis_getUserTime() - entryTime;
-  /* prepare the log content */
-  char buf[128] = {0};
-  snprintf(buf, sizeof(buf), "%s;%llu\n", FuncName, elapsed);
-  /* log to file */
-  int fd;
-  fd = open("/tmp/test-IR-write", O_WRONLY|O_APPEND|O_CREAT);
-  fchmod(fd, S_IRUSR | S_IWUSR);
-  write(fd, buf, sizeof(buf));
-  close(fd);
+  if (elapsed > 10) {
+    /* prepare the log content */
+    char buf[128] = {0};
+    snprintf(buf, sizeof(buf), "%s;%llu\n", FuncName, elapsed);
+    /* log to file */
+    int fd;
+    fd = open("/tmp/test-IR-write", O_WRONLY|O_APPEND|O_CREAT);
+    fchmod(fd, S_IRUSR | S_IWUSR);
+    write(fd, buf, sizeof(buf));
+    close(fd);
+  }
 }
