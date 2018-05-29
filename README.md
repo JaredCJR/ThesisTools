@@ -502,6 +502,9 @@ Trained Model Evaluation(Speedup) For Inference
 
 Change Reward Policy
 =============================================
+This FunctionTiming Reward Policy is abandoned because it is too time-consuming (details in my thesis).
+Currently, we only support the sampling policy correctly.
+However, we still provide the guide for you about the unfinished Reward Policy:
 * The previous setup is for `perf sampling based rewards`.
 * The following are about changing to `use clang tools to insert our APIs for getting accurate function-level performance`.
 * Most of the setup are as same as the above says for training.
@@ -514,8 +517,7 @@ Change Reward Policy
 cd PassInstrument/training/RewardPolicy2-Tools
 ./deployLib.sh
 ```
-This FunctionTiming Reward Policy is abandoned because it it too time-consuming (details in my thesis).
-Currently, we only support the sampling policy correctly.
+
 
 
 Issues
