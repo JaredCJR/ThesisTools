@@ -97,7 +97,7 @@ export PATH=$LLVM_THESIS_HOME/build-release-gcc7/bin:$PATH
 Using the "RandomSelect/LLVMTestSuiteScript" to generate the "Random-Graphs"
 ===============================================================================
 * The related directory is at [here](RandomSelect/LLVMTestSuiteScript/GraphGen).
-* Check the [ipynb](RandomSelect/LLVMTestSuiteScript/GraphGen/genGraphAnalysis.ipynb) to veiw the `raw` figures.
+* Check the [ipynb](RandomSelect/LLVMTestSuiteScript/GraphGen/genGraphAnalysis.ipynb) to view the `raw` figures.
   * Use ipython(from Anaconda) to execute it.
 
 How to build LLVM/Clang for "RandomSelect/LLVMTestSuiteScript"
@@ -502,6 +502,9 @@ Trained Model Evaluation(Speedup) For Inference
 
 Change Reward Policy
 =============================================
+This FunctionTiming Reward Policy is abandoned because it is too time-consuming (details in my thesis).
+Currently, we only support the sampling policy correctly.
+However, we still provide the guide for you about the unfinished Reward Policy:
 * The previous setup is for `perf sampling based rewards`.
 * The following are about changing to `use clang tools to insert our APIs for getting accurate function-level performance`.
 * Most of the setup are as same as the above says for training.
@@ -515,7 +518,6 @@ cd PassInstrument/training/RewardPolicy2-Tools
 ./deployLib.sh
 ```
 
-TODO: add how to use the tools for inserting automatically.
 
 
 Issues
