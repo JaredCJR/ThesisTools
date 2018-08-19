@@ -137,7 +137,7 @@ class LitRunner:
         return retList
 
 
-    def run(self, Mode="Standard", MailMsg=""):
+    def run(self, Mode="Standard", MailMsg="", Rebuild=True, SuccessBuiltTestPath=[]):
         time = sv.TimeService()
         if Mode == "Random-FunctionLevel":
             '''
@@ -150,9 +150,11 @@ class LitRunner:
             Cmd = daemonLoc + ' ' + 'start'
             self.ExecCmd(Cmd, ShellMode=False, NeedPrintStderr=True)
         #cmake
-        self.CmakeTestSuite()
-        #if you disable cmake, you need to enable the following line
-        #time.DelTimeStamp()
+        if Rebuild == True:
+            self.CmakeTestSuite()
+        else:
+            #if you disable cmake, you need to enable the following line
+            time.DelTimeStamp()
 
         Log = sv.LogService()
         StartDateTime = time.GetCurrentLocalTime()
@@ -173,10 +175,11 @@ class LitRunner:
                 RetSet = rg_driver.run()
                 #build
                 os.chdir(RootPath)
-                self.ExecCmd("make clean", ShellMode=True)
-                BuildCmd = "make -j" + CoreNum
-                Log.out("Build command = \"{}\"\n".format(BuildCmd))
-                self.ExecCmd(BuildCmd, ShellMode=True, NeedPrintStderr=True)
+                if Rebuild == True:
+                    self.ExecCmd("make clean", ShellMode=True)
+                    BuildCmd = "make -j" + CoreNum
+                    Log.out("Build command = \"{}\"\n".format(BuildCmd))
+                    self.ExecCmd(BuildCmd, ShellMode=True, NeedPrintStderr=True)
                 #record input set
                 RandomSetAllLoc = os.getenv('LLVM_THESIS_RandomHome') + "/InputSetAll"
                 with open(RandomSetAllLoc, "a") as file:
@@ -186,16 +189,17 @@ class LitRunner:
             os.chdir(pwd)
 
             #place the corresponding feature extractor
-            actor = lm.LitMimic()
-            SuccessBuiltTestPath = actor.run()
+            if Rebuild == True:
+                actor = lm.LitMimic()
+                SuccessBuiltTestPath = actor.run()
 
-            #remove ".test" for those failed to pass sanity check in lit
-            RmFailed = sv.PassSetService()
-            FailedTests = RmFailed.RemoveSanityFailedTestDesc(Log.SanityFilePath)
-            for test in SuccessBuiltTestPath:
-                if test in FailedTests:
-                    SuccessBuiltTestPath.remove(test)
-                    Log.out("Remove \"{}\" in SuccessBuiltTestPath\n".format(test))
+                #remove ".test" for those failed to pass sanity check in lit
+                RmFailed = sv.PassSetService()
+                FailedTests = RmFailed.RemoveSanityFailedTestDesc(Log.SanityFilePath)
+                for test in SuccessBuiltTestPath:
+                    if test in FailedTests:
+                        SuccessBuiltTestPath.remove(test)
+                        Log.out("Remove \"{}\" in SuccessBuiltTestPath\n".format(test))
             # Now, all the remained tests should be all reported as successful execution from lit
         else:
             """
@@ -286,10 +290,12 @@ class LitRunner:
         Split test into multiple list,
         you need to know what is the physical core number and ID in your computer.
         '''
-        if Mode == "Selected.SingleCore":
+        if Mode == "Selected.SingleCore" or Mode == "Standard":
             SplitCount = 1
+            print("SingleCore mode")
         else:
             SplitCount = 5
+            print("MultiCore mode")
 
         SplitList = []
         shuffle(SuccessBuiltTestPath)
@@ -376,6 +382,7 @@ class LitRunner:
 
         mail.send(Subject=MailSubject, Msg=Content)
         time.DelTimeStamp()
+        return SuccessBuiltTestPath
 
 
 class CommonDriver:
@@ -409,13 +416,24 @@ class CommonDriver:
         self.KillProcess(self.PID)
         sys.exit()
 
-    def run(self, Mode, round=200):
+    def run(self, Mode, round=100):
         self.CleanAllResults()
         mail = sv.EmailService()
         ts = sv.TimeService()
         StartTime = ts.GetCurrentLocalTime()
+        rebuild = True
+        retPath = []
         #How many round do we need?
+        # FIXME: using "random" mode will need to fix this method.
+        # FIXME: please refer to the method "LimitTimeExec" of "ThesisTools/PassInstrument/training/Lib.py"
         for i in range(round):
+            if i > 0 and Mode == "Standard":
+                rebuild = False
+            #Build(including cmake) and Execute
+            lit = LitRunner()
+            msg = "{}/{} Round.\n".format(i+1, round)
+            retPath = lit.run(Mode, MailMsg=msg, Rebuild=rebuild, SuccessBuiltTestPath=retPath)
+        """
             self.PID = os.fork()
             #child
             if self.PID == 0:
@@ -444,6 +462,7 @@ class CommonDriver:
                         Log.outNotToFile("Parent wait too long, abort this round.\n")
                         Log.err("Parent wait too long, abort this round.\n")
                         mail.SignificantNotification(Msg="Abort one round.\n")
+        """
 
         EndTime = ts.GetCurrentLocalTime()
         TotalTime = ts.GetDeltaTimeInDate(StartTime, EndTime)
@@ -457,6 +476,8 @@ class CommonDriver:
 
 
 if __name__ == '__main__':
+    print("Check for perf, please allow apt to check with sudo")
+    os.system('TMP12="sudo apt install linux-tools-`uname -r` linux-cloud-tools-`uname -r`"; /bin/bash -c "$TMP12"')
     '''
     Simpe argument parsing...
     I don't think this matters.
@@ -473,4 +494,4 @@ if __name__ == '__main__':
     time.sleep(3)
 
     driver = CommonDriver()
-    driver.run(Mode, round=100)
+    driver.run(Mode, round=20)

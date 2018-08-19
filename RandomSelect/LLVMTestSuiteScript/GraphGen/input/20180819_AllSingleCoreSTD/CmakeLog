@@ -1,0 +1,44 @@
+-- The C compiler identification is Clang 5.0.1
+-- The CXX compiler identification is Clang 5.0.1
+-- Check for working C compiler: /home/jrchang/workspace/llvm-official/build-release-gcc7/bin/clang
+-- Check for working C compiler: /home/jrchang/workspace/llvm-official/build-release-gcc7/bin/clang -- works
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Check for working CXX compiler: /home/jrchang/workspace/llvm-official/build-release-gcc7/bin/clang++
+-- Check for working CXX compiler: /home/jrchang/workspace/llvm-official/build-release-gcc7/bin/clang++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- No build type selected, defaulting to Release
+-- Found Tclsh: /usr/bin/tclsh (found version "8.6") 
+-- Could NOT find TCL (missing:  TCL_INCLUDE_PATH) 
+-- Could NOT find TCLTK (missing:  TCL_INCLUDE_PATH TK_INCLUDE_PATH) 
+-- Could NOT find TK (missing:  TK_INCLUDE_PATH) 
+-- Check target operating system - Linux
+-- Check target system architecture: x86
+-- Check if the system is big endian
+-- Searching 16 bit integer
+-- Looking for sys/types.h
+-- Looking for sys/types.h - found
+-- Looking for stdint.h
+-- Looking for stdint.h - found
+-- Looking for stddef.h
+-- Looking for stddef.h - found
+-- Check size of unsigned short
+-- Check size of unsigned short - done
+-- Using unsigned short
+-- Check if the system is big endian - little endian
+-- Adding directory Bitcode
+-- Adding directory External
+-- Adding directory MultiSource
+-- Looking for re_comp
+-- Looking for re_comp - found
+-- Adding directory SingleSource
+-- Looking for __ARM_NEON
+-- Looking for __ARM_NEON - not found
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/jrchang/workspace/llvm-thesis/test-suite/build

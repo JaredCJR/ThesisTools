@@ -1,0 +1,6 @@
+CMakeFiles/office-ispell.dir/ispell.c.o: In function `main':
+/home/jrchang/workspace/llvm-thesis/test-suite/MultiSource/Benchmarks/MiBench/office-ispell/ispell.c:(.text+0xeb4): warning: the use of `mktemp' is dangerous, better use `mkstemp' or `mkdtemp'
+CMakeFiles/mybison.dir/files.c.o: In function `openfiles':
+/home/jrchang/workspace/llvm-thesis/test-suite/MultiSource/Benchmarks/Prolangs-C/bison/files.c:(.text+0x616): warning: the use of `mktemp' is dangerous, better use `mkstemp' or `mkdtemp'
+CMakeFiles/unix-smail.dir/deliver.c.o: In function `deliver':
+/home/jrchang/workspace/llvm-thesis/test-suite/MultiSource/Benchmarks/Prolangs-C/unix-smail/deliver.c:(.text+0xf9): warning: the use of `mktemp' is dangerous, better use `mkstemp' or `mkdtemp'
