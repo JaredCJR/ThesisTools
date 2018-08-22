@@ -96,7 +96,9 @@ def runEval(WorkerID, jsonPath):
 
 def readOriginalResults():
     loc = os.getenv("LLVM_THESIS_RandomHome", "Error")
-    loc = loc + "/LLVMTestSuiteScript/GraphGen/output/newMeasurableStdBenchmarkMeanAndSigma"
+    #loc = loc + "/LLVMTestSuiteScript/GraphGen/output/newMeasurableStdBenchmarkMeanAndSigma"
+    #FIXME: try the new SingleCore STD results
+    loc = loc + "/LLVMTestSuiteScript/GraphGen/output/SingleCoreMeasurableProgramMeanAndSigma"
     Orig_cycles_mean = {}
     Orig_cycles_sigma = {}
     with open(loc, 'r') as File:
@@ -137,9 +139,9 @@ if __name__ == '__main__':
         # we don't have to read the original data for every time
         '''
         Orig_cycles_mean, Orig_cycles_sigma = readOriginalResults()
-        with open("Orig_cycles_mean.json", 'w') as fp:
+        with open("Orig_cycles_mean-20180819.json", 'w') as fp:
             json.dump(Orig_cycles_mean, fp)
-        with open("Orig_cycles_sigma.json", 'w') as fp:
+        with open("Orig_cycles_sigma-20180819.json", 'w') as fp:
             json.dump(Orig_cycles_sigma, fp)
         '''
 
